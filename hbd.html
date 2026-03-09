@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday</title>
+  <style>
+    :root{
+      --bg1:#fff7fb;
+      --bg2:#ffe9f3;
+      --pink:#ff5fa2;
+      --pink-dark:#e63e87;
+      --gold:#ffcc66;
+      --text:#4b2e39;
+      --card:#ffffffcc;
+      --shadow:0 12px 35px rgba(0,0,0,.12);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, #fff 0%, var(--bg1) 40%, var(--bg2) 100%);
+      overflow-x:hidden;
+    }
+
+    .section{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+      position:relative;
+    }
+
+    h1,h2,h3,p{
+      margin:8px 0;
+      text-align:center;
+    }
+
+    .subtitle{
+      opacity:.8;
+      max-width:700px;
+      line-height:1.6;
+    }
+
+    .btn{
+      border:none;
+      background:linear-gradient(135deg, var(--pink), var(--pink-dark));
+      color:#fff;
+      padding:12px 22px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:16px;
+      box-shadow:var(--shadow);
+      transition:.25s ease;
+      margin:8px;
+    }
+    .btn:hover{transform:translateY(-2px) scale(1.02)}
+    .btn.secondary{
+      background:linear-gradient(135deg, #7a7aff, #4d4dff);
+    }
+
+    /* floating decorations */
+    .sparkle{
+      position:absolute;
+      font-size:20px;
+      animation:floatY 4s ease-in-out infinite;
+      pointer-events:none;
+      opacity:.65;
+    }
+    @keyframes floatY{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-12px)}
+    }
+
+    /* Gift box */
+    .gift-wrap{
+      margin-top:24px;
+      cursor:pointer;
+      position:relative;
+      width:220px;
+      height:220px;
+      transition:transform .3s ease;
+    }
+    .gift-wrap:hover{transform:scale(1.03)}
+    .gift-box{
+      position:absolute;
+      bottom:0;
+      width:220px;
+      height:150px;
+      background:linear-gradient(135deg, #ff8fc1, #ff5fa2);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+    }
+    .gift-lid{
+      position:absolute;
+      top:30px;
+      left:-8px;
+      width:236px;
+      height:46px;
+      background:linear-gradient(135deg, #ffb2d1, #ff76b2);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      transform-origin:left bottom;
+      transition:transform .9s ease, top .9s ease, left .9s ease;
+      z-index:2;
+    }
+    .gift-ribbon-v{
+      position:absolute;
+      left:96px;
+      top:0;
+      width:28px;
+      height:220px;
+      background:var(--gold);
+      z-index:3;
+      border-radius:8px;
+    }
+    .gift-ribbon-h{
+      position:absolute;
+      top:46px;
+      left:0;
+      width:220px;
+      height:24px;
+      background:var(--gold);
+      z-index:3;
+      border-radius:8px;
+    }
+    .gift-bow{
+      position:absolute;
+      top:0;
+      left:68px;
+      width:84px;
+      height:52px;
+      z-index:4;
+    }
+    .gift-bow:before,
+    .gift-bow:after{
+      content:"";
+      position:absolute;
+      width:42px;
+      height:42px;
+      border:10px solid var(--gold);
+      border-radius:50% 50% 50% 0;
+      transform:rotate(45deg);
+      background:transparent;
+    }
+    .gift-bow:before{left:0}
+    .gift-bow:after{right:0; transform:scaleX(-1) rotate(45deg)}
+    .gift-wrap.open .gift-lid{
+      transform:rotate(-28deg) translate(-35px, -35px);
+      top:0;
+      left:-24px;
+    }
+
+    .hidden-surprise{
+      margin-top:30px;
+      opacity:0;
+      transform:translateY(16px) scale(.95);
+      transition:all .8s ease;
+      pointer-events:none;
+    }
+    .hidden-surprise.show{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .big-text{
+      font-size:clamp(32px, 6vw, 64px);
+      font-weight:700;
+      color:var(--pink-dark);
+    }
+
+    /* Photo cards */
+    .gallery{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:24px;
+      max-width:1100px;
+      margin-top:30px;
+    }
+    .photo-card{
+      width:260px;
+      background:#fff;
+      border-radius:16px;
+      padding:14px 14px 20px;
+      box-shadow:var(--shadow);
+      transform:translateY(50px) rotate(var(--r, 0deg));
+      opacity:0;
+      transition:all .8s ease;
+    }
+    .photo-card.show{
+      transform:translateY(0) rotate(var(--r, 0deg));
+      opacity:1;
+    }
+    .photo{
+      height:250px;
+      border-radius:12px;
+      background:linear-gradient(135deg, #ffd3e6, #ffc0cb, #ffe6a7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:54px;
+      user-select:none;
+    }
+    .caption{
+      margin-top:12px;
+      font-weight:600;
+      text-align:center;
+    }
+
+    /* Cake */
+    .cake-wrap{
+      margin-top:28px;
+      position:relative;
+      width:260px;
+      height:260px;
+    }
+    .plate{
+      position:absolute;
+      bottom:25px;
+      left:20px;
+      width:220px;
+      height:18px;
+      border-radius:999px;
+      background:#ddd;
+    }
+    .cake-layer-bottom{
+      position:absolute;
+      bottom:43px;
+      left:40px;
+      width:180px;
+      height:85px;
+      background:linear-gradient(135deg, #ff9ac3, #ff7eb4);
+      border-radius:12px;
+    }
+    .cake-layer-top{
+      position:absolute;
+      bottom:120px;
+      left:62px;
+      width:136px;
+      height:60px;
+      background:linear-gradient(135deg, #ffd4e7, #ffb1d1);
+      border-radius:12px;
+    }
+    .icing{
+      position:absolute;
+      background:#fff6fb;
+      border-radius:999px;
+      height:14px;
+    }
+    .icing.i1{bottom:115px; left:62px; width:136px}
+    .icing.i2{bottom:38px; left:40px; width:180px}
+    .candle{
+      position:absolute;
+      bottom:178px;
+      width:12px;
+      height:44px;
+      background:#7db7ff;
+      border-radius:6px;
+    }
+    .candle.c1{left:92px}
+    .candle.c2{left:124px}
+    .candle.c3{left:156px}
+    .flame{
+      position:absolute;
+      top:-18px;
+      left:50%;
+      transform:translateX(-50%);
+      width:16px;
+      height:20px;
+      background:radial-gradient(circle at 50% 30%, #fff6b0, #ffb300 65%, #ff7a00 100%);
+      border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation:flicker .25s infinite alternate;
+      box-shadow:0 0 18px rgba(255,170,0,.65);
+      transition:.4s ease;
+    }
+    .flame.off{
+      opacity:0;
+      transform:translateX(-50%) scale(.2);
+    }
+    @keyframes flicker{
+      from{transform:translateX(-50%) scale(1) rotate(-2deg)}
+      to{transform:translateX(-50%) scale(1.08) rotate(2deg)}
+    }
+
+    /* Balloons */
+    .balloon-zone{
+      position:relative;
+      width:100%;
+      max-width:1000px;
+      height:420px;
+      overflow:hidden;
+      margin-top:20px;
+    }
+    .balloon{
+      position:absolute;
+      bottom:-120px;
+      width:90px;
+      height:110px;
+      background:linear-gradient(135deg, #ff8bc0, #ff5fa2);
+      border-radius:50% 50% 45% 45%;
+      animation:rise linear forwards;
+      box-shadow:var(--shadow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:#fff;
+      font-size:12px;
+      padding:10px;
+      line-height:1.35;
+    }
+    .balloon:after{
+      content:"";
+      position:absolute;
+      bottom:-70px;
+      left:50%;
+      width:2px;
+      height:70px;
+      background:#999;
+      transform:translateX(-50%);
+    }
+    @keyframes rise{
+      from{transform:translateY(0)}
+      to{transform:translateY(-620px)}
+    }
+
+    /* Message */
+    .letter{
+      width:min(800px, 92%);
+      background:var(--card);
+      backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:var(--shadow);
+      border-radius:24px;
+      padding:28px;
+      line-height:1.8;
+      font-size:18px;
+    }
+
+    .typewriter{
+      border-right:2px solid var(--pink-dark);
+      white-space:normal;
+      overflow:hidden;
+      min-height:120px;
+    }
+
+    /* Secret section */
+    .secret-card{
+      width:min(700px, 92%);
+      background:#fff;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:var(--shadow);
+    }
+
+    .input{
+      width:100%;
+      max-width:320px;
+      border:1px solid #ddd;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:16px;
+      margin:10px 0;
+    }
+
+    .result{
+      margin-top:14px;
+      min-height:32px;
+      font-weight:700;
+      color:var(--pink-dark);
+      text-align:center;
+    }
+
+    .footer-note{
+      opacity:.7;
+      font-size:14px;
+      margin-top:10px;
+    }
+
+    .music-control{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:999;
+    }
+
+    .scroll-hint{
+      margin-top:26px;
+      font-size:14px;
+      opacity:.7;
+      animation:bounce 1.5s infinite;
+    }
+    @keyframes bounce{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(8px)}
+    }
+
+    .fade-up{
+      opacity:0;
+      transform:translateY(24px);
+      transition:all .8s ease;
+    }
+    .fade-up.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sparkle" style="top:8%;left:10%;">✨</div>
+  <div class="sparkle" style="top:18%;right:12%;animation-delay:.7s;">🎈</div>
+  <div class="sparkle" style="top:52%;left:6%;animation-delay:1.3s;">🎉</div>
+  <div class="sparkle" style="bottom:18%;right:7%;animation-delay:.4s;">🎂</div>
+
+  <!-- SECTION 1 -->
+  <section class="section" id="hero">
+    <h1 class="big-text">Happy Birthday 🎂</h1>
+    <p class="subtitle">
+      เว็บอวยพรเล็ก ๆ ที่ตั้งใจทำมาเพื่อวันพิเศษของคุณ
+    </p>
+
+    <div class="gift-wrap" id="giftBox">
+      <div class="gift-lid"></div>
+      <div class="gift-box"></div>
+      <div class="gift-ribbon-v"></div>
+      <div class="gift-ribbon-h"></div>
+      <div class="gift-bow"></div>
+    </div>
+
+    <div class="hidden-surprise" id="surpriseText">
+      <h2>🎁 Surprise!</h2>
+      <p class="subtitle">ขอให้วันนี้เต็มไปด้วยรอยยิ้ม ความสุข และสิ่งดี ๆ ตลอดทั้งปี</p>
+      <button class="btn" onclick="document.getElementById('memories').scrollIntoView()">ดูความทรงจำต่อ</button>
+    </div>
+
+    <div class="scroll-hint">กดเปิดกล่องของขวัญ</div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="section" id="memories">
+    <h2 class="fade-up reveal">📸 Birthday Memory Cards</h2>
+    <p class="subtitle fade-up reveal">
+      รูปการ์ดจะค่อย ๆ ปรากฏขึ้นเมื่อเลื่อนมาถึงส่วนนี้
+    </p>
+
+    <div class="gallery">
+      <div class="photo-card reveal-card" style="--r:-6deg;">
+        <div class="photo">🌸</div>
+        <div class="caption">ขอให้ทุกวันสดใสเหมือนรอยยิ้มของคุณ</div>
+      </div>
+
+      <div class="photo-card reveal-card" style="--r:4deg;">
+        <div class="photo">🎁</div>
+        <div class="caption">ขอให้มีแต่เซอร์ไพรส์ดี ๆ เข้ามาในชีวิต</div>
+      </div>
+
+      <div class="photo-card reveal-card" style="--r:-3deg;">
+        <div class="photo">✨</div>
+        <div class="caption">ขอให้ปีนี้เป็นปีที่คุณเปล่งประกายที่สุด</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="section" id="cakeSection">
+    <h2 class="fade-up reveal">🎂 Make a Wish</h2>
+    <p class="subtitle fade-up reveal">
+      ลองกดปุ่มเพื่อเป่าเทียน แล้วอธิษฐานในใจได้เลย
+    </p>
+
+    <div class="cake-wrap fade-up reveal">
+      <div class="plate"></div>
+      <div class="cake-layer-bottom"></div>
+      <div class="icing i2"></div>
+      <div class="cake-layer-top"></div>
+      <div class="icing i1"></div>
+
+      <div class="candle c1"><div class="flame"></div></div>
+      <div class="candle c2"><div class="flame"></div></div>
+      <div class="candle c3"><div class="flame"></div></div>
+    </div>
+
+    <div class="fade-up reveal">
+      <button class="btn" id="blowBtn">เป่าเทียน 🕯️</button>
+      <p id="wishText" style="font-weight:700;"></p>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="section" id="balloonSection">
+    <h2 class="fade-up reveal">🎈 Floating Wishes</h2>
+    <p class="subtitle fade-up reveal">
+      คำอวยพรเล็ก ๆ จะลอยขึ้นไปบนฟ้า
+    </p>
+    <button class="btn fade-up reveal" id="startBalloons">ปล่อยบอลลูน</button>
+    <div class="balloon-zone" id="balloonZone"></div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="section" id="messageSection">
+    <h2 class="fade-up reveal">💌 A Special Message</h2>
+    <div class="letter fade-up reveal">
+      <div class="typewriter" id="typewriter"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section class="section" id="secretSection">
+    <h2 class="fade-up reveal">🔐 Secret Birthday Unlock</h2>
+    <div class="secret-card fade-up reveal">
+      <p>กรอกวันเกิดของคุณในรูปแบบ <b>DD/MM</b> เพื่อปลดล็อกข้อความพิเศษ</p>
+      <input class="input" id="birthdayInput" placeholder="เช่น 18/12" />
+      <br />
+      <button class="btn secondary" id="unlockBtn">ปลดล็อก</button>
+      <div class="result" id="unlockResult"></div>
+      <p class="footer-note">ตอนนี้ตั้งค่าให้รหัสตัวอย่างคือ 18/12 แก้ได้ใน JavaScript</p>
+    </div>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section class="section" id="ending">
+    <h1 class="big-text fade-up reveal">สุขสันต์วันเกิดนะ 🎉</h1>
+    <p class="subtitle fade-up reveal">
+      ขอให้คุณเจอแต่คนดี ๆ งานดี ๆ โอกาสดี ๆ และมีความสุขมากขึ้นทุกวัน
+    </p>
+    <button class="btn fade-up reveal" onclick="window.scrollTo({top:0, behavior:'smooth'})">กลับขึ้นบนสุด</button>
+  </section>
+
+  <div class="music-control">
+    <button class="btn" id="musicBtn">🎵 เปิดเพลง</button>
+  </div>
+
+  <!-- ใส่ไฟล์เพลงเองได้ เช่น music/happy-birthday.mp3 -->
+  <audio id="bgMusic" loop>
+    <source src="" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // ----------------------------
+    // Gift box open + confetti
+    // ----------------------------
+    const giftBox = document.getElementById("giftBox");
+    const surpriseText = document.getElementById("surpriseText");
+    let giftOpened = false;
+
+    giftBox.addEventListener("click", () => {
+      if (giftOpened) return;
+      giftOpened = true;
+      giftBox.classList.add("open");
+      setTimeout(() => surpriseText.classList.add("show"), 500);
+      confettiBurst();
+    });
+
+    function confettiBurst(){
+      for(let i=0;i<120;i++){
+        const c = document.createElement("div");
+        c.style.position = "fixed";
+        c.style.left = (window.innerWidth / 2) + "px";
+        c.style.top = (window.innerHeight / 2 - 80) + "px";
+        c.style.width = (6 + Math.random()*8) + "px";
+        c.style.height = (8 + Math.random()*12) + "px";
+        c.style.background = ["#ff5fa2","#ffcc66","#7a7aff","#67d5b5","#ff8b5c"][Math.floor(Math.random()*5)];
+        c.style.pointerEvents = "none";
+        c.style.zIndex = "9999";
+        c.style.borderRadius = "2px";
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(c);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 120 + Math.random() * 260;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance + 150;
+
+        c.animate([
+          { transform:`translate(0,0) rotate(0deg)`, opacity:1 },
+          { transform:`translate(${x}px, ${y}px) rotate(${Math.random()*720}deg)`, opacity:0 }
+        ], {
+          duration: 1200 + Math.random()*900,
+          easing: "cubic-bezier(.2,.8,.2,1)"
+        });
+
+        setTimeout(() => c.remove(), 2100);
+      }
+    }
+
+    // ----------------------------
+    // Reveal on scroll
+    // ----------------------------
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("show");
+        }
+      });
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    document.querySelectorAll(".reveal-card").forEach((el, i) => {
+      observer.observe(el);
+      el.style.transitionDelay = (i * 0.2) + "s";
+    });
+
+    // ----------------------------
+    // Blow candles
+    // ----------------------------
+    const blowBtn = document.getElementById("blowBtn");
+    const wishText = document.getElementById("wishText");
+    let blown = false;
+
+    blowBtn.addEventListener("click", () => {
+      const flames = document.querySelectorAll(".flame");
+      blown = !blown;
+
+      flames.forEach(f => f.classList.toggle("off", blown));
+
+      if(blown){
+        wishText.textContent = "✨ ขอให้พรวันเกิดนี้เป็นจริงทุกข้อเลยนะ";
+        blowBtn.textContent = "จุดเทียนอีกครั้ง 🔥";
+        confettiBurst();
+      }else{
+        wishText.textContent = "";
+        blowBtn.textContent = "เป่าเทียน 🕯️";
+      }
+    });
+
+    // ----------------------------
+    // Balloons
+    // ----------------------------
+    const balloonBtn = document.getElementById("startBalloons");
+    const balloonZone = document.getElementById("balloonZone");
+    const wishes = [
+      "ขอให้มีความสุขมาก ๆ",
+      "ขอให้สุขภาพแข็งแรง",
+      "ขอให้สมหวังทุกเรื่อง",
+      "ขอให้งานปัง เงินเข้าเยอะ ๆ",
+      "ขอให้รอยยิ้มไม่หายไปไหน",
+      "ขอให้ปีนี้เป็นปีที่ดีที่สุด"
+    ];
+
+    balloonBtn.addEventListener("click", () => {
+      for(let i=0; i<10; i++){
+        setTimeout(() => createBalloon(wishes[i % wishes.length]), i * 250);
+      }
+    });
+
+    function createBalloon(text){
+      const b = document.createElement("div");
+      b.className = "balloon";
+      b.textContent = text;
+      b.style.left = Math.random() * (balloonZone.clientWidth - 100) + "px";
+      b.style.animationDuration = (6 + Math.random() * 4) + "s";
+      b.style.background = [
+        "linear-gradient(135deg,#ff8bc0,#ff5fa2)",
+        "linear-gradient(135deg,#8eb8ff,#5b7fff)",
+        "linear-gradient(135deg,#ffd36f,#ffb347)",
+        "linear-gradient(135deg,#9be7c4,#54d2a0)"
+      ][Math.floor(Math.random()*4)];
+
+      balloonZone.appendChild(b);
+      setTimeout(() => b.remove(), 11000);
+    }
+
+    // ----------------------------
+    // Typewriter
+    // ----------------------------
+    const typewriterEl = document.getElementById("typewriter");
+    const message = "สุขสันต์วันเกิดนะ 🎂\nขอให้วันนี้เป็นวันที่อบอุ่น เต็มไปด้วยรอยยิ้ม และความรักจากทุกคนรอบตัว\nขอให้ทุกความตั้งใจของคุณสำเร็จทีละเรื่อง และขอให้ปีนี้เป็นปีที่ใจดีกับคุณมากที่สุด ✨";
+
+    let typed = false;
+    const twObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting && !typed){
+          typed = true;
+          typeText(message, typewriterEl, 35);
+        }
+      });
+    }, { threshold:.4 });
+    twObserver.observe(typewriterEl);
+
+    function typeText(text, el, speed){
+      let i = 0;
+      function step(){
+        if(i < text.length){
+          const ch = text[i] === "\n" ? "<br>" : text[i];
+          el.innerHTML += ch;
+          i++;
+          setTimeout(step, speed);
+        }
+      }
+      step();
+    }
+
+    // ----------------------------
+    // Secret unlock
+    // ----------------------------
+    document.getElementById("unlockBtn").addEventListener("click", () => {
+      const input = document.getElementById("birthdayInput").value.trim();
+      const result = document.getElementById("unlockResult");
+
+      if(input === "18/12"){
+        result.innerHTML = "🎉 ปลดล็อกสำเร็จ: คุณคือคนพิเศษมาก ๆ และสมควรได้รับสิ่งดี ๆ ที่สุด";
+        confettiBurst();
+      } else if (!input) {
+        result.textContent = "กรุณากรอกวันเกิดก่อน";
+      } else {
+        result.textContent = "ยังไม่ถูกน้า ลองอีกครั้ง ✨";
+      }
+    });
+
+    // ----------------------------
+    // Music control
+    // ----------------------------
+    const music = document.getElementById("bgMusic");
+    const musicBtn = document.getElementById("musicBtn");
+    let playing = false;
+
+    musicBtn.addEventListener("click", async () => {
+      try{
+        if(!playing){
+          await music.play();
+          playing = true;
+          musicBtn.textContent = "⏸ ปิดเพลง";
+        }else{
+          music.pause();
+          playing = false;
+          musicBtn.textContent = "🎵 เปิดเพลง";
+        }
+      }catch(e){
+        alert("ยังไม่ได้ใส่ไฟล์เพลงในแท็ก <audio> นะ");
+      }
+    });
+  </script>
+</body>
+</html>

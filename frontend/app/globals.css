@@ -24,3 +24,97 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+@keyframes floatY {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes flicker {
+  from {
+    transform: translateX(-50%) scale(1) rotate(-2deg);
+  }
+
+  to {
+    transform: translateX(-50%) scale(1.08) rotate(2deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-620px);
+  }
+}
+
+@keyframes confetti-fly {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes bounceHint {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-float {
+  animation: floatY 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatY 4.8s ease-in-out infinite;
+  animation-delay: 0.7s;
+}
+
+.animate-float-slow {
+  animation: floatY 5.3s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+.animate-flicker {
+  animation: flicker 0.25s infinite alternate;
+}
+
+.animate-rise {
+  animation-name: rise;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.animate-bounce-hint {
+  animation: bounceHint 1.5s infinite;
+}
+
+.typewriter-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: #be185d;
+  margin-left: 4px;
+  vertical-align: middle;
+}
