@@ -113,8 +113,110 @@ body {
   content: "";
   display: inline-block;
   width: 2px;
-  height: 1.2em;
   background: #be185d;
   margin-left: 4px;
   vertical-align: middle;
+}
+
+@keyframes boxShake {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+
+  15% {
+    transform: translateX(-4px) rotate(-2deg);
+  }
+
+  30% {
+    transform: translateX(5px) rotate(2deg);
+  }
+
+  45% {
+    transform: translateX(-6px) rotate(-2deg);
+  }
+
+  60% {
+    transform: translateX(5px) rotate(1deg);
+  }
+
+  75% {
+    transform: translateX(-3px) rotate(-1deg);
+  }
+
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+@keyframes lidSpringOpen {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  35% {
+    transform: translate(-30px, -40px) rotate(-24deg) scale(1.02);
+  }
+
+  55% {
+    transform: translate(-18px, -28px) rotate(-15deg) scale(0.98);
+  }
+
+  75% {
+    transform: translate(-26px, -36px) rotate(-21deg) scale(1.01);
+  }
+
+  100% {
+    transform: translate(-22px, -34px) rotate(-18deg) scale(1);
+  }
+}
+
+@keyframes confetti-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+  }
+}
+
+@keyframes floaty {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: floaty 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floaty 4s ease-in-out infinite;
+  animation-delay: 0.7s;
+}
+
+.animate-float-slow {
+  animation: floaty 4.8s ease-in-out infinite;
+  animation-delay: 1.4s;
+}
+
+.box-shake {
+  animation: boxShake 420ms ease-in-out;
+}
+
+.lid-open {
+  animation: lidSpringOpen 1000ms cubic-bezier(0.2, 1.2, 0.2, 1) forwards;
+}
+
+.confetti-piece {
+  animation: confetti-fly linear forwards;
+  will-change: transform, opacity;
 }

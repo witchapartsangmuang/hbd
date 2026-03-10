@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Gift</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      overflow-x: hidden;
+      background: linear-gradient(180deg, #fffafc 0%, #ffeef6 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .gift-wrap {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      transform-origin: center center;
+    }
+
+    .gift-base {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 220px;
+      height: 150px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f9a8d4, #ec4899);
+      box-shadow: 0 20px 40px rgba(236, 72, 153, 0.22);
+    }
+
+    .gift-lid {
+      position: absolute;
+      left: -8px;
+      top: 30px;
+      width: 236px;
+      height: 46px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #fbcfe8, #f472b6);
+      box-shadow: 0 12px 24px rgba(236, 72, 153, 0.22);
+      transform-origin: 50% 80%;
+      transition: transform 0.2s ease;
+      z-index: 20;
+    }
+
+    .ribbon-v {
+      position: absolute;
+      left: 96px;
+      top: 0;
+      width: 28px;
+      height: 220px;
+      border-radius: 10px;
+      background: #fcd34d;
+      z-index: 30;
+    }
+
+    .ribbon-h {
+      position: absolute;
+      left: 0;
+      top: 46px;
+      width: 220px;
+      height: 24px;
+      border-radius: 10px;
+      background: #fcd34d;
+      z-index: 30;
+    }
+
+    .bow {
+      position: absolute;
+      left: 68px;
+      top: 0;
+      width: 84px;
+      height: 52px;
+      z-index: 40;
+    }
+
+    .bow::before,
+    .bow::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      width: 40px;
+      height: 40px;
+      border: 10px solid #fcd34d;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(45deg);
+      background: transparent;
+    }
+
+    .bow::before {
+      left: 0;
+    }
+
+    .bow::after {
+      right: 0;
+      transform: scaleX(-1) rotate(45deg);
+    }
+
+    .gift-wrap.pressing {
+      animation: pressDown 180ms ease forwards;
+    }
+
+    .gift-wrap.shake {
+      animation: boxShake 420ms ease-in-out;
+    }
+
+    .gift-wrap.opened .gift-lid {
+      animation: lidSpringOpen 1s cubic-bezier(.2,1.2,.2,1) forwards;
+    }
+
+    @keyframes pressDown {
+      0% { transform: scale(1); }
+      100% { transform: scale(0.94); }
+    }
+
+    @keyframes boxShake {
+      0%   { transform: translateX(0) rotate(0deg); }
+      15%  { transform: translateX(-4px) rotate(-2deg); }
+      30%  { transform: translateX(5px) rotate(2deg); }
+      45%  { transform: translateX(-6px) rotate(-2deg); }
+      60%  { transform: translateX(5px) rotate(1deg); }
+      75%  { transform: translateX(-3px) rotate(-1deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    @keyframes lidSpringOpen {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+      35% {
+        transform: translate(-30px, -40px) rotate(-24deg) scale(1.02);
+      }
+      55% {
+        transform: translate(-18px, -28px) rotate(-15deg) scale(0.98);
+      }
+      75% {
+        transform: translate(-26px, -36px) rotate(-21deg) scale(1.01);
+      }
+      100% {
+        transform: translate(-22px, -34px) rotate(-18deg) scale(1);
+      }
+    }
+
+    .confetti-piece {
+      position: absolute;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 60;
+      will-change: transform, opacity;
+      animation: confettiFly linear forwards;
+    }
+
+    @keyframes confettiFly {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+      }
+    }
+
+    .card-item {
+      opacity: 0;
+      transform: translateY(-180px) scale(0.5) rotate(var(--start-rotate, 0deg));
+      transform-origin: center center;
+      transition:
+        transform 0.9s cubic-bezier(.2,1.15,.2,1),
+        opacity 0.6s ease;
+    }
+
+    .card-item.show {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(var(--final-rotate, 0deg));
+    }
+
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.72;
+      animation: floaty 4s ease-in-out infinite;
+    }
+
+    .sparkle.s2 { animation-delay: .7s; }
+    .sparkle.s3 { animation-delay: 1.4s; }
+    .sparkle.s4 { animation-delay: 2.1s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="min-h-screen px-5 py-10">
+    <section class="mx-auto max-w-6xl text-center">
+      <div class="relative">
+        <div class="sparkle s1 left-[10%] top-[8%] text-2xl">✨</div>
+        <div class="sparkle s2 right-[12%] top-[18%] text-2xl">🎈</div>
+        <div class="sparkle s3 left-[8%] top-[52%] text-2xl">🎉</div>
+        <div class="sparkle s4 right-[10%] bottom-[12%] text-2xl">🎂</div>
+
+        <h1 class="text-4xl font-bold text-pink-600 sm:text-6xl">Happy Birthday 🎂</h1>
+        <p class="mx-auto mt-3 max-w-2xl text-base leading-7 text-rose-900/80 sm:text-lg">
+          เว็บอวยพรเล็ก ๆ ที่ตั้งใจทำมาเพื่อวันพิเศษของคุณ
+        </p>
+
+        <div class="mt-10 flex justify-center">
+          <button
+            id="giftButton"
+            type="button"
+            aria-label="Open gift box"
+            class="relative cursor-pointer transition hover:scale-105 active:scale-100"
+          >
+            <div id="giftWrap" class="gift-wrap">
+              <div id="confettiOrigin" class="absolute left-1/2 top-[68px] z-[55] h-2 w-2 -translate-x-1/2 rounded-full"></div>
+              <span class="gift-lid"></span>
+              <span class="gift-base"></span>
+              <span class="ribbon-v"></span>
+              <span class="ribbon-h"></span>
+              <span class="bow"></span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div id="cardsSection" class="mt-8">
+        <div class="grid grid-cols-12 gap-6">
+          <div class="card-item col-span-12 md:col-span-6 lg:col-span-3" style="--final-rotate:-3deg; --start-rotate:-10deg;">
+            <div class="overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-pink-100">
+              <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80" class="h-72 w-full object-cover" alt="Birthday card 1">
+              <div class="p-4">
+                <p class="text-sm leading-6 text-rose-900">ขอให้ปีนี้เป็นปีที่คุณเปล่งประกายที่สุด</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-item col-span-12 md:col-span-6 lg:col-span-3" style="--final-rotate:3deg; --start-rotate:8deg;">
+            <div class="overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-pink-100">
+              <img src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=900&q=80" class="h-72 w-full object-cover" alt="Birthday card 2">
+              <div class="p-4">
+                <p class="text-sm leading-6 text-rose-900">ขอให้มีความสุขในทุกช่วงเวลาที่กำลังจะมาถึง</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-item col-span-12 md:col-span-6 lg:col-span-3" style="--final-rotate:-2deg; --start-rotate:-7deg;">
+            <div class="overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-pink-100">
+              <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&q=80" class="h-72 w-full object-cover" alt="Birthday card 3">
+              <div class="p-4">
+                <p class="text-sm leading-6 text-rose-900">ขอให้รอยยิ้มของคุณสดใสแบบนี้ตลอดทั้งปี</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-item col-span-12 md:col-span-6 lg:col-span-3" style="--final-rotate:2deg; --start-rotate:10deg;">
+            <div class="overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-pink-100">
+              <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=900&q=80" class="h-72 w-full object-cover" alt="Birthday card 4">
+              <div class="p-4">
+                <p class="text-sm leading-6 text-rose-900">ขอให้เจอแต่เรื่องดี ๆ และคนดี ๆ ในทุกวัน</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto mt-12 max-w-3xl rounded-3xl bg-white/80 p-6 text-left shadow-lg ring-1 ring-pink-100 backdrop-blur">
+        <p class="text-lg leading-8 text-rose-900">
+          สุขสันต์วันเกิดนะ 🎉 ขอให้ทุกสิ่งที่ตั้งใจค่อย ๆ เป็นจริง มีความสุขมาก ๆ
+          สุขภาพแข็งแรง และมีแต่เรื่องน่ารักเข้ามาในชีวิตเสมอ
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const giftButton = document.getElementById("giftButton");
+    const giftWrap = document.getElementById("giftWrap");
+    const confettiOrigin = document.getElementById("confettiOrigin");
+    const cardItems = document.querySelectorAll(".card-item");
+
+    let isOpened = false;
+    let isPressing = false;
+
+    const confettiColors = [
+      "#f472b6",
+      "#fb7185",
+      "#fbbf24",
+      "#34d399",
+      "#60a5fa",
+      "#a78bfa",
+      "#f9a8d4"
+    ];
+
+    giftButton.addEventListener("mousedown", () => {
+      if (isOpened) return;
+      isPressing = true;
+      giftWrap.classList.remove("shake");
+      giftWrap.classList.add("pressing");
+    });
+
+    giftButton.addEventListener("mouseup", () => {
+      if (isOpened || !isPressing) return;
+      isPressing = false;
+
+      giftWrap.classList.remove("pressing");
+      giftWrap.classList.add("shake");
+
+      setTimeout(() => {
+        openGift();
+      }, 420);
+    });
+
+    giftButton.addEventListener("mouseleave", () => {
+      if (isOpened) return;
+      isPressing = false;
+      giftWrap.classList.remove("pressing");
+    });
+
+    function openGift() {
+      if (isOpened) return;
+      isOpened = true;
+
+      giftWrap.classList.add("opened");
+      launchConfettiFromBox();
+      showCardsBounce();
+    }
+
+    function launchConfettiFromBox() {
+      const rect = confettiOrigin.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+
+      const pieces = 120;
+
+      for (let i = 0; i < pieces; i++) {
+        const piece = document.createElement("span");
+        piece.className = "confetti-piece";
+
+        const angle = (-Math.PI / 2) + ((Math.random() - 0.5) * 1.8);
+        const distance = 120 + Math.random() * 260;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance + (120 + Math.random() * 180);
+        const rot = `${Math.random() * 720 - 360}deg`;
+        const duration = 900 + Math.random() * 900;
+        const width = 6 + Math.random() * 8;
+        const height = 8 + Math.random() * 12;
+
+        piece.style.left = `${startX}px`;
+        piece.style.top = `${startY}px`;
+        piece.style.width = `${width}px`;
+        piece.style.height = `${height}px`;
+        piece.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        piece.style.animationDuration = `${duration}ms`;
+        piece.style.setProperty("--tx", `${tx}px`);
+        piece.style.setProperty("--ty", `${ty}px`);
+        piece.style.setProperty("--rot", rot);
+
+        document.body.appendChild(piece);
+
+        setTimeout(() => {
+          piece.remove();
+        }, duration + 80);
+      }
+    }
+
+    function showCardsBounce() {
+      cardItems.forEach((card, index) => {
+        setTimeout(() => {
+          card.classList.add("show");
+        }, 180 + index * 180);
+      });
+    }
+  </script>
+</body>
+</html>

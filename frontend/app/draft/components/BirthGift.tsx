@@ -1,14 +1,9 @@
-"use client"
-import { useEffect, useMemo, useRef, useState } from "react";
-type BalloonItem = {
-    id: number;
-    text: string;
-    left: number;
-    duration: number;
-    styleIndex: number;
-};
+"use client";
 
-type ConfettiPiece = {
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import { giftState } from "../utils/hooks";
+
+export type ConfettiPiece = {
     id: number;
     left: number;
     top: number;
@@ -21,57 +16,38 @@ type ConfettiPiece = {
     duration: number;
 };
 
-const wishes = [
-    "ขอให้มีความสุขมาก ๆ",
-    "ขอให้สุขภาพแข็งแรง",
-    "ขอให้สมหวังทุกเรื่อง",
-    "ขอให้งานปัง เงินเข้าเยอะ ๆ",
-    "ขอให้รอยยิ้มไม่หายไปไหน",
-    "ขอให้ปีนี้เป็นปีที่ดีที่สุด",
-];
-
-const typewriterMessage =
-    "สุขสันต์วันเกิดนะ 🎂\nขอให้วันนี้เป็นวันที่อบอุ่น เต็มไปด้วยรอยยิ้ม และความรักจากทุกคนรอบตัว\nขอให้ทุกความตั้งใจของคุณสำเร็จทีละเรื่อง และขอให้ปีนี้เป็นปีที่ใจดีกับคุณมากที่สุด ✨";
-
-const balloonGradients = [
-    "from-pink-400 to-pink-500",
-    "from-blue-300 to-blue-500",
-    "from-amber-300 to-orange-400",
-    "from-emerald-300 to-green-500",
-];
+type BirthGiftProps = {
+    isOpenGift: boolean;
+    setisOpenGift: Dispatch<SetStateAction<boolean>>;
+    // isPressing: boolean;
+    // setisPressing: Dispatch<SetStateAction<boolean>>;
+    setisOpenDisplayImgArea: Dispatch<SetStateAction<boolean>>;
+};
 
 const confettiColors = [
-    "#ff5fa2",
-    "#ffcc66",
-    "#7a7aff",
-    "#67d5b5",
-    "#ff8b5c",
     "#f472b6",
+    "#fb7185",
+    "#fbbf24",
+    "#34d399",
     "#60a5fa",
+    "#a78bfa",
+    "#f9a8d4",
 ];
-export default function BirthGift() {
-    const [giftOpened, setGiftOpened] = useState(false);
+
+export default function BirthGift({
+    isOpenGift,
+    setisOpenGift,
+    // isPressing,
+    // setisPressing,
+    setisOpenDisplayImgArea
+}: BirthGiftProps) {
+    const { isPressing, setisPressing } = giftState()
     const [showSurpriseText, setShowSurpriseText] = useState(false);
-
-    // const [blown, setBlown] = useState(false);
-    // const [wishText, setWishText] = useState("");
-
-    // const [balloons, setBalloons] = useState<BalloonItem[]>([]);
-    // const balloonIdRef = useRef(1);
-    // const balloonZoneRef = useRef<HTMLDivElement | null>(null);
-
-    // const [typedText, setTypedText] = useState("");
-    // const [typeStarted, setTypeStarted] = useState(false);
-    // const messageRef = useRef<HTMLDivElement | null>(null);
-
-    // const [birthdayInput, setBirthdayInput] = useState("");
-    // const [unlockResult, setUnlockResult] = useState("");
-
     const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
-    const confettiIdRef = useRef(1);
+    const [isShaking, setisShaking] = useState(false);
 
-    // const [musicPlaying, setMusicPlaying] = useState(false);
-    // const audioRef = useRef<HTMLAudioElement | null>(null);
+    const confettiIdRef = useRef(1);
+    const confettiOriginRef = useRef<HTMLDivElement | null>(null);
 
     const sparkles = useMemo(
         () => [
@@ -83,70 +59,35 @@ export default function BirthGift() {
         []
     );
 
-    // useEffect(() => {
-    //     if (!giftOpened) return;
-    //     const timer = setTimeout(() => setShowSurpriseText(true), 500);
-    //     return () => clearTimeout(timer);
-    // }, [giftOpened]);
-
-    // useEffect(() => {
-    //     if (!typeStarted) return;
-
-    //     let i = 0;
-    //     const interval = setInterval(() => {
-    //         i += 1;
-    //         setTypedText(typewriterMessage.slice(0, i));
-    //         if (i >= typewriterMessage.length) {
-    //             clearInterval(interval);
-    //         }
-    //     }, 35);
-
-    //     return () => clearInterval(interval);
-    // }, [typeStarted]);
-
-    // useEffect(() => {
-    //     if (!messageRef.current) return;
-
-    //     const observer = new IntersectionObserver(
-    //         (entries) => {
-    //             entries.forEach((entry) => {
-    //                 if (entry.isIntersecting) {
-    //                     setTypeStarted(true);
-    //                 }
-    //             });
-    //         },
-    //         { threshold: 0.35 }
-    //     );
-
-    //     observer.observe(messageRef.current);
-
-    //     return () => observer.disconnect();
-    // }, []);
+    useEffect(() => {
+        if (!isOpenGift) return;
+        const timer = setTimeout(() => setShowSurpriseText(true), 500);
+        return () => clearTimeout(timer);
+    }, [isOpenGift]);
 
     const launchConfetti = () => {
-        const centerX =
-            typeof window !== "undefined" ? window.innerWidth / 2 : 600;
-        const centerY =
-            typeof window !== "undefined" ? window.innerHeight / 2 - 80 : 300;
+        if (!confettiOriginRef.current) return;
+
+        const rect = confettiOriginRef.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
 
         const pieces: ConfettiPiece[] = Array.from({ length: 120 }).map(() => {
-            const angle = Math.random() * Math.PI * 2;
+            const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.8;
             const distance = 120 + Math.random() * 260;
-            const x = Math.cos(angle) * distance;
-            const y = Math.sin(angle) * distance + 150;
 
             return {
                 id: confettiIdRef.current++,
                 left: centerX,
                 top: centerY,
-                x,
-                y,
-                rotate: Math.random() * 720,
+                x: Math.cos(angle) * distance,
+                y: Math.sin(angle) * distance + (120 + Math.random() * 180),
+                rotate: Math.random() * 720 - 360,
                 color:
                     confettiColors[Math.floor(Math.random() * confettiColors.length)],
                 width: 6 + Math.random() * 8,
                 height: 8 + Math.random() * 12,
-                duration: 1200 + Math.random() * 900,
+                duration: 900 + Math.random() * 900,
             };
         });
 
@@ -157,129 +98,114 @@ export default function BirthGift() {
             setConfetti((prev) =>
                 prev.filter((item) => !pieces.some((piece) => piece.id === item.id))
             );
-        }, maxDuration + 100);
+        }, maxDuration + 120);
     };
 
-    const handleOpenGift = () => {
-        if (giftOpened) return;
-        setGiftOpened(true);
-        launchConfetti();
+    const handleMouseDown = () => {
+        if (isOpenGift) return;
+        setisOpenDisplayImgArea(true)
+        setisPressing(true);
     };
 
-    // const handleBlowCandles = () => {
-    //     const next = !blown;
-    //     setBlown(next);
-    //     if (next) {
-    //         setWishText("✨ ขอให้พรวันเกิดนี้เป็นจริงทุกข้อเลยนะ");
-    //         launchConfetti();
-    //     } else {
-    //         setWishText("");
-    //     }
-    // };
+    const handleMouseUp = () => {
+        if (isOpenGift || !isPressing) return;
 
-    // const handleStartBalloons = () => {
-    //     const zoneWidth = balloonZoneRef.current?.clientWidth ?? 900;
-    //     const newItems: BalloonItem[] = Array.from({ length: 10 }).map((_, i) => ({
-    //         id: balloonIdRef.current++,
-    //         text: wishes[i % wishes.length],
-    //         left: Math.max(0, Math.random() * (zoneWidth - 100)),
-    //         duration: 6 + Math.random() * 4,
-    //         styleIndex: Math.floor(Math.random() * balloonGradients.length),
-    //     }));
+        setisPressing(false);
+        setisShaking(true);
 
-    //     setBalloons((prev) => [...prev, ...newItems]);
+        window.setTimeout(() => {
+            setisShaking(false);
+            setisOpenGift(true);
+            launchConfetti();
+        }, 420);
+    };
 
-    //     window.setTimeout(() => {
-    //         setBalloons((prev) =>
-    //             prev.filter((item) => !newItems.some((newItem) => newItem.id === item.id))
-    //         );
-    //     }, 11000);
-    // };
-
-    // const handleUnlock = () => {
-    //     if (!birthdayInput.trim()) {
-    //         setUnlockResult("กรุณากรอกวันเกิดก่อน");
-    //         return;
-    //     }
-
-    //     if (birthdayInput.trim() === "18/12") {
-    //         setUnlockResult(
-    //             "🎉 ปลดล็อกสำเร็จ: คุณคือคนพิเศษมาก ๆ และสมควรได้รับสิ่งดี ๆ ที่สุด"
-    //         );
-    //         launchConfetti();
-    //     } else {
-    //         setUnlockResult("ยังไม่ถูกน้า ลองอีกครั้ง ✨");
-    //     }
-    // };
-
-    // const toggleMusic = async () => {
-    //     try {
-    //         if (!audioRef.current) return;
-
-    //         if (!musicPlaying) {
-    //             await audioRef.current.play();
-    //             setMusicPlaying(true);
-    //         } else {
-    //             audioRef.current.pause();
-    //             setMusicPlaying(false);
-    //         }
-    //     } catch {
-    //         alert("ยังไม่ได้ใส่ไฟล์เพลงใน audio tag");
-    //     }
-    // };
+    const handleMouseLeave = () => {
+        if (isOpenGift) return;
+        setisPressing(false);
+    };
 
     return (
-        <section className="relative flex min-h-screen flex-col items-center justify-center px-5 py-10 text-center">
-            <h1 className="text-4xl font-bold text-pink-600 sm:text-6xl">
-                Happy Birthday 🎂
-            </h1>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-rose-900/80 sm:text-lg">
-                เว็บอวยพรเล็ก ๆ ที่ตั้งใจทำมาเพื่อวันพิเศษของคุณ
-            </p>
-
-            <button
-                type="button"
-                onClick={handleOpenGift}
-                className="group relative mt-8 h-[220px] w-[220px] cursor-pointer transition hover:scale-105"
-                aria-label="Open gift box"
-            >
-                <span
-                    className={`absolute left-[-8px] top-[30px] z-20 h-[46px] w-[236px] rounded-xl bg-gradient-to-br from-pink-200 to-pink-400 shadow-xl transition-all duration-700 ${giftOpened
-                        ? "left-[-24px] top-0 -translate-x-8 -translate-y-8 -rotate-[28deg]"
-                        : ""
-                        }`}
-                />
-                <span className="absolute bottom-0 left-0 h-[150px] w-[220px] rounded-xl bg-gradient-to-br from-pink-300 to-pink-500 shadow-xl" />
-                <span className="absolute left-[96px] top-0 z-30 h-[220px] w-7 rounded-lg bg-amber-300" />
-                <span className="absolute left-0 top-[46px] z-30 h-6 w-[220px] rounded-lg bg-amber-300" />
-
-                <span className="absolute left-[68px] top-0 z-40 h-[52px] w-[84px]">
-                    <span className="absolute left-0 top-1 h-10 w-10 rotate-45 rounded-[50%_50%_50%_0] border-[10px] border-amber-300" />
-                    <span className="absolute right-0 top-1 h-10 w-10 scale-x-[-1] rotate-45 rounded-[50%_50%_50%_0] border-[10px] border-amber-300" />
-                </span>
-            </button>
-
-            <div
-                className={`mt-8 transition-all duration-700 ${showSurpriseText
-                    ? "translate-y-0 scale-100 opacity-100"
-                    : "pointer-events-none translate-y-4 scale-95 opacity-0"
-                    }`}
-            >
-                <h2 className="text-2xl font-bold text-rose-700">🎁 Surprise!</h2>
-                <p className="mx-auto mt-2 max-w-xl text-rose-900/80">
-                    ขอให้วันนี้เต็มไปด้วยรอยยิ้ม ความสุข และสิ่งดี ๆ ตลอดทั้งปี
-                </p>
-                <a
-                    href="#memories"
-                    className="mt-5 inline-flex rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+        <>
+            {sparkles.map((item, index) => (
+                <div
+                    key={index}
+                    className={`pointer-events-none absolute z-10 text-xl opacity-70 ${item.className}`}
                 >
-                    ดูความทรงจำต่อ
-                </a>
-            </div>
+                    {item.emoji}
+                </div>
+            ))}
 
-            <p className="mt-8 text-sm text-rose-900/70 animate-bounce-hint">
-                กดเปิดกล่องของขวัญ
-            </p>
-        </section>
-    )
+            {confetti.map((piece) => (
+                <span
+                    key={piece.id}
+                    className="confetti-piece pointer-events-none fixed z-[9999] block rounded-sm"
+                    style={
+                        {
+                            left: `${piece.left}px`,
+                            top: `${piece.top}px`,
+                            width: `${piece.width}px`,
+                            height: `${piece.height}px`,
+                            backgroundColor: piece.color,
+                            animationDuration: `${piece.duration}ms`,
+                            ["--tx" as string]: `${piece.x}px`,
+                            ["--ty" as string]: `${piece.y}px`,
+                            ["--rot" as string]: `${piece.rotate}deg`,
+                        } as React.CSSProperties
+                    }
+                />
+            ))}
+
+            <section className="relative flex flex-col items-center justify-center px-5 py-10 text-center">
+                <h1 className="text-4xl font-bold text-pink-600 sm:text-6xl">
+                    Happy Birthday 🎂
+                </h1>
+                <p className="mt-3 max-w-2xl text-base leading-7 text-rose-900/80 sm:text-lg">
+                    เว็บอวยพรเล็ก ๆ ที่ตั้งใจทำมาเพื่อวันพิเศษของคุณ
+                </p>
+
+                <button
+                    type="button"
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
+                    className="group relative mt-8 h-[220px] w-[220px] cursor-pointer transition hover:scale-105"
+                    aria-label="Open gift box"
+                >
+                    <div
+                        className={`relative h-[220px] w-[220px] origin-center ${isPressing ? "scale-95" : "scale-100"
+                            } ${isShaking ? "box-shake" : ""} transition-transform duration-200`}
+                    >
+                        <div
+                            ref={confettiOriginRef}
+                            className="absolute left-1/2 top-[68px] z-[55] h-2 w-2 -translate-x-1/2 rounded-full"
+                        />
+
+                        <span
+                            className={`absolute left-[-8px] top-[30px] z-20 h-[46px] w-[236px] rounded-xl bg-gradient-to-br from-pink-200 to-pink-400 shadow-xl ${isOpenGift ? "lid-open" : ""
+                                }`}
+                            style={{ transformOrigin: "50% 80%" }}
+                        />
+                        <span className="absolute bottom-0 left-0 h-[150px] w-[220px] rounded-xl bg-gradient-to-br from-pink-300 to-pink-500 shadow-xl" />
+                        <span className="absolute left-[96px] top-0 z-30 h-[220px] w-7 rounded-lg bg-amber-300" />
+                        <span className="absolute left-0 top-[46px] z-30 h-6 w-[220px] rounded-lg bg-amber-300" />
+
+                        <span className="absolute left-[68px] top-0 z-40 h-[52px] w-[84px]">
+                            <span className="absolute left-0 top-1 h-10 w-10 rotate-45 rounded-[50%_50%_50%_0] border-[10px] border-amber-300" />
+                            <span className="absolute right-0 top-1 h-10 w-10 scale-x-[-1] rotate-45 rounded-[50%_50%_50%_0] border-[10px] border-amber-300" />
+                        </span>
+                    </div>
+                </button>
+
+                <div
+                    className={`mt-6 text-lg font-medium text-rose-500 transition-all duration-700 ${showSurpriseText
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-3 opacity-0"
+                        }`}
+                >
+                    สุขสันต์วันเกิด ขอให้วันนี้เต็มไปด้วยความสุข 🎉
+                </div>
+            </section>
+        </>
+    );
 }
