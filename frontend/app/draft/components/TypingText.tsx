@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useMemo, useRef, useState } from "react";
 
 
@@ -53,7 +51,7 @@ export default function TypingText() {
 
 
   return (
-    <main className="relative overflow-x-hidden bg-gradient-to-br from-white via-pink-50 to-rose-100 text-rose-950">
+    <main className="relative overflow-x-hidden bg-linear-to-br from-white via-pink-50 to-rose-100 text-rose-950">
       <section className="flex min-h-screen flex-col items-center justify-center px-5 py-16">
         <h2 className="text-center text-3xl font-bold text-rose-700">
           💌 A Special Message

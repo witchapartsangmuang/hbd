@@ -232,7 +232,7 @@ export default function Page() {
   };
 
   return (
-    <main className="relative overflow-x-hidden bg-gradient-to-br from-white via-pink-50 to-rose-100 text-rose-950">
+    <main className="relative overflow-x-hidden bg-linear-to-br from-white via-pink-50 to-rose-100 text-rose-950">
       {sparkles.map((item, index) => (
         <div
           key={index}
@@ -273,18 +273,18 @@ export default function Page() {
         <button
           type="button"
           onClick={handleOpenGift}
-          className="group relative mt-8 h-[220px] w-[220px] cursor-pointer transition hover:scale-105"
+          className="group relative mt-8 h-55 w-55 cursor-pointer transition hover:scale-105"
           aria-label="Open gift box"
         >
           <span
-            className={`absolute left-[-8px] top-[30px] z-20 h-[46px] w-[236px] rounded-xl bg-gradient-to-br from-pink-200 to-pink-400 shadow-xl transition-all duration-700 ${giftOpened
+            className={`absolute left-[-8px] top-[30px] z-20 h-[46px] w-[236px] rounded-xl bg-linear-to-br from-pink-200 to-pink-400 shadow-xl transition-all duration-700 ${giftOpened
                 ? "left-[-24px] top-0 -translate-x-8 -translate-y-8 -rotate-[28deg]"
                 : ""
               }`}
           />
-          <span className="absolute bottom-0 left-0 h-[150px] w-[220px] rounded-xl bg-gradient-to-br from-pink-300 to-pink-500 shadow-xl" />
-          <span className="absolute left-[96px] top-0 z-30 h-[220px] w-7 rounded-lg bg-amber-300" />
-          <span className="absolute left-0 top-[46px] z-30 h-6 w-[220px] rounded-lg bg-amber-300" />
+          <span className="absolute bottom-0 left-0 h-[150px] w-55 rounded-xl bg-linear-to-br from-pink-300 to-pink-500 shadow-xl" />
+          <span className="absolute left-[96px] top-0 z-30 h-55 w-7 rounded-lg bg-amber-300" />
+          <span className="absolute left-0 top-[46px] z-30 h-6 w-55 rounded-lg bg-amber-300" />
 
           <span className="absolute left-[68px] top-0 z-40 h-[52px] w-[84px]">
             <span className="absolute left-0 top-1 h-10 w-10 rotate-45 rounded-[50%_50%_50%_0] border-[10px] border-amber-300" />
@@ -304,7 +304,7 @@ export default function Page() {
           </p>
           <a
             href="#memories"
-            className="mt-5 inline-flex rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+            className="mt-5 inline-flex rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
           >
             ดูความทรงจำต่อ
           </a>
@@ -346,9 +346,9 @@ export default function Page() {
           ].map((card, index) => (
             <div
               key={index}
-              className={`w-[260px] rounded-2xl bg-white p-4 pb-5 shadow-xl ${card.rotate} transition duration-300 hover:-translate-y-1`}
+              className={`w-65 rounded-2xl bg-white p-4 pb-5 shadow-xl ${card.rotate} transition duration-300 hover:-translate-y-1`}
             >
-              <div className="flex h-[250px] items-center justify-center rounded-xl bg-gradient-to-br from-pink-100 via-rose-200 to-amber-100 text-6xl">
+              <div className="flex h-[250px] items-center justify-center rounded-xl bg-linear-to-br from-pink-100 via-rose-200 to-amber-100 text-6xl">
                 {card.emoji}
               </div>
               <p className="mt-3 text-center font-semibold text-rose-900">
@@ -367,21 +367,21 @@ export default function Page() {
           ลองกดปุ่มเพื่อเป่าเทียน แล้วอธิษฐานในใจได้เลย
         </p>
 
-        <div className="relative mt-8 h-[260px] w-[260px]">
-          <div className="absolute bottom-[25px] left-[20px] h-[18px] w-[220px] rounded-full bg-zinc-300" />
-          <div className="absolute bottom-[43px] left-[40px] h-[85px] w-[180px] rounded-xl bg-gradient-to-br from-pink-300 to-pink-500" />
-          <div className="absolute bottom-[38px] left-[40px] h-[14px] w-[180px] rounded-full bg-rose-50" />
-          <div className="absolute bottom-[120px] left-[62px] h-[60px] w-[136px] rounded-xl bg-gradient-to-br from-pink-100 to-pink-300" />
-          <div className="absolute bottom-[115px] left-[62px] h-[14px] w-[136px] rounded-full bg-rose-50" />
+        <div className="relative mt-8 h-65 w-65">
+          <div className="absolute bottom-6.25 left-5 h-4.5 w-55 rounded-full bg-zinc-300" />
+          <div className="absolute bottom-10.75 left-10 h-21.25 w-45 rounded-xl bg-linear-to-br from-pink-300 to-pink-500" />
+          <div className="absolute bottom-9.5 left-10 h-3.5 w-45 rounded-full bg-rose-50" />
+          <div className="absolute bottom-30 left-15.5 h-15 w-34 rounded-xl bg-linear-to-br from-pink-100 to-pink-300" />
+          <div className="absolute bottom-28.75 left-15.5 h-3.5 w-34 rounded-full bg-rose-50" />
 
           {[92, 124, 156].map((left, index) => (
             <div
               key={index}
-              className="absolute bottom-[178px] h-[44px] w-3 rounded-md bg-blue-300"
+              className="absolute bottom-44.5 h-11 w-3 rounded-md bg-blue-300"
               style={{ left }}
             >
               <div
-                className={`absolute -top-[18px] left-1/2 h-5 w-4 -translate-x-1/2 rounded-[50%_50%_50%_50%/60%_60%_40%_40%] bg-[radial-gradient(circle_at_50%_30%,#fff6b0,#ffb300_65%,#ff7a00_100%)] shadow-[0_0_18px_rgba(255,170,0,0.65)] transition ${blown ? "scale-0 opacity-0" : "animate-flicker"
+                className={`absolute -top-4.5 left-1/2 h-5 w-4 -translate-x-1/2 rounded-[50%_50%_50%_50%/60%_60%_40%_40%] bg-[radial-gradient(circle_at_50%_30%,#fff6b0,#ffb300_65%,#ff7a00_100%)] shadow-[0_0_18px_rgba(255,170,0,0.65)] transition ${blown ? "scale-0 opacity-0" : "animate-flicker"
                   }`}
               />
             </div>
@@ -391,7 +391,7 @@ export default function Page() {
         <button
           type="button"
           onClick={handleBlowCandles}
-          className="mt-6 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+          className="mt-6 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
         >
           {blown ? "จุดเทียนอีกครั้ง 🔥" : "เป่าเทียน 🕯️"}
         </button>
@@ -410,7 +410,7 @@ export default function Page() {
         <button
           type="button"
           onClick={handleStartBalloons}
-          className="mt-6 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+          className="mt-6 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
         >
           ปล่อยบอลลูน
         </button>
@@ -422,7 +422,7 @@ export default function Page() {
           {balloons.map((balloon) => (
             <div
               key={balloon.id}
-              className={`animate-rise absolute bottom-[-120px] flex h-[110px] w-[90px] items-center justify-center rounded-[50%_50%_45%_45%] bg-gradient-to-br ${balloonGradients[balloon.styleIndex]} px-2 text-center text-xs leading-5 text-white shadow-xl`}
+              className={`animate-rise absolute bottom-[-120px] flex h-[110px] w-[90px] items-center justify-center rounded-[50%_50%_45%_45%] bg-linear-to-br ${balloonGradients[balloon.styleIndex]} px-2 text-center text-xs leading-5 text-white shadow-xl`}
               style={{
                 left: balloon.left,
                 animationDuration: `${balloon.duration}s`,
@@ -471,7 +471,7 @@ export default function Page() {
             <button
               type="button"
               onClick={handleUnlock}
-              className="rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+              className="rounded-full bg-linear-to-r from-indigo-500 to-blue-600 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
             >
               ปลดล็อก
             </button>
@@ -498,7 +498,7 @@ export default function Page() {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          className="mt-6 inline-flex rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+          className="mt-6 inline-flex rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
         >
           กลับขึ้นบนสุด
         </a>
@@ -507,7 +507,7 @@ export default function Page() {
       <button
         type="button"
         onClick={toggleMusic}
-        className="fixed bottom-5 right-5 z-50 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-5 py-3 font-medium text-white shadow-xl transition hover:-translate-y-0.5"
+        className="fixed bottom-5 right-5 z-50 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-3 font-medium text-white shadow-xl transition hover:-translate-y-0.5"
       >
         {musicPlaying ? "⏸ ปิดเพลง" : "🎵 เปิดเพลง"}
       </button>
