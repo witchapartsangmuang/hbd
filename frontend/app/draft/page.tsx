@@ -7,6 +7,15 @@ import { birthGiftState } from "./utils/hooks";
 import { imgCard } from "./utils/data";
 import Cake from "./components/Cake";
 import DateOfBirth from "./components/DateOfBirth";
+import SlideInIcon from "./components/SlideInIcon";
+import PopTheBalloon from "./components/PopTheBalloon";
+import MemoryMatching from "./components/MemoryMatching";
+import CatchTheGift from "./components/CatchTheGift";
+import HeartCollector from "./components/HeartCollector";
+import FindTheHiddenGift from "./components/FindTheHiddenGift";
+import WhackAMoleBirthday from "./components/WhackAMoleBirthday";
+import ScratchCard from "./components/ScratchCard";
+import FlipPhotoCard from "./components/FlipPhotoCard.tsx";
 export default function Page() {
     const { isOpenGift, setisOpenGift, isPressing, setisPressing, isOpenDisplayImgArea, setisOpenDisplayImgArea } = birthGiftState()
     const sparkles = useMemo(
@@ -65,7 +74,31 @@ export default function Page() {
                     <Cake />
                 </div>
                 <div className="col-span-12 p-5">
-                    ปล่อยลูกโป่ง
+                    <SlideInIcon />
+                </div>
+                <div className="col-span-12 p-5">
+                    <PopTheBalloon />
+                </div>
+                <div className="col-span-12 p-5">
+                    <MemoryMatching />
+                </div>
+                <div className="col-span-12 p-5">
+                    <CatchTheGift />
+                </div>
+                <div className="col-span-12 p-5">
+                    <HeartCollector />
+                </div>
+                <div className="col-span-12 p-5">
+                    <FindTheHiddenGift />
+                </div>
+                <div className="col-span-12 p-5">
+                    <WhackAMoleBirthday />
+                </div>
+                <div className="col-span-12 p-5">
+                    <ScratchCard />
+                </div>
+                <div className="col-span-12 p-5">
+                    <FlipPhotoCard imageSrc={'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80'} />
                 </div>
                 <div className="col-span-12 p-5">
                     <DateOfBirth correctCode="181299"

@@ -23,9 +23,9 @@ export default function DateOfBirth({
     const joinedCode = useMemo(() => digits.join(""), [digits]);
     const isComplete = useMemo(() => digits.every((d) => d !== ""), [digits]);
 
-    useEffect(() => {
-        inputRefs.current[0]?.focus();
-    }, []);
+    // useEffect(() => {
+    //     inputRefs.current[0]?.focus();
+    // }, []);
 
     useEffect(() => {
         if (!isComplete) {
@@ -175,7 +175,7 @@ export default function DateOfBirth({
                     const showDivider = index === 1 || index === 3;
 
                     return (
-                        <div key={index} className="flex items-center gap-2">
+                        <div key={index} className="flex items-center gap-1">
                             <input
                                 ref={(el) => {
                                     inputRefs.current[index] = el;
@@ -189,7 +189,7 @@ export default function DateOfBirth({
                                 onChange={(e) => handleChange(index, e.target.value)}
                                 onKeyDown={(e) => handleKeyDown(index, e)}
                                 onPaste={handlePaste}
-                                className={`h-14 w-12 rounded-2xl border text-center text-xl font-bold outline-none transition placeholder:text-rose-300
+                                className={`h-12 w-10 rounded-2xl border text-center text-xl font-bold outline-none transition placeholder:text-rose-300
                                 ${success
                                         ? "border-emerald-400 bg-emerald-50 text-emerald-600 shadow-[0_0_0_4px_rgba(16,185,129,0.10)]"
                                         : error
