@@ -8,18 +8,15 @@ import { Dispatch, RefObject, SetStateAction } from "react";
 export function launchConfetti(confettiIdRef: RefObject<number>, setConfetti: Dispatch<SetStateAction<ConfettiPiece[]>>) {
     const centerX =
         typeof window !== "undefined" ? window.innerWidth / 2 : 600;
-    const centerY =
-        typeof window !== "undefined" ? window.innerHeight / 2 - 80 : 300;
     const pieces: ConfettiPiece[] = Array.from({ length: 120 }).map(() => {
         const angle = Math.random() * Math.PI * 2;
-        const distance = 120 + Math.random() * 260;
+        const distance = 150 + Math.random() * 260;
         const x = Math.cos(angle) * distance;
         const y = Math.sin(angle) * distance + 150;
 
         return {
             id: confettiIdRef.current++,
             left: centerX,
-            top: centerY,
             x,
             y,
             rotate: Math.random() * 720,

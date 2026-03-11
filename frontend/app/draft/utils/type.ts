@@ -9,7 +9,6 @@ export type BalloonItem = {
 export type ConfettiPiece = {
     id: number;
     left: number;
-    top: number;
     x: number;
     y: number;
     rotate: number;

@@ -1,3 +1,5 @@
+// BirthGift.tsx
+export const giftSurpriseText = "สุขสันต์วันเกิดน้าาา 🎉"
 export const imgCard = [{
 	imgPath: "/img/1.jpg",
 	caption: "ขอให้ปีนี้เป็นปีที่คุณเปล่งประกายที่สุด",
@@ -16,6 +18,12 @@ export const imgCard = [{
 	caption: "ขอให้ปีนี้เป็นปีที่คุณเปล่งประกายที่สุด",
 	rotateAngle: 3,
 }]
+// Cake.tsx
+export const cakeWishText = "✨ ขอให้พรวันเกิดนี้เป็นจริงทุกข้อเลยนะ"
+// ScratchCard.tsx
+export const brushRadius = 26
+export const revealThreshold = 50
+
 
 export const wishes = [
 	"ขอให้มีความสุขมาก ๆ",

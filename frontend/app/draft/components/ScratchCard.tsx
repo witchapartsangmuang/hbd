@@ -1,31 +1,39 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
+import { brushRadius, revealThreshold } from "../utils/data";
+import { confettiState, scratchCardState } from "../utils/hooks";
+import { launchConfetti } from "../utils/functions";
 type ScratchCardProps = {
   maxWidth?: number;
   aspectRatio?: number; // width / height
-  brushRadius?: number;
-  revealThreshold?: number; // 0 - 100
   onSuccess?: () => void;
+  nextStep: () => void;
 };
 
 export default function ScratchCard({
   maxWidth = 820,
   aspectRatio = 820 / 420,
-  brushRadius = 26,
-  revealThreshold = 45,
   onSuccess,
+  nextStep
 }: ScratchCardProps) {
+
+  const confettiIdRef = useRef(2)
+  const { confetti, setConfetti } = confettiState()
+
+
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const isDrawingRef = useRef(false);
   const revealedRef = useRef(false);
-
-  const [progress, setProgress] = useState(0);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const { progress, setprogress, isRevealed, setisRevealed } = scratchCardState()
   const [cardSize, setCardSize] = useState({ width: 320, height: 164 });
-
+  useEffect(() => {
+    if (progress === revealThreshold) {
+      launchConfetti(confettiIdRef, setConfetti);
+    }
+  }, [progress])
   const isMobile = cardSize.width < 640;
   const actualBrushRadius = isMobile
     ? Math.max(18, brushRadius * 0.78)
@@ -82,8 +90,8 @@ export default function ScratchCard({
       renderHeight / 2 + (isMobile ? 24 : 28)
     );
 
-    setProgress(0);
-    setIsRevealed(false);
+    setprogress(0);
+    setisRevealed(false);
     revealedRef.current = false;
   };
 
@@ -186,11 +194,11 @@ export default function ScratchCard({
     }
 
     const percent = Math.round((transparentCount / totalPixels) * 100);
-    setProgress(percent);
+    setprogress(percent);
 
     if (percent >= revealThreshold && !revealedRef.current) {
       revealedRef.current = true;
-      setIsRevealed(true);
+      setisRevealed(true);
       onSuccess?.();
 
       setTimeout(() => {
@@ -246,8 +254,18 @@ export default function ScratchCard({
   };
 
   return (
-    <section className="mx-auto w-full max-w-5xl rounded-[24px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-3 shadow-xl sm:rounded-[32px] sm:p-6">
-      <div className="mb-4 flex flex-col gap-4 rounded-[20px] bg-white/85 p-4 shadow-sm sm:mb-5 sm:rounded-[24px] sm:p-5 md:flex-row md:items-center md:justify-between">
+    <section
+      className="relative flex flex-col items-center min-h-screen p-5"
+    // className="w-full max-w-5xl rounded-[24px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-3 shadow-xl sm:rounded-[32px] sm:p-6"
+    >
+      <p className="mt-6 text-3xl font-bold text-pink-600">
+        ลองขูดการ์ดดูสิ!
+      </p>
+      <p className="mt-3 text-center text-rose-900/80">
+        ในการ์ดมีอะไรซ่อนอยู่น้าาา
+      </p>
+
+      {/* <div className="mb-4 flex flex-col gap-4 rounded-[20px] bg-white/85 p-4 shadow-sm sm:mb-5 sm:rounded-[24px] sm:p-5 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-rose-500 sm:text-sm">
             Birthday Mini Game
@@ -259,41 +277,61 @@ export default function ScratchCard({
             ลากเพื่อขูดการ์ดและเปิดข้อความเซอร์ไพรส์
           </p>
         </div>
-
-        <div className="grid w-full grid-cols-3 gap-2 md:flex md:w-auto md:flex-wrap md:items-center md:gap-3">
-          <div className="rounded-2xl bg-rose-100 px-3 py-3 text-center sm:px-4">
-            <p className="text-[10px] text-rose-700 sm:text-xs">Revealed</p>
-            <p className="text-xl font-bold text-rose-600 sm:text-2xl">
-              {progress}%
-            </p>
-          </div>
-
-          <div className="rounded-2xl bg-pink-100 px-3 py-3 text-center sm:px-4">
-            <p className="text-[10px] text-pink-700 sm:text-xs">Target</p>
-            <p className="text-xl font-bold text-pink-600 sm:text-2xl">
-              {revealThreshold}%
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleReset}
-            className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] active:scale-95"
-          >
-            รีเซ็ต
-          </button>
+      </div> */}
+      {/* <div className="grid w-full grid-cols-3 gap-2 md:flex md:w-auto md:flex-wrap md:items-center md:gap-3">
+        <div className="rounded-2xl bg-rose-100 px-3 py-3 text-center sm:px-4">
+          <p className="text-[10px] text-rose-700 sm:text-xs">Revealed</p>
+          <p className="text-xl font-bold text-rose-600 sm:text-2xl">
+            {progress}%
+          </p>
         </div>
+        <div className="rounded-2xl bg-pink-100 px-3 py-3 text-center sm:px-4">
+          <p className="text-[10px] text-pink-700 sm:text-xs">Target</p>
+          <p className="text-xl font-bold text-pink-600 sm:text-2xl">
+            {revealThreshold}%
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] active:scale-95"
+        >
+          รีเซ็ต
+        </button>
+      </div> */}
+      <div className="w-full z-1000 h-1">
+        {confetti.map((piece) => (
+          <span
+            key={piece.id}
+            className="confetti-piece pointer-events-none absolute z-9999 block rounded-sm"
+            style={
+              {
+                left: `${piece.left}px`,
+                width: `${piece.width}px`,
+                height: `${piece.height}px`,
+                backgroundColor: piece.color,
+                animationDuration: `${piece.duration}ms`,
+                ["--tx" as string]: `${piece.x}px`,
+                ["--ty" as string]: `${piece.y}px`,
+                ["--rot" as string]: `${piece.rotate}deg`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
       </div>
 
       <div
         ref={containerRef}
-        className="w-full rounded-[24px] border border-white/70 bg-white/70 p-2 shadow-2xl sm:rounded-[28px] sm:p-4"
+        className="w-full rounded-3xl border p-2 shadow-2xl border-white/70 bg-white/70"
       >
         <div
-          className="relative mx-auto overflow-hidden rounded-[24px] border border-rose-100 bg-gradient-to-br from-rose-100 via-pink-50 to-white sm:rounded-[28px]"
-          style={{ width: cardSize.width, height: cardSize.height }}
+          className="relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
+          style={{ width: "100%", height: cardSize.height }}
+        // style={{ width: cardSize.width, height: cardSize.height }}
         >
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
+
+          eee
+          {/* <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
             <div className="mb-3 text-4xl sm:mb-4 sm:text-6xl">🎂💖🎉</div>
 
             <h3 className="text-2xl font-bold text-rose-600 sm:text-3xl">
@@ -314,13 +352,12 @@ export default function ScratchCard({
                 เปิดสำเร็จแล้ว 🎁
               </div>
             )}
-          </div>
+          </div> */}
 
           <canvas
             ref={canvasRef}
-            className={`absolute inset-0 z-10 touch-none ${
-              isRevealed ? "pointer-events-none" : "cursor-crosshair"
-            }`}
+            className={`absolute inset-0 z-10 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
+              }`}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

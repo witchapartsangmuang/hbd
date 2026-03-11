@@ -1,10 +1,9 @@
-"use client";
-import ImgCard from "@/components/ImgCard";
+"use client"
 import { useEffect, useMemo, useRef, useState } from "react";
 import BirthGift from "./components/BirthGift";
 import TypingText from "./components/TypingText";
 import { birthGiftState } from "./utils/hooks";
-import { imgCard } from "./utils/data";
+
 import Cake from "./components/Cake";
 import DateOfBirth from "./components/DateOfBirth";
 import SlideInIcon from "./components/SlideInIcon";
@@ -17,19 +16,18 @@ import WhackAMoleBirthday from "./components/WhackAMoleBirthday";
 import ScratchCard from "./components/ScratchCard";
 import FlipPhotoCard from "./components/FlipPhotoCard.tsx";
 export default function Page() {
-    const { isOpenGift, setisOpenGift, isPressing, setisPressing, isOpenDisplayImgArea, setisOpenDisplayImgArea } = birthGiftState()
+    const [stepOne, setstepOne] = useState<boolean>(false)
+    const [stepTwo, setstepTwo] = useState<boolean>(false)
+    const [stepThree, setstepThree] = useState<boolean>(false)
     const sparkles = useMemo(
         () => [
-            { emoji: "✨", className: "top-[8%] left-[10%] animate-float" },
+            { emoji: "✨", className: "top-[15%] left-[10%] animate-float" },
             { emoji: "🎈", className: "top-[18%] right-[12%] animate-float-delayed" },
             { emoji: "🎉", className: "top-[52%] left-[6%] animate-float-slow" },
-            { emoji: "🎂", className: "bottom-[18%] right-[7%] animate-float" },
+            { emoji: "🎂", className: "bottom-[45%] right-[8%] animate-float" },
         ],
         []
     );
-    useEffect(() => {
-        console.log("isOpenGift", isOpenGift);
-    }, [isOpenGift])
     return (
         <>
             {sparkles.map((item, index) => (
@@ -41,75 +39,54 @@ export default function Page() {
                 </div>
             ))}
             <div className="grid grid-cols-12 bg-[#FFFAFD]">
-                <div className="col-span-12 p-5">
-                    <BirthGift
-                        isOpenGift={isOpenGift}
-                        setisOpenGift={setisOpenGift}
-                        setisOpenDisplayImgArea={setisOpenDisplayImgArea} />
-                    {
-                        isOpenDisplayImgArea &&
-                        <div className="grid grid-cols-12">
-                            {imgCard.map((img, i) => (
-                                <div
-                                    key={`${img.imgPath}-${i}`}
-                                    className={`p-5 col-span-12 md:col-span-6 lg:col-span-3 transition-all duration-1000 ease-out ${isOpenGift
-                                        ? "translate-y-0 scale-100 opacity-100"
-                                        : "-translate-y-60 scale-75 opacity-0 pointer-events-none"
-                                        }`}
-                                    style={{
-                                        transitionDelay: `${i * 180}ms`,
-                                    }}
-                                >
-                                    <ImgCard
-                                        imgPath={img.imgPath}
-                                        rotateAngle={img.rotateAngle}
-                                        caption={img.caption}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    }
+                {/* <div className="col-span-12">
+                    <BirthGift nextStep={() => { setstepOne(true) }} />
                 </div>
-                <div className="col-span-12 p-5">
-                    <Cake />
+                <div className={`col-span-12 ${stepOne ? "block" : "hidden"}`}>
+                    <Cake nextStep={() => { setstepTwo(true) }} />
+                </div> */}
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <ScratchCard nextStep={() => { setstepThree(true) }} />
                 </div>
-                <div className="col-span-12 p-5">
+
+                {/* <div className={`col-span-12 ${stepTwo ? "block" :"hidden"}`}>
                     <SlideInIcon />
-                </div>
-                <div className="col-span-12 p-5">
+                </div> */}
+
+
+                {/* <div className="col-span-12">
                     <PopTheBalloon />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <MemoryMatching />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <CatchTheGift />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <HeartCollector />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <FindTheHiddenGift />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <WhackAMoleBirthday />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <ScratchCard />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <FlipPhotoCard imageSrc={'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80'} />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <DateOfBirth correctCode="181299"
                         onSuccess={() => {
                             console.log("unlock success");
-                            // set state เปิดรูปเพิ่ม / เปิดคำอวยพรเพิ่ม / เปิด section ลับ
                         }} />
                 </div>
-                <div className="col-span-12 p-5">
+                <div className="col-span-12">
                     <TypingText />
-                </div>
+                </div> */}
             </div>
 
         </>

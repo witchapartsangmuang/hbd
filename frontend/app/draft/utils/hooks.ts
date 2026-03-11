@@ -1,24 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
-export type BalloonItem = {
-    id: number;
-    text: string;
-    left: number;
-    duration: number;
-    styleIndex: number;
-};
-export type ConfettiPiece = {
-    id: number;
-    left: number;
-    top: number;
-    x: number;
-    y: number;
-    rotate: number;
-    color: string;
-    width: number;
-    height: number;
-    duration: number;
-};
+import { ConfettiPiece } from "./type";
 export function confettiState() {
     const [confetti, setConfetti] = useState<ConfettiPiece[]>([])
     return {
@@ -26,12 +7,13 @@ export function confettiState() {
         setConfetti
     }
 }
-
+// BirthGift.tsx
 export function birthGiftState() {
     const [isOpenGift, setisOpenGift] = useState<boolean>(false);
     const [isPressing, setisPressing] = useState<boolean>(false)
     const [isOpenDisplayImgArea, setisOpenDisplayImgArea] = useState<boolean>(false);
     const [isShaking, setisShaking] = useState<boolean>(false);
+    const [showSurpriseText, setshowSurpriseText] = useState<boolean>(false);
     return {
         isOpenGift,
         setisOpenGift,
@@ -40,10 +22,12 @@ export function birthGiftState() {
         isOpenDisplayImgArea,
         setisOpenDisplayImgArea,
         isShaking,
-        setisShaking
+        setisShaking,
+        showSurpriseText,
+        setshowSurpriseText
     };
 }
-
+// Cake.tsx
 export function cakeState() {
     const [blown, setblown] = useState<boolean>(false);
     const [wishText, setwishText] = useState<string>("");
@@ -52,6 +36,17 @@ export function cakeState() {
         setblown,
         wishText,
         setwishText
+    }
+}
+// ScratchCard.tsx
+export function scratchCardState() {
+    const [progress, setprogress] = useState(0);
+    const [isRevealed, setisRevealed] = useState(false);
+    return {
+        progress,
+        setprogress,
+        isRevealed,
+        setisRevealed
     }
 }
 
