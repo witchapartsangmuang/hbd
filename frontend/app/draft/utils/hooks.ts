@@ -42,11 +42,17 @@ export function cakeState() {
 export function scratchCardState() {
     const [progress, setprogress] = useState(0);
     const [isRevealed, setisRevealed] = useState(false);
+    const [cardSize, setCardSize] = useState({ width: window.innerWidth, height: window.innerHeight * 0.4 });
+    const [showVideo, setshowVideo] = useState(false);
     return {
         progress,
         setprogress,
         isRevealed,
-        setisRevealed
+        setisRevealed,
+        cardSize,
+        setCardSize,
+        showVideo,
+        setshowVideo
     }
 }
 

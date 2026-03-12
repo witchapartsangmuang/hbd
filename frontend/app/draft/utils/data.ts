@@ -20,9 +20,11 @@ export const imgCard = [{
 }]
 // Cake.tsx
 export const cakeWishText = "✨ ขอให้พรวันเกิดนี้เป็นจริงทุกข้อเลยนะ"
-// ScratchCard.tsx
-export const brushRadius = 26
+// ScratchCardImg.tsx + ScratchCardVdo.tsx
+export const brushRadius = 56
 export const revealThreshold = 50
+
+
 
 
 export const wishes = [

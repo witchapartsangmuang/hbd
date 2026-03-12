@@ -1,7 +1,6 @@
 'use client'
-import { confettiState } from "./hooks";
 import { ConfettiPiece } from "./type";
-import { wishes, typewriterMessage, balloonGradients, confettiColors } from "./data";
+import { confettiColors } from "./data";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
 

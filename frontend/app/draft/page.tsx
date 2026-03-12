@@ -13,8 +13,9 @@ import CatchTheGift from "./components/CatchTheGift";
 import HeartCollector from "./components/HeartCollector";
 import FindTheHiddenGift from "./components/FindTheHiddenGift";
 import WhackAMoleBirthday from "./components/WhackAMoleBirthday";
-import ScratchCard from "./components/ScratchCard";
+import ScratchCardImg from "./components/ScratchCardImg";
 import FlipPhotoCard from "./components/FlipPhotoCard.tsx";
+import ScratchCardVdo from "./components/ScratchCardVdo";
 export default function Page() {
     const [stepOne, setstepOne] = useState<boolean>(false)
     const [stepTwo, setstepTwo] = useState<boolean>(false)
@@ -39,26 +40,43 @@ export default function Page() {
                 </div>
             ))}
             <div className="grid grid-cols-12 bg-[#FFFAFD]">
+                {/* completed */}
                 {/* <div className="col-span-12">
                     <BirthGift nextStep={() => { setstepOne(true) }} />
                 </div>
                 <div className={`col-span-12 ${stepOne ? "block" : "hidden"}`}>
                     <Cake nextStep={() => { setstepTwo(true) }} />
-                </div> */}
+                </div>
                 <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
-                    <ScratchCard nextStep={() => { setstepThree(true) }} />
+                    <ScratchCardImg nextStep={() => { setstepThree(true) }} />
+                </div>
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <ScratchCardVdo nextStep={() => { setstepThree(true) }} />
+                </div> */}
+
+                <div className="col-span-12">
+                    <TypingText />
                 </div>
 
-                {/* <div className={`col-span-12 ${stepTwo ? "block" :"hidden"}`}>
-                    <SlideInIcon />
-                </div> */}
-
-
-                {/* <div className="col-span-12">
+                <div className="col-span-12">
                     <PopTheBalloon />
                 </div>
                 <div className="col-span-12">
-                    <MemoryMatching />
+                    <FlipPhotoCard imageSrc={'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80'} />
+                </div>
+                <div className="col-span-12">
+                    <DateOfBirth correctCode="181299"
+                        onSuccess={() => {
+                            console.log("unlock success");
+                        }} />
+                </div>
+
+
+                {/* <div className={`col-span-12 ${stepTwo ? "block" : "hidden"}`}>
+                    <SlideInIcon />
+                </div>
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <MemoryMatching nextStep={() => { setstepThree(true) }} />
                 </div>
                 <div className="col-span-12">
                     <CatchTheGift />
@@ -71,22 +89,9 @@ export default function Page() {
                 </div>
                 <div className="col-span-12">
                     <WhackAMoleBirthday />
-                </div>
-                <div className="col-span-12">
-                    <ScratchCard />
-                </div>
-                <div className="col-span-12">
-                    <FlipPhotoCard imageSrc={'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80'} />
-                </div>
-                <div className="col-span-12">
-                    <DateOfBirth correctCode="181299"
-                        onSuccess={() => {
-                            console.log("unlock success");
-                        }} />
-                </div>
-                <div className="col-span-12">
-                    <TypingText />
                 </div> */}
+
+
             </div>
 
         </>

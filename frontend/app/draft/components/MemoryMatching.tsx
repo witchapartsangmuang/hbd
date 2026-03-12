@@ -35,7 +35,7 @@ function createCards(): CardItem[] {
   );
 }
 
-export default function MemoryMatching() {
+export default function MemoryMatching({ nextStep }: { nextStep: () => void }) {
   const [cards, setCards] = useState<CardItem[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -200,20 +200,18 @@ export default function MemoryMatching() {
               className="group perspective h-28 w-full sm:h-32"
             >
               <div
-                className={`relative h-full w-full rounded-3xl transition-transform duration-500 [transform-style:preserve-3d] ${
-                  showFront ? "[transform:rotateY(180deg)]" : ""
-                }`}
+                className={`relative h-full w-full rounded-3xl transition-transform duration-500 [transform-style:preserve-3d] ${showFront ? "[transform:rotateY(180deg)]" : ""
+                  }`}
               >
                 <div className="absolute inset-0 flex items-center justify-center rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-400 to-pink-500 text-3xl text-white shadow-lg [backface-visibility:hidden]">
                   🎀
                 </div>
 
                 <div
-                  className={`absolute inset-0 flex items-center justify-center rounded-3xl border text-4xl shadow-lg [backface-visibility:hidden] [transform:rotateY(180deg)] ${
-                    card.isMatched
-                      ? "border-emerald-200 bg-emerald-50"
-                      : "border-white/80 bg-white"
-                  }`}
+                  className={`absolute inset-0 flex items-center justify-center rounded-3xl border text-4xl shadow-lg [backface-visibility:hidden] [transform:rotateY(180deg)] ${card.isMatched
+                    ? "border-emerald-200 bg-emerald-50"
+                    : "border-white/80 bg-white"
+                    }`}
                 >
                   {card.emoji}
                 </div>
