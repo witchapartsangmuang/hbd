@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Message Surprise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .glass {
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      transition: all 0.8s ease;
+    }
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .heart {
+      position: absolute;
+      bottom: -24px;
+      opacity: 0;
+      pointer-events: none;
+      animation: floatHeart linear forwards;
+    }
+    @keyframes floatHeart {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-220px) translateX(20px) scale(1.2) rotate(12deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50 text-slate-800 overflow-x-hidden">
+  <div id="heartsLayer" class="fixed inset-0 pointer-events-none overflow-hidden"></div>
+
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center justify-center px-6 py-16">
+    <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-10 items-center">
+      <div class="fade-up">
+        <div class="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white/70 glass px-4 py-2 text-sm text-rose-500 shadow-sm">
+          <span>🎥</span>
+          <span>Special Video Message</span>
+        </div>
+
+        <h1 class="mt-6 text-4xl md:text-6xl font-bold leading-tight text-rose-500">
+          ข้อความพิเศษ
+          <br />
+          ที่อยากให้คุณดูจนจบ
+        </h1>
+
+        <p class="mt-5 text-base md:text-lg leading-8 text-slate-600">
+          ตัวอย่างนี้เป็นหน้า Video Message สำหรับเว็บเซอร์ไพรส์วันเกิดหรือวันวาเลนไทน์
+          มีปุ่มเปิดวิดีโอ, บรรยากาศหวาน ๆ, ข้อความประกอบ และปุ่มไปต่อหน้าเซอร์ไพรส์ถัดไป
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <button id="playMainBtn"
+            class="inline-flex items-center gap-2 rounded-full bg-rose-500 px-6 py-3 text-white font-semibold shadow-lg shadow-rose-200 transition hover:-translate-y-0.5 hover:bg-rose-600">
+            <span>▶</span>
+            <span>เปิดวิดีโอ</span>
+          </button>
+
+          <a href="#message"
+            class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-rose-500 font-semibold shadow transition hover:-translate-y-0.5">
+            <span>💌</span>
+            <span>ดูข้อความด้านล่าง</span>
+          </a>
+        </div>
+
+        <div class="mt-8 grid sm:grid-cols-3 gap-4">
+          <div class="rounded-2xl bg-white/80 glass border border-white/60 p-4 shadow">
+            <div class="text-2xl">🎂</div>
+            <p class="mt-2 text-sm font-semibold text-slate-700">Birthday Version</p>
+            <p class="mt-1 text-sm text-slate-500">ใส่คลิปอวยพรวันเกิดสั้น ๆ</p>
+          </div>
+          <div class="rounded-2xl bg-white/80 glass border border-white/60 p-4 shadow">
+            <div class="text-2xl">❤️</div>
+            <p class="mt-2 text-sm font-semibold text-slate-700">Valentine Version</p>
+            <p class="mt-1 text-sm text-slate-500">ใส่คลิปบอกรักหรือรวมภาพคู่</p>
+          </div>
+          <div class="rounded-2xl bg-white/80 glass border border-white/60 p-4 shadow">
+            <div class="text-2xl">✨</div>
+            <p class="mt-2 text-sm font-semibold text-slate-700">Secret Ending</p>
+            <p class="mt-1 text-sm text-slate-500">ปิดท้ายด้วยเซอร์ไพรส์อีกชั้น</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Card -->
+      <div class="fade-up">
+        <div class="rounded-[32px] bg-white/80 glass border border-white/70 shadow-2xl shadow-rose-100 p-4 md:p-5">
+          <div class="relative rounded-[24px] overflow-hidden bg-slate-900 aspect-video">
+            <video
+              id="mainVideo"
+              class="w-full h-full object-cover"
+              poster="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1400&q=80"
+              preload="metadata"
+            >
+              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+              เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+            </video>
+
+            <!-- Overlay -->
+            <div id="videoOverlay" class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/20 flex items-center justify-center">
+              <button id="overlayPlayBtn"
+                class="group w-20 h-20 rounded-full bg-white/90 text-rose-500 text-3xl shadow-2xl transition hover:scale-105 active:scale-95">
+                ▶
+              </button>
+
+              <div class="absolute left-5 right-5 bottom-5">
+                <div class="rounded-2xl bg-black/35 px-4 py-3 text-white">
+                  <p class="text-xs uppercase tracking-[0.25em] text-white/70">Video Message</p>
+                  <h2 class="mt-1 text-xl md:text-2xl font-bold">สำหรับคนพิเศษของฉัน</h2>
+                  <p class="mt-1 text-sm text-white/85">กดเล่นเพื่อดูข้อความที่ตั้งใจทำไว้ให้โดยเฉพาะ</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="mt-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+            <button id="togglePlayBtn"
+              class="rounded-full bg-rose-500 px-5 py-3 text-white font-semibold shadow transition hover:bg-rose-600">
+              เล่นวิดีโอ
+            </button>
+
+            <button id="restartBtn"
+              class="rounded-full bg-white px-5 py-3 text-rose-500 font-semibold shadow transition hover:bg-rose-50">
+              เล่นใหม่
+            </button>
+
+            <div class="flex-1"></div>
+
+            <div class="flex items-center gap-3 bg-white rounded-full px-4 py-3 shadow">
+              <span class="text-sm text-slate-500">เสียง</span>
+              <input id="volumeSlider" type="range" min="0" max="1" step="0.05" value="0.8" class="w-32 accent-rose-500" />
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-500">
+            ตัวอย่างนี้ใช้วิดีโอ demo placeholder สามารถเปลี่ยนเป็นไฟล์ของคุณเองได้ทันที
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Message Section -->
+  <section id="message" class="px-6 pb-20">
+    <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-8">
+      <div class="fade-up rounded-[28px] bg-white/80 glass border border-white/60 p-8 shadow-xl shadow-rose-100">
+        <div class="text-4xl">💌</div>
+        <h3 class="mt-4 text-3xl font-bold text-slate-800">ข้อความใต้คลิป</h3>
+        <p class="mt-5 text-slate-600 leading-8">
+          ไม่ว่าคลิปนี้จะยาวหรือสั้น สิ่งที่อยากให้รู้ก็คือ
+          คุณเป็นหนึ่งในเหตุผลที่ทำให้หลายวันธรรมดากลายเป็นวันที่น่าจดจำ
+          และไม่ว่าจะเป็นวันเกิดหรือวันวาเลนไทน์ ฉันก็อยากให้คุณยิ้มได้ทุกครั้งที่เปิดหน้านี้ขึ้นมา
+        </p>
+        <p class="mt-4 text-slate-600 leading-8">
+          คุณสามารถใส่ข้อความเล่าเรื่อง, ขอบคุณ, บอกรัก หรือเล่า moment สำคัญ
+          ไว้ใต้คลิปเพื่อเพิ่มอารมณ์ร่วมได้อีกมาก
+        </p>
+      </div>
+
+      <div class="fade-up rounded-[28px] bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 p-[1px] shadow-2xl shadow-rose-200">
+        <div class="h-full rounded-[28px] bg-white p-8">
+          <div class="text-4xl">🎁</div>
+          <h3 class="mt-4 text-3xl font-bold text-slate-800">ต่อยอดได้อีก</h3>
+
+          <div class="mt-6 space-y-4">
+            <div class="rounded-2xl bg-rose-50 p-4">
+              <p class="font-semibold text-rose-500">1. ปุ่มไปหน้า Secret Letter</p>
+              <p class="mt-1 text-sm text-slate-600">ดูคลิปจบแล้วค่อยปลดล็อกจดหมายพิเศษ</p>
+            </div>
+
+            <div class="rounded-2xl bg-rose-50 p-4">
+              <p class="font-semibold text-rose-500">2. ปลดล็อกหลังดูจบ</p>
+              <p class="mt-1 text-sm text-slate-600">เมื่อวิดีโอจบให้แสดงปุ่มเซอร์ไพรส์อัตโนมัติ</p>
+            </div>
+
+            <div class="rounded-2xl bg-rose-50 p-4">
+              <p class="font-semibold text-rose-500">3. ใส่รูปคู่หรือคลิปจริง</p>
+              <p class="mt-1 text-sm text-slate-600">เปลี่ยน placeholder เป็นไฟล์จากเครื่องของคุณ</p>
+            </div>
+          </div>
+
+          <button id="secretBtn"
+            class="mt-8 hidden w-full rounded-2xl bg-rose-500 px-6 py-4 text-white font-semibold shadow-lg shadow-rose-200 transition hover:bg-rose-600">
+            เปิดเซอร์ไพรส์ถัดไป ✨
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div id="secretModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 px-5">
+    <div class="relative w-full max-w-lg rounded-[32px] bg-white p-8 text-center shadow-2xl">
+      <button id="closeModal"
+        class="absolute right-4 top-4 w-10 h-10 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200">
+        ✕
+      </button>
+
+      <div class="text-5xl">🎉</div>
+      <h3 class="mt-4 text-3xl font-bold text-rose-500">Surprise!</h3>
+      <p class="mt-4 text-slate-600 leading-8">
+        ตัวอย่างนี้คือปลายทางหลังดูวิดีโอจบ
+        คุณสามารถเปลี่ยนส่วนนี้เป็นหน้าใหม่, รูปพิเศษ, จดหมาย, หรือปุ่มดาวน์โหลดความทรงจำได้
+      </p>
+
+      <div class="mt-6 rounded-2xl bg-rose-50 p-5 text-rose-500 font-medium">
+        You are my favorite part of every memory ❤️
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const revealEls = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.15 });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    const video = document.getElementById('mainVideo');
+    const overlay = document.getElementById('videoOverlay');
+    const playMainBtn = document.getElementById('playMainBtn');
+    const overlayPlayBtn = document.getElementById('overlayPlayBtn');
+    const togglePlayBtn = document.getElementById('togglePlayBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const secretBtn = document.getElementById('secretBtn');
+    const secretModal = document.getElementById('secretModal');
+    const closeModal = document.getElementById('closeModal');
+    const secretTriggerBtn = document.getElementById('secretBtn');
+    const heartsLayer = document.getElementById('heartsLayer');
+
+    video.volume = 0.8;
+
+    function playVideo() {
+      video.play();
+      overlay.classList.add('hidden');
+      togglePlayBtn.textContent = 'หยุดวิดีโอ';
+    }
+
+    function pauseVideo() {
+      video.pause();
+      togglePlayBtn.textContent = 'เล่นวิดีโอ';
+    }
+
+    function toggleVideo() {
+      if (video.paused) {
+        playVideo();
+      } else {
+        pauseVideo();
+      }
+    }
+
+    playMainBtn.addEventListener('click', () => {
+      document.getElementById('mainVideo').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => playVideo(), 300);
+    });
+
+    overlayPlayBtn.addEventListener('click', playVideo);
+    togglePlayBtn.addEventListener('click', toggleVideo);
+
+    restartBtn.addEventListener('click', () => {
+      video.currentTime = 0;
+      playVideo();
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+      video.volume = Number(e.target.value);
+    });
+
+    video.addEventListener('play', () => {
+      overlay.classList.add('hidden');
+      togglePlayBtn.textContent = 'หยุดวิดีโอ';
+    });
+
+    video.addEventListener('pause', () => {
+      if (video.currentTime < video.duration) {
+        togglePlayBtn.textContent = 'เล่นวิดีโอ';
+      }
+    });
+
+    video.addEventListener('ended', () => {
+      togglePlayBtn.textContent = 'เล่นวิดีโอ';
+      secretBtn.classList.remove('hidden');
+      overlay.classList.remove('hidden');
+    });
+
+    secretTriggerBtn.addEventListener('click', () => {
+      secretModal.classList.remove('hidden');
+      secretModal.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+      secretModal.classList.add('hidden');
+      secretModal.classList.remove('flex');
+    });
+
+    secretModal.addEventListener('click', (e) => {
+      if (e.target === secretModal) {
+        secretModal.classList.add('hidden');
+        secretModal.classList.remove('flex');
+      }
+    });
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = Math.random() > 0.5 ? '❤' : '💖';
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.fontSize = (14 + Math.random() * 18) + 'px';
+      heart.style.animationDuration = (3 + Math.random() * 2.5) + 's';
+      heartsLayer.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }
+
+    setInterval(createHeart, 650);
+  </script>
+</body>
+</html>

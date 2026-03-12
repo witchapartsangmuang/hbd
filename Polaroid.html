@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polaroid Cards Pop Out</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .gift-box {
+      animation: floatBox 3s ease-in-out infinite;
+    }
+
+    @keyframes floatBox {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .lid-open {
+      animation: openLid 0.8s cubic-bezier(.22,1,.36,1) forwards;
+      transform-origin: center bottom;
+    }
+
+    @keyframes openLid {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-34px) rotate(-14deg); }
+    }
+
+    .box-bounce {
+      animation: boxBounce 0.45s ease;
+    }
+
+    @keyframes boxBounce {
+      0% { transform: scale(1); }
+      35% { transform: scale(0.97); }
+      70% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .polaroid {
+      opacity: 0;
+      transform: translate(-50%, 80px) scale(0.75) rotate(0deg);
+      transition: transform 0.9s cubic-bezier(.22,1,.36,1), opacity 0.45s ease;
+      will-change: transform, opacity;
+    }
+
+    .polaroid.show {
+      opacity: 1;
+    }
+
+    .polaroid-1.show {
+      transform: translate(-180px, -125px) rotate(-16deg) scale(1);
+    }
+
+    .polaroid-2.show {
+      transform: translate(-30px, -170px) rotate(8deg) scale(1.03);
+    }
+
+    .polaroid-3.show {
+      transform: translate(145px, -120px) rotate(18deg) scale(1);
+    }
+
+    .polaroid-4.show {
+      transform: translate(30px, -25px) rotate(-8deg) scale(0.98);
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 18px;
+      border-radius: 999px;
+      opacity: 0;
+      animation: confettiFly 1.5s ease-out forwards;
+    }
+
+    @keyframes confettiFly {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(0.8);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      animation: twinkle 1.2s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { transform: scale(0.7); opacity: 0.35; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    .caption-enter {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: all 0.6s ease;
+    }
+
+    .caption-enter.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-50 to-fuchsia-100 text-slate-800">
+  <main class="min-h-screen flex items-center justify-center px-6 py-14">
+    <section class="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left content -->
+      <div class="text-center lg:text-left">
+        <div class="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white/80 px-4 py-2 text-sm text-rose-500 shadow-sm">
+          <span>📸</span>
+          <span>Polaroid Surprise Demo</span>
+        </div>
+
+        <h1 class="mt-6 text-4xl md:text-6xl font-bold leading-tight text-rose-500">
+          การ์ด Polaroid
+          <br />
+          เด้งออกมาจากกล่อง
+        </h1>
+
+        <p class="mt-5 text-base md:text-lg leading-8 text-slate-600 max-w-xl mx-auto lg:mx-0">
+          ตัวอย่างนี้เหมาะกับเว็บเซอร์ไพรส์วันเกิดหรือวันวาเลนไทน์
+          เมื่อกดเปิดกล่อง รูป Polaroid จะเด้งออกมาทีละใบแบบ scrapbook พร้อมข้อความน่ารักด้านล่าง
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
+          <button id="openBtn"
+            class="rounded-full bg-rose-500 px-6 py-3 text-white font-semibold shadow-lg shadow-rose-200 transition hover:-translate-y-0.5 hover:bg-rose-600">
+            เปิดกล่องของขวัญ 🎁
+          </button>
+
+          <button id="resetBtn"
+            class="rounded-full bg-white px-6 py-3 text-rose-500 font-semibold shadow transition hover:-translate-y-0.5 hover:bg-rose-50">
+            เล่นใหม่
+          </button>
+        </div>
+
+        <div id="captionBox"
+          class="caption-enter mt-8 rounded-[28px] bg-white/80 p-6 shadow-xl shadow-rose-100 max-w-xl mx-auto lg:mx-0">
+          <p class="text-sm uppercase tracking-[0.25em] text-rose-400">Memory Note</p>
+          <h2 class="mt-3 text-2xl font-bold text-slate-800">รูปเล็ก ๆ แต่ความรู้สึกไม่เล็กเลย</h2>
+          <p class="mt-3 text-slate-600 leading-8">
+            ทุกใบสามารถเปลี่ยนเป็นรูปจริง, วันสำคัญ, หรือข้อความเฉพาะของคุณได้
+            เพื่อให้กลายเป็นหน้าเปิดเซอร์ไพรส์ที่น่ารักมากขึ้นอีก
+          </p>
+        </div>
+      </div>
+
+      <!-- Right visual -->
+      <div class="relative flex items-center justify-center min-h-[620px]">
+        <!-- sparkles -->
+        <div class="sparkle text-2xl text-rose-300 left-[10%] top-[10%]">✦</div>
+        <div class="sparkle text-lg text-pink-300 right-[14%] top-[12%]" style="animation-delay:.3s">✨</div>
+        <div class="sparkle text-xl text-fuchsia-300 left-[18%] bottom-[18%]" style="animation-delay:.6s">✦</div>
+        <div class="sparkle text-lg text-rose-400 right-[10%] bottom-[12%]" style="animation-delay:.9s">✨</div>
+
+        <div id="stage" class="relative w-[360px] h-[520px]">
+          <!-- polaroids -->
+          <div class="polaroid polaroid-1 absolute left-1/2 top-1/2 z-20">
+            <div class="w-[150px] bg-white rounded-md shadow-2xl p-3">
+              <img
+                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80"
+                alt="memory 1"
+                class="w-full h-[150px] object-cover rounded-sm"
+              />
+              <div class="pt-3 pb-1 text-center">
+                <p class="text-sm font-semibold text-slate-700">First Smile</p>
+                <p class="text-xs text-slate-500 mt-1">รอยยิ้มแรกที่จำได้</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="polaroid polaroid-2 absolute left-1/2 top-1/2 z-30">
+            <div class="w-[158px] bg-white rounded-md shadow-2xl p-3">
+              <img
+                src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=900&q=80"
+                alt="memory 2"
+                class="w-full h-[158px] object-cover rounded-sm"
+              />
+              <div class="pt-3 pb-1 text-center">
+                <p class="text-sm font-semibold text-slate-700">Coffee Date</p>
+                <p class="text-xs text-slate-500 mt-1">คาเฟ่เล็ก ๆ วันนั้น</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="polaroid polaroid-3 absolute left-1/2 top-1/2 z-10">
+            <div class="w-[150px] bg-white rounded-md shadow-2xl p-3">
+              <img
+                src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
+                alt="memory 3"
+                class="w-full h-[150px] object-cover rounded-sm"
+              />
+              <div class="pt-3 pb-1 text-center">
+                <p class="text-sm font-semibold text-slate-700">Little Trip</p>
+                <p class="text-xs text-slate-500 mt-1">ทริปสั้น ๆ แต่พิเศษ</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="polaroid polaroid-4 absolute left-1/2 top-1/2 z-40">
+            <div class="w-[145px] bg-white rounded-md shadow-2xl p-3">
+              <img
+                src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=900&q=80"
+                alt="memory 4"
+                class="w-full h-[145px] object-cover rounded-sm"
+              />
+              <div class="pt-3 pb-1 text-center">
+                <p class="text-sm font-semibold text-slate-700">Special Day</p>
+                <p class="text-xs text-slate-500 mt-1">วันสำคัญของคุณ</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- gift box -->
+          <div class="absolute left-1/2 bottom-0 -translate-x-1/2 z-50">
+            <div class="gift-box relative">
+              <!-- lid -->
+              <div id="giftLid" class="absolute left-1/2 -translate-x-1/2 top-0 z-20">
+                <div class="relative w-[240px] h-[58px] rounded-2xl bg-gradient-to-b from-rose-400 to-rose-500 shadow-xl">
+                  <div class="absolute left-1/2 top-0 -translate-x-1/2 w-10 h-[58px] bg-rose-200/90"></div>
+                  <div class="absolute left-[calc(50%-28px)] -top-6 w-14 h-8 border-[10px] border-rose-200 rounded-full border-b-0 rotate-[-22deg]"></div>
+                  <div class="absolute right-[calc(50%-28px)] -top-6 w-14 h-8 border-[10px] border-rose-200 rounded-full border-b-0 rotate-[22deg]"></div>
+                </div>
+              </div>
+
+              <!-- base -->
+              <div id="giftBase" class="relative mt-10 w-[220px] h-[170px] rounded-[28px] bg-gradient-to-b from-rose-500 to-pink-600 shadow-2xl">
+                <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-10 bg-rose-200/95"></div>
+                <div class="absolute top-7 left-0 right-0 h-8 bg-rose-300/85"></div>
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[190px] h-8 rounded-full bg-rose-300/25 blur-xl"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- confetti layer -->
+          <div id="confettiLayer" class="absolute inset-0 pointer-events-none z-[60]"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const openBtn = document.getElementById("openBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const giftLid = document.getElementById("giftLid");
+    const giftBase = document.getElementById("giftBase");
+    const polaroids = document.querySelectorAll(".polaroid");
+    const confettiLayer = document.getElementById("confettiLayer");
+    const captionBox = document.getElementById("captionBox");
+
+    let opened = false;
+    let timeouts = [];
+
+    function makeConfettiBurst() {
+      confettiLayer.innerHTML = "";
+      const colors = ["#fb7185", "#f472b6", "#f9a8d4", "#fda4af", "#c084fc", "#f43f5e"];
+
+      for (let i = 0; i < 32; i++) {
+        const dot = document.createElement("span");
+        dot.className = "confetti";
+        dot.style.left = "50%";
+        dot.style.top = "62%";
+        dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+        dot.style.setProperty("--x", `${(Math.random() - 0.5) * 360}px`);
+        dot.style.setProperty("--y", `${-80 - Math.random() * 220}px`);
+        dot.style.setProperty("--r", `${Math.random() * 720 - 360}deg`);
+        dot.style.width = `${8 + Math.random() * 6}px`;
+        dot.style.height = `${14 + Math.random() * 10}px`;
+        confettiLayer.appendChild(dot);
+      }
+    }
+
+    function openGift() {
+      if (opened) return;
+      opened = true;
+
+      giftLid.classList.add("lid-open");
+      giftBase.classList.add("box-bounce");
+      makeConfettiBurst();
+      captionBox.classList.add("show");
+
+      polaroids.forEach((card, index) => {
+        const t = setTimeout(() => {
+          card.classList.add("show");
+        }, 280 + index * 240);
+        timeouts.push(t);
+      });
+    }
+
+    function resetGift() {
+      opened = false;
+      timeouts.forEach(t => clearTimeout(t));
+      timeouts = [];
+
+      giftLid.classList.remove("lid-open");
+      giftBase.classList.remove("box-bounce");
+      confettiLayer.innerHTML = "";
+      captionBox.classList.remove("show");
+
+      polaroids.forEach(card => {
+        card.classList.remove("show");
+      });
+
+      void giftLid.offsetWidth;
+      void giftBase.offsetWidth;
+    }
+
+    openBtn.addEventListener("click", openGift);
+    resetBtn.addEventListener("click", resetGift);
+    giftBase.addEventListener("click", openGift);
+    giftLid.addEventListener("click", openGift);
+  </script>
+</body>
+</html>

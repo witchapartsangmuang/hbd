@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Timeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+
+    .timeline-line {
+      background: linear-gradient(to bottom, rgba(244,114,182,.15), rgba(244,114,182,.9), rgba(251,113,133,.15));
+    }
+
+    .memory-card {
+      opacity: 0;
+      transform: translateY(28px) scale(.98);
+      transition: all .7s ease;
+    }
+
+    .memory-card.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 18px;
+      animation: floatUp linear forwards;
+      pointer-events: none;
+      opacity: .9;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(.8);
+        opacity: 0;
+      }
+      15% {
+        opacity: .95;
+      }
+      100% {
+        transform: translateY(-180px) scale(1.25) rotate(12deg);
+        opacity: 0;
+      }
+    }
+
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-rose-50 via-pink-50 to-white text-slate-800 overflow-x-hidden">
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center justify-center px-6">
+    <div id="hearts-layer" class="absolute inset-0 overflow-hidden"></div>
+
+    <div class="max-w-3xl text-center relative z-10">
+      <div class="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white/70 glass px-4 py-2 text-sm text-rose-500 shadow-sm">
+        <span>💖</span>
+        <span>Our Memory Timeline</span>
+      </div>
+
+      <h1 class="mt-6 text-4xl md:text-6xl font-bold leading-tight text-rose-500">
+        เรื่องราวเล็ก ๆ
+        <br />
+        ที่ทำให้ใจฉันยิ้มทุกครั้ง
+      </h1>
+
+      <p class="mt-5 text-base md:text-lg text-slate-600 leading-8">
+        ลองเลื่อนลงไปเรื่อย ๆ แล้วดูว่าแต่ละช่วงเวลามีอะไรซ่อนอยู่บ้าง
+      </p>
+
+      <a href="#timeline"
+         class="mt-8 inline-flex items-center gap-2 rounded-full bg-rose-500 px-6 py-3 text-white font-semibold shadow-lg shadow-rose-200 transition hover:-translate-y-0.5 hover:bg-rose-600">
+        เริ่มดูความทรงจำ
+        <span>↓</span>
+      </a>
+    </div>
+
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-rose-400 animate-bounce text-2xl">
+      ⌄
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section id="timeline" class="relative max-w-6xl mx-auto px-6 md:px-8 py-20 md:py-28">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-bold text-slate-800">Memory Timeline</h2>
+      <p class="mt-4 text-slate-500 max-w-2xl mx-auto leading-7">
+        ตัวอย่างนี้เป็น timeline แนวเซอร์ไพรส์วันเกิดหรือวันวาเลนไทน์
+        ที่ใช้รูป + ข้อความ + วันสำคัญ ให้ความรู้สึกเหมือนเปิด scrapbook ออนไลน์
+      </p>
+    </div>
+
+    <!-- center line -->
+    <div class="absolute left-1/2 top-56 bottom-16 hidden md:block w-1 -translate-x-1/2 rounded-full timeline-line"></div>
+
+    <div class="space-y-12 md:space-y-20">
+
+      <!-- item 1 -->
+      <div class="memory-card relative grid md:grid-cols-2 gap-8 items-center">
+        <div class="md:pr-14">
+          <div class="rounded-[28px] overflow-hidden shadow-2xl shadow-rose-100 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80"
+              alt="memory 1"
+              class="h-[320px] w-full object-cover"
+            />
+          </div>
+        </div>
+
+        <div class="relative md:pl-14">
+          <div class="hidden md:flex absolute -left-[18px] top-8 items-center justify-center w-9 h-9 rounded-full bg-rose-500 text-white shadow-lg shadow-rose-200">
+            ❤
+          </div>
+
+          <div class="rounded-[28px] border border-rose-100 bg-white/85 glass p-7 shadow-xl shadow-rose-100/60">
+            <p class="text-sm font-semibold tracking-[0.25em] text-rose-400 uppercase">12 January 2024</p>
+            <h3 class="mt-3 text-2xl font-bold text-slate-800">วันแรกที่เราเริ่มคุยกันจริงจัง</h3>
+            <p class="mt-4 text-slate-600 leading-8">
+              จากบทสนทนาสั้น ๆ กลายเป็นการคุยยาว ๆ แบบไม่รู้ตัว
+              วันนั้นอาจดูธรรมดา แต่กลับกลายเป็นจุดเริ่มต้นของหลายความรู้สึกดี ๆ
+            </p>
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-sm text-rose-500">
+              💬 First long conversation
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- item 2 -->
+      <div class="memory-card relative grid md:grid-cols-2 gap-8 items-center">
+        <div class="order-2 md:order-1 relative md:pr-14">
+          <div class="rounded-[28px] border border-rose-100 bg-white/85 glass p-7 shadow-xl shadow-rose-100/60">
+            <p class="text-sm font-semibold tracking-[0.25em] text-rose-400 uppercase">14 February 2024</p>
+            <h3 class="mt-3 text-2xl font-bold text-slate-800">เดตเล็ก ๆ ที่น่ารักเกินคาด</h3>
+            <p class="mt-4 text-slate-600 leading-8">
+              คาเฟ่เล็ก ๆ มุมเดิม แสงเย็น ๆ เพลงเบา ๆ
+              ทุกอย่างธรรมดา แต่กลับพิเศษเพราะมีคุณอยู่ตรงนั้น
+            </p>
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-sm text-rose-500">
+              ☕ Our favorite café moment
+            </div>
+          </div>
+          <div class="hidden md:flex absolute -right-[18px] top-8 items-center justify-center w-9 h-9 rounded-full bg-rose-500 text-white shadow-lg shadow-rose-200">
+            ❤
+          </div>
+        </div>
+
+        <div class="order-1 md:order-2 md:pl-14">
+          <div class="rounded-[28px] overflow-hidden shadow-2xl shadow-rose-100 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=1200&q=80"
+              alt="memory 2"
+              class="h-[320px] w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- item 3 -->
+      <div class="memory-card relative grid md:grid-cols-2 gap-8 items-center">
+        <div class="md:pr-14">
+          <div class="rounded-[28px] overflow-hidden shadow-2xl shadow-rose-100 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"
+              alt="memory 3"
+              class="h-[320px] w-full object-cover"
+            />
+          </div>
+        </div>
+
+        <div class="relative md:pl-14">
+          <div class="hidden md:flex absolute -left-[18px] top-8 items-center justify-center w-9 h-9 rounded-full bg-rose-500 text-white shadow-lg shadow-rose-200">
+            ❤
+          </div>
+
+          <div class="rounded-[28px] border border-rose-100 bg-white/85 glass p-7 shadow-xl shadow-rose-100/60">
+            <p class="text-sm font-semibold tracking-[0.25em] text-rose-400 uppercase">03 June 2024</p>
+            <h3 class="mt-3 text-2xl font-bold text-slate-800">ทริปที่ทำให้เรารู้ว่าอยู่ด้วยกันแล้วสบายใจ</h3>
+            <p class="mt-4 text-slate-600 leading-8">
+              ไม่ว่าจะหลงทาง ฝนตก หรือเหนื่อยแค่ไหน
+              ทริปนั้นทำให้รู้ว่าแค่มีอีกคนอยู่ข้าง ๆ ทุกอย่างก็ดูเบาลง
+            </p>
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-sm text-rose-500">
+              🌤 First trip together
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- item 4 -->
+      <div class="memory-card relative grid md:grid-cols-2 gap-8 items-center">
+        <div class="order-2 md:order-1 relative md:pr-14">
+          <div class="rounded-[28px] border border-rose-100 bg-white/85 glass p-7 shadow-xl shadow-rose-100/60">
+            <p class="text-sm font-semibold tracking-[0.25em] text-rose-400 uppercase">18 December 2024</p>
+            <h3 class="mt-3 text-2xl font-bold text-slate-800">วันเกิดที่อยากทำให้คุณยิ้มที่สุด</h3>
+            <p class="mt-4 text-slate-600 leading-8">
+              วันนี้ไม่ใช่แค่วันเกิดของคุณ แต่เป็นอีกวันสำคัญของฉันด้วย
+              เพราะโลกใบนี้มีคนที่ทำให้หัวใจอ่อนโยนขึ้นอยู่คนหนึ่ง
+            </p>
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 text-sm text-rose-500">
+              🎂 Your special day
+            </div>
+          </div>
+          <div class="hidden md:flex absolute -right-[18px] top-8 items-center justify-center w-9 h-9 rounded-full bg-rose-500 text-white shadow-lg shadow-rose-200">
+            ❤
+          </div>
+        </div>
+
+        <div class="order-1 md:order-2 md:pl-14">
+          <div class="rounded-[28px] overflow-hidden shadow-2xl shadow-rose-100 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=1200&q=80"
+              alt="memory 4"
+              class="h-[320px] w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- final card -->
+      <div class="memory-card relative max-w-3xl mx-auto">
+        <div class="rounded-[32px] bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 p-[1px] shadow-2xl shadow-rose-200">
+          <div class="rounded-[32px] bg-white px-8 py-10 md:px-12 md:py-12 text-center">
+            <div class="text-5xl">💌</div>
+            <h3 class="mt-5 text-3xl md:text-4xl font-bold text-slate-800">And this is only the beginning</h3>
+            <p class="mt-5 text-slate-600 leading-8 max-w-2xl mx-auto">
+              ขอบคุณทุกช่วงเวลาที่น่ารัก ขอบคุณทุกความสบายใจ
+              และขอบคุณที่ทำให้เรื่องธรรมดาหลายอย่างกลายเป็นความทรงจำที่มีความหมาย
+            </p>
+            <button
+              id="surpriseBtn"
+              class="mt-8 inline-flex items-center gap-2 rounded-full bg-rose-500 px-6 py-3 text-white font-semibold shadow-lg shadow-rose-200 transition hover:-translate-y-0.5 hover:bg-rose-600"
+            >
+              กดรับเซอร์ไพรส์เล็ก ๆ
+              <span>✨</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- surprise modal -->
+  <div id="modal"
+       class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/55 px-5">
+    <div class="w-full max-w-lg rounded-[32px] bg-white p-8 shadow-2xl text-center relative">
+      <button id="closeModal"
+              class="absolute right-4 top-4 w-10 h-10 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200">
+        ✕
+      </button>
+
+      <div class="text-5xl">🎉</div>
+      <h3 class="mt-4 text-3xl font-bold text-rose-500">You are my favorite memory</h3>
+      <p class="mt-4 text-slate-600 leading-8">
+        ไม่ว่าจะวันเกิดหรือวันวาเลนไทน์
+        เว็บนี้สามารถปิดท้ายด้วยข้อความพิเศษ,
+        เพลง, วิดีโอ, หรือปุ่มพาไปหน้าเซอร์ไพรส์อีกหน้าหนึ่งได้
+      </p>
+      <div class="mt-6 rounded-2xl bg-rose-50 px-5 py-4 text-rose-500 font-medium">
+        ตัวอย่าง: เปลี่ยนปุ่มนี้ให้ไปหน้า “Secret Letter” หรือ “Video Message” ได้
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.memory-card');
+    const modal = document.getElementById('modal');
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    const closeModal = document.getElementById('closeModal');
+    const heartsLayer = document.getElementById('hearts-layer');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.18 });
+
+    cards.forEach(card => observer.observe(card));
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.textContent = Math.random() > 0.5 ? '❤' : '💖';
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.bottom = '-20px';
+      heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+      heart.style.fontSize = (14 + Math.random() * 20) + 'px';
+      heartsLayer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6500);
+    }
+
+    setInterval(createHeart, 550);
+
+    surpriseBtn.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    });
+
+    closeModal.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    });
+  </script>
+</body>
+</html>
