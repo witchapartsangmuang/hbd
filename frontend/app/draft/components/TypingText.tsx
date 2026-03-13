@@ -3,13 +3,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { typingTextState } from "../utils/hooks";
 import { typewriterMessage } from "../utils/data";
 
-export default function TypingText() {
+export default function TypingText({ nextStep }: { nextStep: () => void }) {
 	const { typedText, settypedText, typeStarted, settypeStarted } = typingTextState()
 	const messageRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		if (!typeStarted) return;
 		let i = 0;
+		nextStep()
 		const interval = setInterval(() => {
 			i += 1;
 			settypedText(typewriterMessage.slice(0, i));

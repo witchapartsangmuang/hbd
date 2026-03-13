@@ -1,9 +1,8 @@
 "use client"
-import { useEffect, useMemo, useRef, useState } from "react";
+import { birthGiftState } from "./utils/hooks";
+import { useEffect, useMemo, useState } from "react";
 import BirthGift from "./components/BirthGift";
 import TypingText from "./components/TypingText";
-import { birthGiftState } from "./utils/hooks";
-
 import Cake from "./components/Cake";
 import DateOfBirth from "./components/DateOfBirth";
 import SlideInIcon from "./components/SlideInIcon";
@@ -16,10 +15,21 @@ import WhackAMoleBirthday from "./components/WhackAMoleBirthday";
 import ScratchCardImg from "./components/ScratchCardImg";
 import FlipPhotoCard from "./components/FlipPhotoCard.tsx";
 import ScratchCardVdo from "./components/ScratchCardVdo";
+import ReleaseBalloon from "./components/ReleaseBalloon";
+import CinematicBirthdayBear from "./components/CinematicBirthdayBear";
+import CinematicCat from "./components/CinematicCat";
+import CinematicDog from "./components/CinematicDog";
 export default function Page() {
     const [stepOne, setstepOne] = useState<boolean>(false)
     const [stepTwo, setstepTwo] = useState<boolean>(false)
     const [stepThree, setstepThree] = useState<boolean>(false)
+    const [stepFour, setstepFour] = useState<boolean>(false)
+    const [stepFive, setstepFive] = useState<boolean>(false)
+    const [stepSix, setstepSix] = useState<boolean>(false)
+
+    useEffect(() => {
+        console.log("next");
+    }, [stepOne, stepTwo, stepThree, stepFour, stepFive])
     const sparkles = useMemo(
         () => [
             { emoji: "✨", className: "top-[15%] left-[10%] animate-float" },
@@ -41,25 +51,41 @@ export default function Page() {
             ))}
             <div className="grid grid-cols-12 bg-[#FFFAFD]">
                 {/* completed */}
-                <div className="col-span-12">
+                {/* <div className="col-span-12">
                     <BirthGift nextStep={() => { setstepOne(true) }} />
                 </div>
-                <div className={`col-span-12 ${!stepOne ? "block" : "hidden"}`}>
+                <div className={`col-span-12 ${stepOne ? "block" : "hidden"}`}>
                     <Cake nextStep={() => { setstepTwo(true) }} />
                 </div>
-                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                <div className={`col-span-12 ${stepTwo ? "block" : "hidden"}`}>
                     <ScratchCardVdo nextStep={() => { setstepThree(true) }} />
                 </div>
-                <div className="col-span-12">
-                    <TypingText />
+                <div className={`col-span-12 ${stepThree ? "block" : "hidden"}`}>
+                    <ReleaseBalloon nextStep={() => { setstepFour(true) }} />
                 </div>
-                {/* <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
-                    <ScratchCardImg nextStep={() => { setstepThree(true) }} />
-                </div> */}
-                {/* <div className="col-span-12">
+                <div className={`col-span-12 ${stepFour ? "block" : "hidden"}`}>
+                    <ScratchCardImg nextStep={() => { setstepFive(true) }} />
+                </div>
+                <div className={`col-span-12 ${stepFive ? "block" : "hidden"}`}>
+                    <TypingText nextStep={() => { setstepSix(true) }} />
+                </div>
+                <div className={`col-span-12 ${stepSix ? "block" : "hidden"}`}>
                     <DateOfBirth />
                 </div> */}
 
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <SlideInIcon />
+                </div>
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <CinematicBirthdayBear />
+                </div>
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <CinematicDog />
+                </div>
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <CinematicCat />
+                </div>
+                
                 {/* <div className="col-span-12">
                     <PopTheBalloon />
                 </div> */}
@@ -69,9 +95,7 @@ export default function Page() {
                  */}
 
 
-                {/* <div className={`col-span-12 ${stepTwo ? "block" : "hidden"}`}>
-                    <SlideInIcon />
-                </div>
+                {/* 
                 <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
                     <MemoryMatching nextStep={() => { setstepThree(true) }} />
                 </div>

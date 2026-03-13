@@ -12,7 +12,7 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
     const isDrawingRef = useRef(false);
     const revealedRef = useRef(false);
     const { confetti, setConfetti } = confettiState()
-    const { mounted, setmouted, progress, setprogress, isRevealed, setisRevealed, cardSize, setCardSize, showVideo, setshowVideo } = scratchCardState()
+    const { mounted, setmouted, progress, setprogress, isRevealed, setisRevealed, isFading, setisFading, cardSize, setCardSize, showVideo, setshowVideo } = scratchCardState()
     useEffect(() => {
         setmouted(true)
     }, [])
@@ -56,18 +56,17 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
             ctx.arc(x, y, size / 2, 0, Math.PI * 2);
             ctx.fill();
         }
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
         ctx.textAlign = "center";
         ctx.font = isMobile ? "700 24px sans-serif" : "700 34px sans-serif";
-        ctx.fillText("Scratch Me ✨", renderWidth / 2, renderHeight / 2 - 6);
-
-        ctx.font = isMobile ? "500 13px sans-serif" : "500 16px sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,0.92)";
-        ctx.fillText(
-            "ลากเพื่อเปิดเซอร์ไพรส์วันเกิด",
-            renderWidth / 2,
-            renderHeight / 2 + (isMobile ? 24 : 28)
-        );
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.fillText("Scratch Me ✨", renderWidth / 2, renderHeight / 2);
+        // ctx.font = isMobile ? "500 13px sans-serif" : "500 16px sans-serif";
+        // ctx.fillStyle = "rgba(255,255,255,0.92)";
+        // ctx.fillText(
+        //     "ลากเพื่อเปิดเซอร์ไพรส์วันเกิด",
+        //     renderWidth / 2,
+        //     renderHeight / 2 + (isMobile ? 24 : 28)
+        // );
         setprogress(0);
         setisRevealed(false);
         setshowVideo(false);
@@ -129,7 +128,7 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
 
         revealedRef.current = true;
         setisRevealed(true);
-
+        setisFading(true);
         setTimeout(() => {
             const c = canvasRef.current;
             if (!c) return;
@@ -137,11 +136,10 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
             if (!clearCtx) return;
             clearCtx.clearRect(0, 0, c.width, c.height);
         }, 120);
-
-        // พยายามเปิดวิดีโอพร้อมเสียงทันทีหลังขูดสำเร็จ
         setTimeout(() => {
             setshowVideo(true);
         }, 220);
+        nextStep()
     };
 
     const scratchAt = (x: number, y: number) => {
@@ -197,7 +195,6 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
     };
 
     const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
-        e.preventDefault();
         isDrawingRef.current = true;
         const point = getPoint(e);
         if (!point) return;
@@ -205,7 +202,6 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
     };
 
     const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
-        e.preventDefault();
         if (!isDrawingRef.current) return;
         const point = getPoint(e);
         if (!point) return;
@@ -218,7 +214,8 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
 
 
     return (
-        <section className="relative flex flex-col items-center min-h-screen p-5">
+        // min-h-screen
+		<section className="relative flex flex-col items-center p-5">
             <p className="mt-6 text-3xl font-bold text-pink-600">
                 ลองขูดการ์ดดูสิ!
             </p>
@@ -266,8 +263,11 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
                                         </div>
                                         <canvas
                                             ref={canvasRef}
-                                            className={`absolute inset-0 z-10 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
+                                            className={`absolute inset-0 z-10 transition-opacity duration-500 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
                                                 }`}
+                                            style={{
+                                                opacity: isFading ? 0 : 1,
+                                            }}
                                             onMouseDown={handleMouseDown}
                                             onMouseMove={handleMouseMove}
                                             onMouseUp={handleMouseUp}
@@ -296,8 +296,8 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
             <div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
                 <p className="text-sm font-medium text-rose-600">
                     {isRevealed
-                        ? "เปิดการ์ดสำเร็จแล้ว พร้อมไปดูเซอร์ไพรส์ถัดไปได้เลย 💌"
-                        : "ขูดให้เกินเปอร์เซ็นต์เป้าหมายเพื่อเปิดข้อความลับ ✨"}
+                        ? "ยังมีอันต่อไปนะ 💌"
+                        : "ค่อยๆ ขูดนะ ✨"}
                 </p>
             </div>
         </section>

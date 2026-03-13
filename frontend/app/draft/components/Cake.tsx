@@ -14,7 +14,8 @@ export default function Cake({ nextStep }: { nextStep: () => void }) {
     };
     return (
         <>
-            <section className="relative flex flex-col items-center min-h-screen p-5">
+            {/* min-h-screen */}
+            <section className="relative flex flex-col items-center p-5">
                 <p className="mt-6 text-3xl font-bold text-pink-600">
                     🎂 Make a Wish
                 </p>
@@ -71,7 +72,7 @@ export default function Cake({ nextStep }: { nextStep: () => void }) {
                 >
                     เป่าเทียน 🕯️
                 </button>
-                <p className={`mt-4 text-center font-semibold text-rose-700 ${blown ? "opacity-100" : "opacity-0"}`}>{cakeWishText}</p>
+                <p className={`mt-5 mb-5 text-center font-semibold text-rose-700 ${blown ? "opacity-100" : "opacity-0"}`}>{cakeWishText}</p>
             </section>
         </>
     );

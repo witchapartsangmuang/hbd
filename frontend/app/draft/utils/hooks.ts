@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ConfettiPiece } from "./type";
+import { BalloonItem, ConfettiPiece } from "./type";
 export function confettiState() {
     const [confetti, setConfetti] = useState<ConfettiPiece[]>([])
     return {
@@ -43,6 +43,7 @@ export function scratchCardState() {
     const [mounted, setmouted] = useState(false)
     const [progress, setprogress] = useState(0);
     const [isRevealed, setisRevealed] = useState(false);
+    const [isFading, setisFading] = useState(false);
     const [cardSize, setCardSize] = useState(() => {
         if (typeof window === "undefined") {
             return { width: 1, height: 1 };
@@ -59,6 +60,8 @@ export function scratchCardState() {
         setprogress,
         isRevealed,
         setisRevealed,
+        isFading,
+        setisFading,
         cardSize,
         setCardSize,
         showVideo,
@@ -93,4 +96,15 @@ export function dateOfBirthState() {
         seterror
     }
 }
-
+// ReleaseBalloon.tsx
+export function releaseBalloonState() {
+    const [balloons, setballoons] = useState<BalloonItem[]>([]);
+    const [release, setrelease] = useState(false);
+    release
+    return {
+        balloons,
+        setballoons,
+        release,
+        setrelease
+    }
+}
