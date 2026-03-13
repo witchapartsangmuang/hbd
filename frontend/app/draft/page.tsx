@@ -41,35 +41,32 @@ export default function Page() {
             ))}
             <div className="grid grid-cols-12 bg-[#FFFAFD]">
                 {/* completed */}
-                {/* <div className="col-span-12">
+                <div className="col-span-12">
                     <BirthGift nextStep={() => { setstepOne(true) }} />
                 </div>
-                <div className={`col-span-12 ${stepOne ? "block" : "hidden"}`}>
+                <div className={`col-span-12 ${!stepOne ? "block" : "hidden"}`}>
                     <Cake nextStep={() => { setstepTwo(true) }} />
                 </div>
                 <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
-                    <ScratchCardImg nextStep={() => { setstepThree(true) }} />
-                </div>
-                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
                     <ScratchCardVdo nextStep={() => { setstepThree(true) }} />
-                </div> */}
-
+                </div>
                 <div className="col-span-12">
                     <TypingText />
                 </div>
+                {/* <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <ScratchCardImg nextStep={() => { setstepThree(true) }} />
+                </div> */}
+                {/* <div className="col-span-12">
+                    <DateOfBirth />
+                </div> */}
 
-                <div className="col-span-12">
+                {/* <div className="col-span-12">
                     <PopTheBalloon />
-                </div>
-                <div className="col-span-12">
+                </div> */}
+                {/* <div className="col-span-12">
                     <FlipPhotoCard imageSrc={'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80'} />
                 </div>
-                <div className="col-span-12">
-                    <DateOfBirth correctCode="181299"
-                        onSuccess={() => {
-                            console.log("unlock success");
-                        }} />
-                </div>
+                 */}
 
 
                 {/* <div className={`col-span-12 ${stepTwo ? "block" : "hidden"}`}>

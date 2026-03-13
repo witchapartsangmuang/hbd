@@ -6,17 +6,16 @@ import { confettiState, scratchCardState } from "../utils/hooks";
 import { launchConfetti } from "../utils/functions";
 
 export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
-
-	const maxWidth = window.innerWidth
-	const aspectRatio = window.innerWidth / (window.innerHeight * 0.4)
 	const confettiIdRef = useRef(2)
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const isDrawingRef = useRef(false);
 	const revealedRef = useRef(false);
 	const { confetti, setConfetti } = confettiState()
-	const { progress, setprogress, isRevealed, setisRevealed, cardSize, setCardSize } = scratchCardState()
-
+	const { mounted, setmouted, progress, setprogress, isRevealed, setisRevealed, cardSize, setCardSize, showVideo, setshowVideo } = scratchCardState()
+	useEffect(() => {
+		setmouted(true)
+	}, [])
 	useEffect(() => {
 		if (progress === revealThreshold) {
 			launchConfetti(confettiIdRef, setConfetti);
@@ -75,9 +74,12 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 	};
 
 	useEffect(() => {
+		if (typeof window === "undefined") return;
 		const updateSize = () => {
 			const wrapper = containerRef.current;
 			if (!wrapper) return;
+			const maxWidth = window.innerWidth;
+			const aspectRatio = window.innerWidth / (window.innerHeight * 0.4);
 			const parentWidth = wrapper.clientWidth;
 			const nextWidth = Math.min(parentWidth, maxWidth);
 			const nextHeight = Math.round(nextWidth / aspectRatio);
@@ -96,7 +98,7 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 			observer.disconnect();
 			window.removeEventListener("resize", updateSize);
 		};
-	}, [maxWidth, aspectRatio]);
+	}, [mounted, setCardSize]);
 
 	useEffect(() => {
 		if (!cardSize.width || !cardSize.height) return;
@@ -231,41 +233,46 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 				))}
 			</div>
 			<div className="w-full rounded-3xl border shadow-2xl p-2 border-white/70 bg-white/70">
-				<div ref={containerRef}>
-					<div
-						className="relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
-						style={{ width: cardSize.width, height: cardSize.height }}
-					>
-						<div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
-							<div className="mb-3 text-4xl sm:mb-4 sm:text-6xl">🎂💖🎉</div>
+				{
+					mounted && <>
+						<div ref={containerRef}>
+							<div
+								className="relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
+								style={{ width: cardSize.width, height: cardSize.height }}
+							>
+								<img className="object-cover w-full h-full" src="/img/5.png" />
+								{/* <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
+									<div className="mb-3 text-4xl sm:mb-4 sm:text-6xl">🎂💖🎉</div>
 
-							<h3 className="text-2xl font-bold text-rose-600 sm:text-3xl">
-								สุขสันต์วันเกิดนะ
-							</h3>
+									<h3 className="text-2xl font-bold text-rose-600 sm:text-3xl">
+										สุขสันต์วันเกิดนะ
+									</h3>
 
-							<p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700 sm:mt-4 sm:text-base sm:leading-7">
-								ขอให้ปีนี้เต็มไปด้วยรอยยิ้ม ความสุข ความสำเร็จ
-								และเรื่องดี ๆ ที่เข้ามาแบบไม่ขาดสายเลย ✨
-							</p>
+									<p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700 sm:mt-4 sm:text-base sm:leading-7">
+										ขอให้ปีนี้เต็มไปด้วยรอยยิ้ม ความสุข ความสำเร็จ
+										และเรื่องดี ๆ ที่เข้ามาแบบไม่ขาดสายเลย ✨
+									</p>
 
-							<p className="mt-2 text-xs text-rose-500 sm:mt-3 sm:text-sm">
-								ขอให้ทุกวันของคุณน่ารักพอ ๆ กับวันนี้นะ
-							</p>
+									<p className="mt-2 text-xs text-rose-500 sm:mt-3 sm:text-sm">
+										ขอให้ทุกวันของคุณน่ารักพอ ๆ กับวันนี้นะ
+									</p>
+								</div> */}
+								<canvas
+									ref={canvasRef}
+									className={`absolute inset-0 z-10 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
+										}`}
+									onMouseDown={handleMouseDown}
+									onMouseMove={handleMouseMove}
+									onMouseUp={handleMouseUp}
+									onMouseLeave={handleMouseUp}
+									onTouchStart={handleTouchStart}
+									onTouchMove={handleTouchMove}
+									onTouchEnd={handleTouchEnd}
+								/>
+							</div>
 						</div>
-						<canvas
-							ref={canvasRef}
-							className={`absolute inset-0 z-10 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
-								}`}
-							onMouseDown={handleMouseDown}
-							onMouseMove={handleMouseMove}
-							onMouseUp={handleMouseUp}
-							onMouseLeave={handleMouseUp}
-							onTouchStart={handleTouchStart}
-							onTouchMove={handleTouchMove}
-							onTouchEnd={handleTouchEnd}
-						/>
-					</div>
-				</div>
+					</>
+				}
 			</div>
 			<div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
 				<p className="text-sm font-medium text-rose-600">

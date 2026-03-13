@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { ConfettiPiece } from "./type";
 export function confettiState() {
     const [confetti, setConfetti] = useState<ConfettiPiece[]>([])
@@ -38,13 +38,23 @@ export function cakeState() {
         setwishText
     }
 }
-// ScratchCard.tsx
+// ScratchCardImg.tsx + ScratchCardVdo.tsx 
 export function scratchCardState() {
+    const [mounted, setmouted] = useState(false)
     const [progress, setprogress] = useState(0);
     const [isRevealed, setisRevealed] = useState(false);
-    const [cardSize, setCardSize] = useState({ width: window.innerWidth, height: window.innerHeight * 0.4 });
+    const [cardSize, setCardSize] = useState(() => {
+        if (typeof window === "undefined") {
+            return { width: 1, height: 1 };
+        }
+        return {
+            width: window.innerWidth,
+            height: window.innerHeight * 0.4
+        };
+    })
     const [showVideo, setshowVideo] = useState(false);
     return {
+        mounted, setmouted,
         progress,
         setprogress,
         isRevealed,
@@ -55,11 +65,32 @@ export function scratchCardState() {
         setshowVideo
     }
 }
-
-export function dateOfBirthState() {
-    const [digits, setdigits] = useState(["", "", "", "", "", ""]);
-    const [error, seterror] = useState("");
+// TypingText.tsx
+export function typingTextState() {
+    const [typedText, settypedText] = useState("");
+    const [typeStarted, settypeStarted] = useState(false);
     return {
-        digits, setdigits, error, seterror
+        typedText,
+        settypedText,
+        typeStarted,
+        settypeStarted
     }
 }
+// DateOfBirth.tsx
+export function dateOfBirthState() {
+    const [digits, setdigits] = useState(["", "", "", "", "", ""]);
+    const [shake, setshake] = useState(false);
+    const [success, setsuccess] = useState(false);
+    const [error, seterror] = useState("");
+    return {
+        digits,
+        setdigits,
+        shake,
+        setshake,
+        success,
+        setsuccess,
+        error,
+        seterror
+    }
+}
+

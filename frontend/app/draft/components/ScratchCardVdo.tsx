@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { brushRadius, revealThreshold } from "../utils/data";
 import { confettiState, scratchCardState } from "../utils/hooks";
 import { launchConfetti } from "../utils/functions";
 
 export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
-
-    const maxWidth = window.innerWidth
-    const aspectRatio = window.innerWidth / (window.innerHeight * 0.4)
     const confettiIdRef = useRef(3)
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const isDrawingRef = useRef(false);
     const revealedRef = useRef(false);
     const { confetti, setConfetti } = confettiState()
-    const { progress, setprogress, isRevealed, setisRevealed, cardSize, setCardSize, showVideo, setshowVideo } = scratchCardState()
-
+    const { mounted, setmouted, progress, setprogress, isRevealed, setisRevealed, cardSize, setCardSize, showVideo, setshowVideo } = scratchCardState()
+    useEffect(() => {
+        setmouted(true)
+    }, [])
     useEffect(() => {
         if (progress === revealThreshold) {
             launchConfetti(confettiIdRef, setConfetti);
@@ -76,9 +75,12 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
     };
 
     useEffect(() => {
+        if (typeof window === "undefined") return;
         const updateSize = () => {
             const wrapper = containerRef.current;
             if (!wrapper) return;
+            const maxWidth = window.innerWidth
+            const aspectRatio = window.innerWidth / (window.innerHeight * 0.4)
             const parentWidth = wrapper.clientWidth;
             const nextWidth = Math.min(parentWidth, maxWidth);
             const nextHeight = Math.round(nextWidth / aspectRatio);
@@ -97,7 +99,7 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
             observer.disconnect();
             window.removeEventListener("resize", updateSize);
         };
-    }, [maxWidth, aspectRatio]);
+    }, [mounted, setCardSize]);
 
     useEffect(() => {
         if (!cardSize.width || !cardSize.height) return;
@@ -244,46 +246,52 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
                 ))}
             </div>
             <div className="w-full rounded-3xl border shadow-2xl p-2 border-white/70 bg-white/70">
-                <div ref={containerRef}>
-                    <div
-                        className="relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
-                        style={{ width: cardSize.width, height: cardSize.height }}
-                    >
-                        {!showVideo ? (
-                            <>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
-                                    <iframe
-                                        className="absolute inset-0 h-full w-full"
-                                        src="https://www.youtube.com/embed/S43vWT9waGQ?autoplay=1&rel=0"
-                                        title="Birthday Video"
-                                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                                        allowFullScreen
-                                    />
-                                </div>
-                                <canvas
-                                    ref={canvasRef}
-                                    className={`absolute inset-0 z-10 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
-                                        }`}
-                                    onMouseDown={handleMouseDown}
-                                    onMouseMove={handleMouseMove}
-                                    onMouseUp={handleMouseUp}
-                                    onMouseLeave={handleMouseUp}
-                                    onTouchStart={handleTouchStart}
-                                    onTouchMove={handleTouchMove}
-                                    onTouchEnd={handleTouchEnd}
-                                />
-                            </>
-                        ) : (
-                            <iframe
-                                className="absolute inset-0 h-full w-full"
-                                src="https://www.youtube.com/embed/S43vWT9waGQ?autoplay=1&rel=0"
-                                title="Birthday Video"
-                                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                                allowFullScreen
-                            />
-                        )}
-                    </div>
-                </div>
+                {
+                    mounted && <>
+                        <div ref={containerRef}>
+                            <div
+                                className="relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
+                                style={{ width: cardSize.width, height: cardSize.height }}
+                            >
+                                {!showVideo ? (
+                                    <>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
+                                            <iframe
+                                                className="absolute inset-0 h-full w-full"
+                                                src="https://www.youtube.com/embed/S43vWT9waGQ?autoplay=0&rel=0"
+                                                title="Birthday Video"
+                                                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                                                allowFullScreen
+                                            />
+                                        </div>
+                                        <canvas
+                                            ref={canvasRef}
+                                            className={`absolute inset-0 z-10 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
+                                                }`}
+                                            onMouseDown={handleMouseDown}
+                                            onMouseMove={handleMouseMove}
+                                            onMouseUp={handleMouseUp}
+                                            onMouseLeave={handleMouseUp}
+                                            onTouchStart={handleTouchStart}
+                                            onTouchMove={handleTouchMove}
+                                            onTouchEnd={handleTouchEnd}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <iframe
+                                            className="absolute inset-0 h-full w-full"
+                                            src="https://www.youtube.com/embed/S43vWT9waGQ?autoplay=1&rel=0"
+                                            title="Birthday Video"
+                                            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                                            allowFullScreen
+                                        />
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </>
+                }
             </div>
             <div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
                 <p className="text-sm font-medium text-rose-600">
@@ -293,5 +301,6 @@ export default function ScratchCardVdo({ nextStep }: { nextStep: () => void }) {
                 </p>
             </div>
         </section>
+
     );
 }

@@ -1,52 +1,34 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { formatPlaceholder, correctCode } from "../utils/data";
+import { dateOfBirthState } from "../utils/hooks";
+import { empty_digits } from "../utils/data";
 
-type BirthdayPasscodeProps = {
-    correctCode?: string; // เช่น 181299 = 18/12/99
-    onSuccess?: () => void;
-};
-
-const EMPTY_DIGITS = ["", "", "", "", "", ""];
-
-export default function DateOfBirth({
-    correctCode = "181299",
-    onSuccess,
-}: BirthdayPasscodeProps) {
-    const [digits, setDigits] = useState<string[]>(EMPTY_DIGITS);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState(false);
-    const [shake, setShake] = useState(false);
-
+export default function DateOfBirth() {
+    const { digits, setdigits, shake, setshake, success, setsuccess, error, seterror } = dateOfBirthState()
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
-
     const joinedCode = useMemo(() => digits.join(""), [digits]);
     const isComplete = useMemo(() => digits.every((d) => d !== ""), [digits]);
-
-    // useEffect(() => {
-    //     inputRefs.current[0]?.focus();
-    // }, []);
-
     useEffect(() => {
         if (!isComplete) {
-            setSuccess(false);
-            setError("");
+            setsuccess(false);
+            seterror("");
             return;
         }
 
         if (joinedCode === correctCode) {
-            setError("");
-            setSuccess(true);
-            onSuccess?.();
+            seterror("");
+            setsuccess(true);
         } else {
-            setSuccess(false);
-            setError("รหัสวันเกิดไม่ถูกต้อง ลองอีกครั้งนะ 💗");
-            setShake(true);
+            setsuccess(false);
+            seterror("รหัสวันเกิดไม่ถูกต้อง ลองอีกครั้งนะ 💗");
+            setshake(true);
 
-            const timer = setTimeout(() => setShake(false), 450);
+            const timer = setTimeout(() => setshake(false), 450);
             return () => clearTimeout(timer);
         }
-    }, [joinedCode, isComplete, correctCode, onSuccess]);
+    }, [joinedCode, isComplete, correctCode]);
 
     const focusInput = (index: number) => {
         inputRefs.current[index]?.focus();
@@ -60,12 +42,12 @@ export default function DateOfBirth({
 
         if (!onlyNumber) {
             next[index] = "";
-            setDigits(next);
+            setdigits(next);
             return;
         }
 
         next[index] = onlyNumber.slice(-1);
-        setDigits(next);
+        setdigits(next);
 
         if (index < 5) {
             focusInput(index + 1);
@@ -80,14 +62,14 @@ export default function DateOfBirth({
             if (digits[index]) {
                 const next = [...digits];
                 next[index] = "";
-                setDigits(next);
+                setdigits(next);
                 return;
             }
 
             if (index > 0) {
                 const next = [...digits];
                 next[index - 1] = "";
-                setDigits(next);
+                setdigits(next);
                 focusInput(index - 1);
             }
         }
@@ -102,14 +84,13 @@ export default function DateOfBirth({
 
         if (e.key === "Enter" && isComplete) {
             if (joinedCode === correctCode) {
-                setSuccess(true);
-                setError("");
-                onSuccess?.();
+                setsuccess(true);
+                seterror("");
             } else {
-                setSuccess(false);
-                setError("รหัสวันเกิดไม่ถูกต้อง ลองอีกครั้งนะ 💗");
-                setShake(true);
-                setTimeout(() => setShake(false), 450);
+                setsuccess(false);
+                seterror("รหัสวันเกิดไม่ถูกต้อง ลองอีกครั้งนะ 💗");
+                setshake(true);
+                setTimeout(() => setshake(false), 450);
             }
         }
     };
@@ -124,26 +105,25 @@ export default function DateOfBirth({
 
         if (!pasted) return;
 
-        const next = [...EMPTY_DIGITS];
+        const next = [...empty_digits];
         pasted.split("").forEach((char, i) => {
             next[i] = char;
         });
 
-        setDigits(next);
+        setdigits(next);
 
         const focusIndex = Math.min(pasted.length, 5);
         focusInput(focusIndex);
     };
 
     const handleReset = () => {
-        setDigits([...EMPTY_DIGITS]);
-        setError("");
-        setSuccess(false);
-        setShake(false);
+        setdigits([...empty_digits]);
+        seterror("");
+        setsuccess(false);
+        setshake(false);
         focusInput(0);
     };
 
-    const placeholders = ["D", "D", "M", "M", "Y", "Y"];
 
     return (
         <div className="mx-auto w-full max-w-md rounded-[28px] border border-rose-100 bg-white/90 p-6 shadow-xl backdrop-blur">
@@ -185,7 +165,7 @@ export default function DateOfBirth({
                                 autoComplete="one-time-code"
                                 maxLength={1}
                                 value={digit}
-                                placeholder={placeholders[index]}
+                                placeholder={formatPlaceholder[index]}
                                 onChange={(e) => handleChange(index, e.target.value)}
                                 onKeyDown={(e) => handleKeyDown(index, e)}
                                 onPaste={handlePaste}
