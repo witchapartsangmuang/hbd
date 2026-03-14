@@ -73,7 +73,7 @@ export default function Page() {
                     <DateOfBirth />
                 </div> */}
 
-                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                {/* <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
                     <SlideInIcon />
                 </div>
                 <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
@@ -84,15 +84,15 @@ export default function Page() {
                 </div>
                 <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
                     <CinematicCat />
-                </div>
-                
+                </div> */}
+
                 {/* <div className="col-span-12">
                     <PopTheBalloon />
                 </div> */}
-                {/* <div className="col-span-12">
-                    <FlipPhotoCard imageSrc={'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80'} />
+                <div className="col-span-12">
+                    <FlipPhotoCard nextStep={() => { setstepFour(true) }} />
                 </div>
-                 */}
+
 
 
                 {/* 
