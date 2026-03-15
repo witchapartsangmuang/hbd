@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { brushRadius, revealThreshold } from "../utils/data";
+import { brushRadius, revealThreshold, userWidth, userHeight } from "../utils/data";
 import { confettiState, scratchCardState } from "../utils/hooks";
 import { launchConfetti } from "../utils/functions";
 
@@ -57,16 +57,16 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 			ctx.fill();
 		}
 		ctx.textAlign = "center";
-        ctx.font = isMobile ? "700 24px sans-serif" : "700 34px sans-serif";
-        ctx.fillStyle = "rgba(255,255,255,0.95)";
-        ctx.fillText("Scratch Me ✨", renderWidth / 2, renderHeight / 2);
-        // ctx.font = isMobile ? "500 13px sans-serif" : "500 16px sans-serif";
-        // ctx.fillStyle = "rgba(255,255,255,0.92)";
-        // ctx.fillText(
-        //     "ลากเพื่อเปิดเซอร์ไพรส์วันเกิด",
-        //     renderWidth / 2,
-        //     renderHeight / 2 + (isMobile ? 24 : 28)
-        // );
+		ctx.font = isMobile ? "700 24px sans-serif" : "700 34px sans-serif";
+		ctx.fillStyle = "rgba(255,255,255,0.95)";
+		ctx.fillText("Scratch Me ✨", renderWidth / 2, renderHeight / 2);
+		// ctx.font = isMobile ? "500 13px sans-serif" : "500 16px sans-serif";
+		// ctx.fillStyle = "rgba(255,255,255,0.92)";
+		// ctx.fillText(
+		//     "ลากเพื่อเปิดเซอร์ไพรส์วันเกิด",
+		//     renderWidth / 2,
+		//     renderHeight / 2 + (isMobile ? 24 : 28)
+		// );
 		setprogress(0);
 		setisRevealed(false);
 		revealedRef.current = false;
@@ -77,11 +77,12 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 		const updateSize = () => {
 			const wrapper = containerRef.current;
 			if (!wrapper) return;
-			const maxWidth = window.innerWidth;
-			const aspectRatio = window.innerWidth / (window.innerHeight * 0.4);
+			const current = window.innerWidth;
+			const aspectRatio = window.innerWidth / window.innerHeight;
 			const parentWidth = wrapper.clientWidth;
-			const nextWidth = Math.min(parentWidth, maxWidth);
-			const nextHeight = Math.round(nextWidth / aspectRatio);
+			const nextWidth = Math.min(current, parentWidth, userWidth);
+			const recommendRatio = Math.round(nextWidth / aspectRatio);
+			const nextHeight = Math.min(recommendRatio, userHeight);
 			setCardSize({
 				width: nextWidth,
 				height: nextHeight,
@@ -232,7 +233,7 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 					/>
 				))}
 			</div>
-			<div className="w-full rounded-3xl border shadow-2xl p-2 border-white/70 bg-white/70">
+			<div className="w-full rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2 ">
 				{
 					mounted && <>
 						<div ref={containerRef}>

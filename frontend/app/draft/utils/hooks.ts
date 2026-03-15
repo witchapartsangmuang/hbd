@@ -49,6 +49,8 @@ export function scratchCardState() {
             return { width: 1, height: 1 };
         }
         return {
+            // width: 340,
+            // height: 340 * 0.4
             width: window.innerWidth,
             height: window.innerHeight * 0.4
         };
@@ -106,5 +108,16 @@ export function releaseBalloonState() {
         setballoons,
         release,
         setrelease
+    }
+}
+// FlipPhotoCard.tsx
+export function flipPhotoCardState() {
+    const [flipped, setflipped] = useState(false);
+    const [imgSelect, setimgSelect] = useState<string>("")
+    return {
+        flipped,
+        setflipped,
+        imgSelect,
+        setimgSelect
     }
 }

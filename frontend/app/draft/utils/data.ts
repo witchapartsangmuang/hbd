@@ -31,6 +31,8 @@ export const imgCard = [{
 // Cake.tsx
 export const cakeWishText = "✨ ขอให้พรวันเกิดนี้เป็นจริงทุกข้อเลยนะ"
 // ScratchCardImg.tsx + ScratchCardVdo.tsx
+export const userWidth = 720 
+export const userHeight = 520
 export const brushRadius = 56
 export const revealThreshold = 50
 // TypingText.tsx
@@ -55,4 +57,5 @@ export const balloonGradients = [
 	"from-emerald-300 to-green-500",
 ];
 // FlipPhotoCard.tsx
-const imageSrc = "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80"
+export const dogImg = "/img/nm_dog.jpg"
+export const catImg = "/img/nm_cat.jpg"

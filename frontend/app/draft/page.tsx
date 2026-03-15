@@ -26,7 +26,7 @@ export default function Page() {
     const [stepFour, setstepFour] = useState<boolean>(false)
     const [stepFive, setstepFive] = useState<boolean>(false)
     const [stepSix, setstepSix] = useState<boolean>(false)
-
+    const [stepSeven, setstepSeven] = useState<boolean>(false)
     useEffect(() => {
         console.log("next");
     }, [stepOne, stepTwo, stepThree, stepFour, stepFive])
@@ -41,6 +41,7 @@ export default function Page() {
     );
     return (
         <>
+
             {sparkles.map((item, index) => (
                 <div
                     key={index}
@@ -49,9 +50,10 @@ export default function Page() {
                     {item.emoji}
                 </div>
             ))}
-            <div className="grid grid-cols-12 bg-[#FFFAFD]">
+            <div className="grid grid-cols-12 bg-linear-to-br from-rose-50 via-pink-50 to-fuchsia-100">
+
                 {/* completed */}
-                {/* <div className="col-span-12">
+                <div className="col-span-12">
                     <BirthGift nextStep={() => { setstepOne(true) }} />
                 </div>
                 <div className={`col-span-12 ${stepOne ? "block" : "hidden"}`}>
@@ -70,8 +72,11 @@ export default function Page() {
                     <TypingText nextStep={() => { setstepSix(true) }} />
                 </div>
                 <div className={`col-span-12 ${stepSix ? "block" : "hidden"}`}>
+                    <FlipPhotoCard nextStep={() => { setstepSeven(true) }} />
+                </div>
+                <div className={`col-span-12 ${stepSeven ? "block" : "hidden"}`}>
                     <DateOfBirth />
-                </div> */}
+                </div>
 
                 {/* <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
                     <SlideInIcon />
@@ -89,9 +94,9 @@ export default function Page() {
                 {/* <div className="col-span-12">
                     <PopTheBalloon />
                 </div> */}
-                <div className="col-span-12">
-                    <FlipPhotoCard nextStep={() => { setstepFour(true) }} />
-                </div>
+
+
+
 
 
 

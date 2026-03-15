@@ -39,7 +39,7 @@ export default function TypingText({ nextStep }: { nextStep: () => void }) {
 
 
 	return (
-		<section className="relative flex flex-col items-center min-h-screen p-5">
+		<section className="relative flex flex-col items-center p-5">
 			<h2 className="text-center text-3xl font-bold text-rose-700">
 				💌 A Special Message
 			</h2>
