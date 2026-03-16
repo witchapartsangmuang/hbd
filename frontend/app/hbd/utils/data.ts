@@ -30,11 +30,12 @@ export const imgCard = [{
 }]
 // Cake.tsx
 export const cakeWishText = "✨ ขอให้พรวันเกิดนี้เป็นจริงทุกข้อเลยนะ"
-// ScratchCardImg.tsx + ScratchCardVdo.tsx
+// ScratchCardImg.tsx + ScratchCardVdo.tsx + ScratchCardYoutube.tsx
 export const userWidth = 720 
 export const userHeight = 520
 export const brushRadius = 56
 export const revealThreshold = 50
+export const maxVdoWidth = 360
 // TypingText.tsx
 export const typewriterMessage = "สุขสันต์วันเกิดนะ 🎂\nขอให้วันนี้เป็นวันที่อบอุ่น เต็มไปด้วยรอยยิ้ม และความรักจากทุกคนรอบตัว\nขอให้ทุกความตั้งใจของคุณสำเร็จทีละเรื่อง และขอให้ปีนี้เป็นปีที่ใจดีกับคุณมากที่สุด ✨";
 // DateOfBirth.tsx

@@ -5,6 +5,11 @@ import BirthGift from "./components/BirthGift";
 import TypingText from "./components/TypingText";
 import Cake from "./components/Cake";
 import DateOfBirth from "./components/DateOfBirth";
+import FlipPhotoCard from "./components/FlipPhotoCard.tsx";
+import ScratchCardImg from "./components/ScratchCardImg";
+import ScratchCardYoutube from "./components/ScratchCardYouTube";
+import ScratchCardVdo from "./components/ScratchCardVdo";
+import ReleaseBalloon from "./components/ReleaseBalloon";
 import SlideInIcon from "./components/SlideInIcon";
 import PopTheBalloon from "./components/PopTheBalloon";
 import MemoryMatching from "./components/MemoryMatching";
@@ -12,10 +17,6 @@ import CatchTheGift from "./components/CatchTheGift";
 import HeartCollector from "./components/HeartCollector";
 import FindTheHiddenGift from "./components/FindTheHiddenGift";
 import WhackAMoleBirthday from "./components/WhackAMoleBirthday";
-import ScratchCardImg from "./components/ScratchCardImg";
-import FlipPhotoCard from "./components/FlipPhotoCard.tsx";
-import ScratchCardVdo from "./components/ScratchCardVdo";
-import ReleaseBalloon from "./components/ReleaseBalloon";
 import CinematicBirthdayBear from "./components/CinematicBirthdayBear";
 import CinematicCat from "./components/CinematicCat";
 import CinematicDog from "./components/CinematicDog";
@@ -54,20 +55,25 @@ export default function Page() {
 
                 {/* completed */}
                 <div className="col-span-12">
+                    <ScratchCardYoutube nextStep={() => { setstepOne(true) }} />
+                </div>
+                <div className={`col-span-12 ${!stepTwo ? "block" : "hidden"}`}>
+                    <ScratchCardVdo nextStep={() => { setstepThree(true) }} />
+                </div>
+                <div className={`col-span-12 ${!stepFour ? "block" : "hidden"}`}>
+                    <ScratchCardImg nextStep={() => { setstepFive(true) }} />
+                </div>
+                <div className="col-span-12">
                     <BirthGift nextStep={() => { setstepOne(true) }} />
                 </div>
                 <div className={`col-span-12 ${stepOne ? "block" : "hidden"}`}>
                     <Cake nextStep={() => { setstepTwo(true) }} />
                 </div>
-                <div className={`col-span-12 ${stepTwo ? "block" : "hidden"}`}>
-                    <ScratchCardVdo nextStep={() => { setstepThree(true) }} />
-                </div>
+
                 <div className={`col-span-12 ${stepThree ? "block" : "hidden"}`}>
                     <ReleaseBalloon nextStep={() => { setstepFour(true) }} />
                 </div>
-                <div className={`col-span-12 ${stepFour ? "block" : "hidden"}`}>
-                    <ScratchCardImg nextStep={() => { setstepFive(true) }} />
-                </div>
+
                 <div className={`col-span-12 ${stepFive ? "block" : "hidden"}`}>
                     <TypingText nextStep={() => { setstepSix(true) }} />
                 </div>

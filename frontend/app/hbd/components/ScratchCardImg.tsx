@@ -162,7 +162,7 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 				const clearCtx = c.getContext("2d");
 				if (!clearCtx) return;
 				clearCtx.clearRect(0, 0, c.width, c.height);
-			}, 120);
+			}, 1000);
 			nextStep()
 		}
 	};
@@ -233,49 +233,31 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 					/>
 				))}
 			</div>
-			<div className="w-full rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2 ">
+			<div className="flex w-full p-2 justify-center">
 				{
-					mounted && <>
-						<div ref={containerRef}>
-							<div
-								className="relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
-								style={{ width: cardSize.width, height: cardSize.height }}
-							>
-								<img className="object-cover w-full h-full" src="/img/5.png" />
-								{/* <div className="absolute inset-0 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)] px-4 text-center sm:px-6">
-									<div className="mb-3 text-4xl sm:mb-4 sm:text-6xl">🎂💖🎉</div>
-
-									<h3 className="text-2xl font-bold text-rose-600 sm:text-3xl">
-										สุขสันต์วันเกิดนะ
-									</h3>
-
-									<p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700 sm:mt-4 sm:text-base sm:leading-7">
-										ขอให้ปีนี้เต็มไปด้วยรอยยิ้ม ความสุข ความสำเร็จ
-										และเรื่องดี ๆ ที่เข้ามาแบบไม่ขาดสายเลย ✨
-									</p>
-
-									<p className="mt-2 text-xs text-rose-500 sm:mt-3 sm:text-sm">
-										ขอให้ทุกวันของคุณน่ารักพอ ๆ กับวันนี้นะ
-									</p>
-								</div> */}
-								<canvas
-									ref={canvasRef}
-									className={`absolute inset-0 z-10 transition-opacity duration-500 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
-										}`}
-									style={{
-										opacity: isFading ? 0 : 1,
-									}}
-									onMouseDown={handleMouseDown}
-									onMouseMove={handleMouseMove}
-									onMouseUp={handleMouseUp}
-									onMouseLeave={handleMouseUp}
-									onTouchStart={handleTouchStart}
-									onTouchMove={handleTouchMove}
-									onTouchEnd={handleTouchEnd}
-								/>
-							</div>
+					mounted &&
+					<div ref={containerRef} style={{ minWidth: cardSize.width, minHeight: cardSize.height }} className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2">
+						<div
+							className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
+							style={{ width: cardSize.width, height: cardSize.height }}>
+							<canvas
+								ref={canvasRef}
+								className={`absolute z-10 transition-opacity duration-500 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
+									}`}
+								style={{
+									opacity: isFading ? 0 : 1
+								}}
+								onMouseDown={handleMouseDown}
+								onMouseMove={handleMouseMove}
+								onMouseUp={handleMouseUp}
+								onMouseLeave={handleMouseUp}
+								onTouchStart={handleTouchStart}
+								onTouchMove={handleTouchMove}
+								onTouchEnd={handleTouchEnd}
+							/>
+							<img className="object-cover w-full h-full" src="/img/5.png" />
 						</div>
-					</>
+					</div>
 				}
 			</div>
 			<div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
