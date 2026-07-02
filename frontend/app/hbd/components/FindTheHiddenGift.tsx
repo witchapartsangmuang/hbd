@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { HbdContent } from "../utils/content-types";
 
 type SceneItem = {
   id: number;
@@ -68,7 +69,12 @@ function createScene(round: number) {
   return shuffleArray(items);
 }
 
-export default function FindTheHiddenGift() {
+export default function FindTheHiddenGift({
+  nextStep,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
   const [round, setRound] = useState(1);
   const [timeLeft, setTimeLeft] = useState(ROUND_TIME);
   const [sceneItems, setSceneItems] = useState<SceneItem[]>([]);
@@ -327,13 +333,22 @@ export default function FindTheHiddenGift() {
                     สุดยอด 🎁 พร้อมไปดูเซอร์ไพรส์วันเกิดต่อได้เลย
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleRestart}
-                    className="mt-6 rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-                  >
-                    เล่นอีกครั้ง
-                  </button>
+                  <div className="mt-6 flex flex-wrap justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleRestart}
+                      className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                    >
+                      เล่นอีกครั้ง
+                    </button>
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                    >
+                      ถัดไป ▶
+                    </button>
+                  </div>
                 </>
               )}
 

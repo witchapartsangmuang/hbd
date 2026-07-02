@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Surfires — A Cozy Place",
+  title: "Secret Page — A Cozy Place",
   description: "A cozy little corner of the internet.",
 };
 

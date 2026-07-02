@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { HbdContent } from "../utils/content-types";
 
 type HoleItem = {
   id: number;
@@ -32,7 +33,12 @@ function createInitialHoles(): HoleItem[] {
   }));
 }
 
-export default function WhackAMoleBirthday() {
+export default function WhackAMoleBirthday({
+  nextStep,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
   const [holes, setHoles] = useState<HoleItem[]>(createInitialHoles());
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
@@ -381,13 +387,22 @@ export default function WhackAMoleBirthday() {
             {message}
           </div>
 
-          <button
-            type="button"
-            onClick={startGame}
-            className="mt-6 rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-          >
-            เล่นอีกครั้ง
-          </button>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <button
+              type="button"
+              onClick={startGame}
+              className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+            >
+              เล่นอีกครั้ง
+            </button>
+            <button
+              type="button"
+              onClick={nextStep}
+              className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+            >
+              ถัดไป ▶
+            </button>
+          </div>
         </div>
       )}
     </section>

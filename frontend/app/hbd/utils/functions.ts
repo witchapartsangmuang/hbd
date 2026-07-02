@@ -4,7 +4,11 @@ import { confettiColors } from "./data";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
 
-export function launchConfetti(confettiIdRef: RefObject<number>, setConfetti: Dispatch<SetStateAction<ConfettiPiece[]>>) {
+export function launchConfetti(
+    confettiIdRef: RefObject<number>,
+    setConfetti: Dispatch<SetStateAction<ConfettiPiece[]>>,
+    colors: string[] = confettiColors
+) {
     const centerX =
         typeof window !== "undefined" ? window.innerWidth / 2 : 600;
     const pieces: ConfettiPiece[] = Array.from({ length: 120 }).map(() => {
@@ -20,7 +24,7 @@ export function launchConfetti(confettiIdRef: RefObject<number>, setConfetti: Di
             y,
             rotate: Math.random() * 720,
             color:
-                confettiColors[Math.floor(Math.random() * confettiColors.length)],
+                colors[Math.floor(Math.random() * colors.length)],
             width: 6 + Math.random() * 8,
             height: 8 + Math.random() * 12,
             duration: 1200 + Math.random() * 900,

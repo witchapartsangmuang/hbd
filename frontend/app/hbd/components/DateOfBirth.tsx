@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { formatPlaceholder, correctCode } from "../utils/data";
 import { dateOfBirthState } from "../utils/hooks";
-import { empty_digits } from "../utils/data";
+import { HbdContent } from "../utils/content-types";
 
-export default function DateOfBirth() {
+export default function DateOfBirth({ content, nextStep }: { content: HbdContent; nextStep: () => void }) {
+    const { formatPlaceholder, correctCode, emptyDigits: empty_digits } = content.dateOfBirth;
     const { digits, setdigits, shake, setshake, success, setsuccess, error, seterror } = dateOfBirthState()
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
     const joinedCode = useMemo(() => digits.join(""), [digits]);
@@ -20,6 +20,7 @@ export default function DateOfBirth() {
         if (joinedCode === correctCode) {
             seterror("");
             setsuccess(true);
+            nextStep();
         } else {
             setsuccess(false);
             seterror("รหัสวันเกิดไม่ถูกต้อง ลองอีกครั้งนะ 💗");
@@ -86,6 +87,7 @@ export default function DateOfBirth() {
             if (joinedCode === correctCode) {
                 setsuccess(true);
                 seterror("");
+                nextStep();
             } else {
                 setsuccess(false);
                 seterror("รหัสวันเกิดไม่ถูกต้อง ลองอีกครั้งนะ 💗");

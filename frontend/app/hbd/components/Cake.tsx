@@ -2,13 +2,14 @@
 import { useRef } from "react";
 import { launchConfetti } from "../utils/functions";
 import { cakeState, confettiState } from "../utils/hooks";
-import { cakeWishText } from "../utils/data";
-export default function Cake({ nextStep }: { nextStep: () => void }) {
+import { HbdContent } from "../utils/content-types";
+export default function Cake({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+    const { wishText: cakeWishText } = content.cake;
     const confettiIdRef = useRef(2)
     const { confetti, setConfetti } = confettiState()
     const { blown, setblown } = cakeState()
     const handleBlowCandles = () => {
-        launchConfetti(confettiIdRef, setConfetti);
+        launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         setblown(prev => !prev);
         nextStep()
     };

@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-type CinematicBirthdayBearProps = {
-    title?: string;
-    subtitle?: string;
-};
+import { HbdContent } from "../utils/content-types";
 
 export default function CinematicBirthdayBear({
-    title = "มีเซอร์ไพรส์พิเศษกำลังมาหาเธอ 🧸",
-    subtitle = "พอ section นี้เข้าจอ หมีน้อยจะเลื่อนเข้ามาพร้อมป้าย HBD และเอฟเฟกต์น่ารัก ๆ",
-}: CinematicBirthdayBearProps) {
+    nextStep,
+    content,
+}: {
+    nextStep: () => void;
+    content: HbdContent;
+}) {
+    const { title, subtitle } = content.cinematicBirthdayBear;
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -400,6 +400,16 @@ export default function CinematicBirthdayBear({
                     </div>
                 </div>
             </div>
+
+            {isVisible && (
+                <button
+                    type="button"
+                    onClick={nextStep}
+                    className="absolute bottom-6 right-6 z-40 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+                >
+                    ถัดไป ▶
+                </button>
+            )}
         </section>
     );
 }

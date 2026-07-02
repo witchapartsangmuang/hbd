@@ -3,9 +3,9 @@ import { useEffect, useRef } from "react";
 import { confettiState, birthGiftState } from "../utils/hooks";
 import { launchConfetti } from "../utils/functions";
 import ImgCard from "@/components/ImgCard";
-import { imgCard } from "../utils/data";
-import { giftSurpriseText } from "../utils/data";
-export default function BirthGift({ nextStep }: { nextStep: () => void }) {
+import { HbdContent } from "../utils/content-types";
+export default function BirthGift({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+    const { surpriseText: giftSurpriseText, imgCards: imgCard } = content.birthGift;
     const { isOpenGift, setisOpenGift, isPressing, setisPressing, isShaking, setisShaking, isOpenDisplayImgArea, setisOpenDisplayImgArea, showSurpriseText, setshowSurpriseText } = birthGiftState()
     const { confetti, setConfetti } = confettiState()
     const confettiIdRef = useRef(1);
@@ -28,7 +28,7 @@ export default function BirthGift({ nextStep }: { nextStep: () => void }) {
         window.setTimeout(() => {
             setisShaking(false);
             setisOpenGift(true);
-            launchConfetti(confettiIdRef, setConfetti);
+            launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         }, 420);
     };
 

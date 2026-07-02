@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { flipPhotoCardState } from "../utils/hooks";
-import { catImg, dogImg } from "../utils/data";
+import { HbdContent } from "../utils/content-types";
 
-export default function FlipPhotoCard({ nextStep }: { nextStep: () => void }) {
+export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+	const { catImg, dogImg } = content.flipPhotoCard;
 	const { flipped, setflipped, imgSelect, setimgSelect } = flipPhotoCardState();
 	useEffect(() => {
 		if (imgSelect === "") return;

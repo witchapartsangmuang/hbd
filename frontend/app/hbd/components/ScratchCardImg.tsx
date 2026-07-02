@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { brushRadius, revealThreshold, userWidth, userHeight } from "../utils/data";
 import { confettiState, scratchCardState } from "../utils/hooks";
 import { launchConfetti } from "../utils/functions";
+import { HbdContent } from "../utils/content-types";
 
-export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
+export default function ScratchCardImg({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+	const { brushRadius, revealThreshold, userWidth, userHeight } = content.scratchCard;
 	const confettiIdRef = useRef(2)
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const containerRef = useRef<HTMLDivElement | null>(null);
@@ -18,7 +19,7 @@ export default function ScratchCardImg({ nextStep }: { nextStep: () => void }) {
 	}, [])
 	useEffect(() => {
 		if (progress === revealThreshold) {
-			launchConfetti(confettiIdRef, setConfetti);
+			launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
 		}
 	}, [progress])
 

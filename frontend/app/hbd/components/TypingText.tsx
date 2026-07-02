@@ -1,9 +1,10 @@
 "use client"
 import { useEffect, useMemo, useRef, useState } from "react";
 import { typingTextState } from "../utils/hooks";
-import { typewriterMessage } from "../utils/data";
+import { HbdContent } from "../utils/content-types";
 
-export default function TypingText({ nextStep }: { nextStep: () => void }) {
+export default function TypingText({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+	const typewriterMessage = content.typingText.message;
 	const { typedText, settypedText, typeStarted, settypeStarted } = typingTextState()
 	const messageRef = useRef<HTMLDivElement | null>(null);
 

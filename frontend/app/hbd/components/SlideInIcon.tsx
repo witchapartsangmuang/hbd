@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-type SlideInIconProps = {
-  title?: string;
-};
+import { HbdContent } from "../utils/content-types";
 
 export default function SlideInIcon({
-  title = "มีใครบางคนถือป้ายมาหาเธอ...",
-}: SlideInIconProps) {
+  nextStep,
+  content,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
+  const title = content.slideInIcon.title;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -92,6 +94,16 @@ export default function SlideInIcon({
         </div>
 
       </div>
+
+      {isVisible && (
+        <button
+          type="button"
+          onClick={nextStep}
+          className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+        >
+          ถัดไป ▶
+        </button>
+      )}
     </section>
   );
 }

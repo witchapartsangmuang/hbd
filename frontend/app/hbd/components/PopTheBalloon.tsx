@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { HbdContent } from "../utils/content-types";
 
 type BalloonItem = {
   id: number;
@@ -36,7 +37,12 @@ function createBalloon(id: number): BalloonItem {
   };
 }
 
-export default function PopTheBalloon() {
+export default function PopTheBalloon({
+  nextStep,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
   const [balloons, setBalloons] = useState<BalloonItem[]>([]);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(GAME_TIME);
@@ -225,12 +231,20 @@ export default function PopTheBalloon() {
                   เยี่ยมมาก 🎂 พร้อมไปดูเซอร์ไพรส์ต่อได้เลย
                 </div>
 
-                <button
-                  onClick={startGame}
-                  className="mt-5 rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 sm:mt-6 hover:sm:scale-[1.02]"
-                >
-                  เล่นอีกครั้ง
-                </button>
+                <div className="mt-5 flex flex-wrap justify-center gap-3 sm:mt-6">
+                  <button
+                    onClick={startGame}
+                    className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                  >
+                    เล่นอีกครั้ง
+                  </button>
+                  <button
+                    onClick={nextStep}
+                    className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                  >
+                    ถัดไป ▶
+                  </button>
+                </div>
               </div>
             </div>
           )}

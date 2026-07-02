@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { HbdContent } from "../utils/content-types";
 
 type HeartItem = {
   id: number;
@@ -22,14 +23,10 @@ type FloatTextItem = {
   text: string;
 };
 
-type HeartCollectorProps = {
-  targetScore?: number;
-  gameDuration?: number;
-  onSuccess?: () => void;
-};
-
 const WORLD_WIDTH = 960;
 const WORLD_HEIGHT = 560;
+const TARGET_SCORE = 30;
+const GAME_DURATION = 20;
 
 const HEART_TYPES = [
   { emoji: "💖", points: 1, size: 30 },
@@ -44,10 +41,13 @@ function randomBetween(min: number, max: number) {
 }
 
 export default function HeartCollector({
-  targetScore = 30,
-  gameDuration = 20,
-  onSuccess,
-}: HeartCollectorProps) {
+  nextStep,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
+  const targetScore = TARGET_SCORE;
+  const gameDuration = GAME_DURATION;
   const [hearts, setHearts] = useState<HeartItem[]>([]);
   const [floatingTexts, setFloatingTexts] = useState<FloatTextItem[]>([]);
   const [score, setScore] = useState(0);
@@ -210,9 +210,9 @@ export default function HeartCollector({
       unlockedRef.current = true;
       setIsUnlocked(true);
       setMessage("ปลดล็อกเซอร์ไพรส์แล้ว 💌");
-      onSuccess?.();
+      nextStep();
     }
-  }, [score, targetScore, onSuccess]);
+  }, [score, targetScore, nextStep]);
 
   useEffect(() => {
     if (!isGameOver) return;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { HbdContent } from "../utils/content-types";
 
 type GiftItem = {
   id: number;
@@ -36,7 +37,12 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-export default function CatchTheGift() {
+export default function CatchTheGift({
+  nextStep,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
   const [basketX, setBasketX] = useState(WORLD_WIDTH / 2 - BASKET_WIDTH / 2);
   const [gifts, setGifts] = useState<GiftItem[]>([]);
   const [score, setScore] = useState(0);
@@ -439,13 +445,22 @@ export default function CatchTheGift() {
                   เก่งมาก 🎂 พร้อมไปดูเซอร์ไพรส์วันเกิดต่อได้เลย
                 </div>
 
-                <button
-                  type="button"
-                  onClick={startGame}
-                  className="mt-6 rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-                >
-                  เล่นอีกครั้ง
-                </button>
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={startGame}
+                    className="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                  >
+                    เล่นอีกครั้ง
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                  >
+                    ถัดไป ▶
+                  </button>
+                </div>
               </div>
             </div>
           )}

@@ -1,21 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-    brushRadius,
-    revealThreshold,
-    userWidth,
-    userHeight,
-    maxVdoWidth
-} from "../utils/data";
 import { confettiState, scratchCardState } from "../utils/hooks";
 import { launchConfetti } from "../utils/functions";
+import { HbdContent } from "../utils/content-types";
 
 export default function ScratchCardVdo({
     nextStep,
+    content,
 }: {
     nextStep: () => void;
+    content: HbdContent;
 }) {
+    const { brushRadius, revealThreshold, userWidth, userHeight, maxVdoWidth } = content.scratchCard;
     const confettiIdRef = useRef(3);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -45,7 +42,7 @@ export default function ScratchCardVdo({
 
     useEffect(() => {
         if (progress === revealThreshold) {
-            launchConfetti(confettiIdRef, setConfetti);
+            launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         }
     }, [progress, setConfetti]);
 

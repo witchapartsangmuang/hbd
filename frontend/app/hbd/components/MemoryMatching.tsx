@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { HbdContent } from "../utils/content-types";
 
 type CardItem = {
   id: number;
@@ -35,7 +36,12 @@ function createCards(): CardItem[] {
   );
 }
 
-export default function MemoryMatching({ nextStep }: { nextStep: () => void }) {
+export default function MemoryMatching({
+  nextStep,
+}: {
+  nextStep: () => void;
+  content: HbdContent;
+}) {
   const [cards, setCards] = useState<CardItem[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -76,6 +82,7 @@ export default function MemoryMatching({ nextStep }: { nextStep: () => void }) {
   useEffect(() => {
     if (allMatched && cards.length > 0) {
       setIsFinished(true);
+      nextStep();
     }
   }, [allMatched, cards]);
 

@@ -1,9 +1,10 @@
 "use client"
 import { useEffect, useRef } from "react";
-import { balloonGradients, wishes } from "../utils/data"
 import { releaseBalloonState } from "../utils/hooks"
 import { BalloonItem } from "../utils/type";
-export default function ReleaseBalloon({ nextStep }: { nextStep: () => void }) {
+import { HbdContent } from "../utils/content-types";
+export default function ReleaseBalloon({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+    const { wishes, balloonGradients } = content.releaseBalloon;
     const { balloons, setballoons, release, setrelease } = releaseBalloonState()
     const balloonIdRef = useRef(1);
     const balloonZoneRef = useRef<HTMLDivElement | null>(null);
