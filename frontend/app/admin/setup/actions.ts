@@ -15,17 +15,17 @@ export async function setupAdminAction(
   const password = String(formData.get("password") ?? "");
 
   if (!username || !password) {
-    return { error: "กรุณากรอก username และ password" };
+    return { error: "Please enter a username and password" };
   }
   if (password.length < 8) {
-    return { error: "password ต้องมีอย่างน้อย 8 ตัวอักษร" };
+    return { error: "Password must be at least 8 characters" };
   }
 
   let user;
   try {
     user = await createUser(username, password, true);
   } catch {
-    return { error: "username นี้ถูกใช้ไปแล้ว" };
+    return { error: "This username is already taken" };
   }
 
   await createSessionCookie({ userId: user.id, isAdmin: true });

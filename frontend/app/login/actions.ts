@@ -11,21 +11,21 @@ export async function loginAction(formData: FormData): Promise<{ error: string }
   const password = String(formData.get("password") ?? "");
 
   if (!username || !password) {
-    return { error: "กรุณากรอก username และ password" };
+    return { error: "Please enter your username and password" };
   }
 
   const user = await getUserByUsername(username);
   if (!user) {
-    return { error: "username หรือ password ไม่ถูกต้อง" };
+    return { error: "Invalid username or password" };
   }
 
   const isValid = await verifyPassword(password, user.password_hash);
   if (!isValid) {
-    return { error: "username หรือ password ไม่ถูกต้อง" };
+    return { error: "Invalid username or password" };
   }
 
   if (!isUserActiveNow(user)) {
-    return { error: "บัญชีนี้อยู่นอกช่วงเวลาที่อนุญาตให้เข้าใช้งาน" };
+    return { error: "This account is outside its allowed access period" };
   }
 
   await createSessionCookie({ userId: user.id, isAdmin: user.is_admin });

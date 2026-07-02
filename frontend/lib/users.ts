@@ -26,8 +26,26 @@ export async function createUser(
   return rows[0];
 }
 
-export async function updateUserDates(id: number, startDate: string, endDate: string): Promise<void> {
-  await query("UPDATE users SET start_date = $1, end_date = $2 WHERE id = $3", [startDate, endDate, id]);
+export async function updateUserAccount(
+  id: number,
+  fields: { username: string; password?: string; startDate: string; endDate: string }
+): Promise<void> {
+  if (fields.password) {
+    const passwordHash = await hashPassword(fields.password);
+    await query(
+      "UPDATE users SET username = $1, password_hash = $2, start_date = $3, end_date = $4 WHERE id = $5",
+      [fields.username, passwordHash, fields.startDate, fields.endDate, id]
+    );
+  } else {
+    await query(
+      "UPDATE users SET username = $1, start_date = $2, end_date = $3 WHERE id = $4",
+      [fields.username, fields.startDate, fields.endDate, id]
+    );
+  }
+}
+
+export async function deleteUser(id: number): Promise<void> {
+  await query("DELETE FROM users WHERE id = $1", [id]);
 }
 
 export async function getUserByUsername(username: string): Promise<UserRow | null> {

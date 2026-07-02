@@ -1,5 +1,5 @@
 import { query } from "./db";
-import { HbdContent } from "@/app/hbd/utils/content-types";
+import { HbdContent } from "@/components/sections/utils/content-types";
 
 export interface PageRow {
   id: number;

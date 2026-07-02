@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { saveContentAction } from "./actions";
-import { HbdContent } from "@/app/hbd/utils/content-types";
+import { HbdContent } from "@/components/sections/utils/content-types";
 import SectionEditor from "./SectionEditor";
 
 const initialState = { error: null as string | null, savedAt: null as number | null };

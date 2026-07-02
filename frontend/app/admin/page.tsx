@@ -2,8 +2,17 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/session";
 import { listUsersWithPages } from "@/lib/users";
+import { Button } from "@/components/Button";
 import CreateUserForm from "./CreateUserForm";
-import EditUserDatesForm from "./EditUserDatesForm";
+import EditUserForm from "./EditUserForm";
+import DeleteUserButton from "./DeleteUserButton";
+
+function formatDate(value: Date | string | null): string {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toISOString().slice(0, 10);
+}
 
 export default async function AdminPage() {
   const currentUser = await getCurrentUser();
@@ -18,30 +27,25 @@ export default async function AdminPage() {
       <div className="mx-auto max-w-3xl">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-rose-600">Admin</h1>
-          <form action="/logout" method="post">
-            <button
-              type="submit"
-              className="rounded-full border border-rose-200 px-4 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50"
-            >
-              ออกจากระบบ
-            </button>
-          </form>
-        </div>
-
-        <div className="mb-8 rounded-[24px] border border-rose-100 bg-white/90 p-6 shadow-xl">
-          <h2 className="mb-4 text-lg font-semibold text-rose-700">สร้างผู้ใช้ใหม่</h2>
-          <CreateUserForm />
+          <div className="flex items-center gap-2">
+            <CreateUserForm />
+            <form action="/logout" method="post">
+              <Button type="submit" variant="secondary">
+                Log out
+              </Button>
+            </form>
+          </div>
         </div>
 
         <div className="rounded-[24px] border border-rose-100 bg-white/90 p-6 shadow-xl">
-          <h2 className="mb-4 text-lg font-semibold text-rose-700">ผู้ใช้ทั้งหมด</h2>
+          <h2 className="mb-4 text-lg font-semibold text-rose-700">All Users</h2>
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-rose-100 text-rose-500">
                 <th className="pb-2">Username</th>
                 <th className="pb-2">Slug</th>
                 <th className="pb-2">Role</th>
-                <th className="pb-2">ช่วงเวลาที่ใช้งานได้</th>
+                <th className="pb-2">Active Period</th>
                 <th className="pb-2"></th>
               </tr>
             </thead>
@@ -52,21 +56,28 @@ export default async function AdminPage() {
                   <td className="py-2 text-rose-900">{user.slug ?? "-"}</td>
                   <td className="py-2 text-rose-900">{user.is_admin ? "admin" : "user"}</td>
                   <td className="py-2 text-rose-900">
-                    {user.is_admin ? (
-                      "—"
-                    ) : (
-                      <EditUserDatesForm userId={user.id} startDate={user.start_date} endDate={user.end_date} />
-                    )}
+                    {user.is_admin ? "—" : `${formatDate(user.start_date)} - ${formatDate(user.end_date)}`}
                   </td>
                   <td className="py-2 space-x-3">
-                    {user.slug && (
+                    {!user.is_admin && (
                       <>
-                        <Link href={`/${user.slug}`} className="text-rose-500 underline">
-                          ดู
-                        </Link>
-                        <Link href={`/${user.slug}/edit`} className="text-rose-500 underline">
-                          แก้ไข
-                        </Link>
+                        {user.slug && (
+                          <>
+                            <Link href={`/${user.slug}`} className="text-rose-500 underline">
+                              Preview
+                            </Link>
+                            <Link href={`/${user.slug}/edit`} className="text-rose-500 underline">
+                              Edit Content
+                            </Link>
+                          </>
+                        )}
+                        <EditUserForm
+                          userId={user.id}
+                          username={user.username}
+                          startDate={user.start_date}
+                          endDate={user.end_date}
+                        />
+                        <DeleteUserButton userId={user.id} username={user.username} />
                       </>
                     )}
                   </td>

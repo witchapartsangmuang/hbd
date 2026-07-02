@@ -1,20 +1,23 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
   SECTION_TYPES,
   SECTION_LABELS,
   SectionInstance,
   SectionType,
   HbdContent,
-} from "@/app/hbd/utils/content-types";
+} from "@/components/sections/utils/content-types";
 import ImageUrlField from "./ImageUrlField";
+import { Button } from "@/components/Button";
+import { Modal } from "@/components/Modal";
+import { Field } from "@/components/Field";
+import { Input } from "@/components/Input";
+import { Textarea } from "@/components/Textarea";
+import { Select } from "@/components/Select";
+import { SortableList } from "@/components/SortableList";
+import { Eye, EyeSlash, Trash } from "@/icons/icons";
 
-const inputClass =
-  "h-11 w-full rounded-2xl border border-rose-200 bg-rose-50 px-4 text-rose-800 outline-none focus:border-rose-400 focus:bg-white";
-const textareaClass =
-  "w-full rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-800 outline-none focus:border-rose-400 focus:bg-white";
-const labelClass = "mb-1 block text-sm font-medium text-rose-700";
 const panelClass = "rounded-[24px] border border-rose-100 bg-white/90 p-6 shadow-xl";
 
 const NO_CONFIG_TYPES: SectionType[] = [
@@ -48,21 +51,10 @@ export default function SectionEditor({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newSectionName, setNewSectionName] = useState("");
   const [newSectionType, setNewSectionType] = useState<SectionType | "">("");
-  const dragIndexRef = useRef<number | null>(null);
 
   const selected = sections.find((s) => s.id === selectedId) ?? null;
   const usedTypes = new Set(sections.map((s) => s.type));
   const availableTypes = SECTION_TYPES.filter((t) => !usedTypes.has(t));
-
-  const move = (index: number, target: number) => {
-    setSections((prev) => {
-      if (target < 0 || target >= prev.length) return prev;
-      const next = [...prev];
-      const [item] = next.splice(index, 1);
-      next.splice(target, 0, item);
-      return next;
-    });
-  };
 
   const toggleEnabled = (id: string) => {
     setSections((prev) => prev.map((s) => (s.id === id ? { ...s, enabled: !s.enabled } : s)));
@@ -93,17 +85,6 @@ export default function SectionEditor({
     setIsAddModalOpen(false);
   };
 
-  const handleDragStart = (index: number) => {
-    dragIndexRef.current = index;
-  };
-
-  const handleDrop = (index: number) => {
-    const from = dragIndexRef.current;
-    dragIndexRef.current = null;
-    if (from === null || from === index) return;
-    move(from, index);
-  };
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-rose-100 bg-white/90 px-5 py-3 shadow-lg">
@@ -117,17 +98,13 @@ export default function SectionEditor({
             href={`/${slug}`}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700 transition hover:bg-amber-100"
+            className="flex h-10 items-center justify-center rounded-xl border border-gray-200 px-5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
           >
             Preview
           </a>
-          <button
-            type="submit"
-            disabled={isPending}
-            className="rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5 disabled:opacity-60"
-          >
-            {isPending ? "กำลังบันทึก..." : "Save"}
-          </button>
+          <Button type="submit" loading={isPending}>
+            Save
+          </Button>
         </div>
       </div>
 
@@ -139,25 +116,24 @@ export default function SectionEditor({
           <div className={selected?.type === "birthGift" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">กล่องของขวัญ</h2>
-              <label className={labelClass}>ข้อความเซอร์ไพรส์</label>
-              <input className={inputClass} name="birthGift.surpriseText" defaultValue={content.birthGift.surpriseText} />
+              <Field label="ข้อความเซอร์ไพรส์">
+                <Input name="birthGift.surpriseText" defaultValue={content.birthGift.surpriseText} />
+              </Field>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {content.birthGift.imgCards.map((card, i) => (
-                  <div key={i} className="rounded-xl border border-rose-100 p-3">
+                  <div key={i} className="flex flex-col gap-3 rounded-xl border border-rose-100 p-3">
                     <ImageUrlField
+                      slug={slug}
                       name={`imgCard.${i}.imgPath`}
                       defaultValue={card.imgPath}
                       label={`รูปที่ ${i + 1}`}
                     />
-                    <label className={`${labelClass} mt-2`}>คำบรรยาย</label>
-                    <input className={inputClass} name={`imgCard.${i}.caption`} defaultValue={card.caption} />
-                    <label className={`${labelClass} mt-2`}>องศาเอียง</label>
-                    <input
-                      className={inputClass}
-                      type="number"
-                      name={`imgCard.${i}.rotateAngle`}
-                      defaultValue={card.rotateAngle}
-                    />
+                    <Field label="คำบรรยาย">
+                      <Input name={`imgCard.${i}.caption`} defaultValue={card.caption} />
+                    </Field>
+                    <Field label="องศาเอียง">
+                      <Input type="number" name={`imgCard.${i}.rotateAngle`} defaultValue={card.rotateAngle} />
+                    </Field>
                   </div>
                 ))}
               </div>
@@ -167,57 +143,65 @@ export default function SectionEditor({
           <div className={selected?.type === "cake" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">เค้ก</h2>
-              <label className={labelClass}>คำอวยพร</label>
-              <input className={inputClass} name="cake.wishText" defaultValue={content.cake.wishText} />
+              <Field label="คำอวยพร">
+                <Input name="cake.wishText" defaultValue={content.cake.wishText} />
+              </Field>
             </div>
           </div>
 
           <div className={selected?.type === "typingText" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">ข้อความพิมพ์ดีด</h2>
-              <label className={labelClass}>ข้อความ (ขึ้นบรรทัดใหม่ได้)</label>
-              <textarea
-                className={textareaClass}
-                rows={4}
-                name="typingText.message"
-                defaultValue={content.typingText.message}
-              />
+              <Field label="ข้อความ (ขึ้นบรรทัดใหม่ได้)">
+                <Textarea rows={4} name="typingText.message" defaultValue={content.typingText.message} resize />
+              </Field>
             </div>
           </div>
 
           <div className={selected?.type === "dateOfBirth" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">รหัสวันเกิด</h2>
-              <label className={labelClass}>รหัส 6 หลัก (DDMMYY)</label>
-              <input
-                className={inputClass}
-                name="dateOfBirth.correctCode"
-                defaultValue={content.dateOfBirth.correctCode}
-                maxLength={6}
-                pattern="\d{6}"
-              />
+              <Field label="รหัส 6 หลัก (DDMMYY)">
+                <Input
+                  name="dateOfBirth.correctCode"
+                  defaultValue={content.dateOfBirth.correctCode}
+                  maxLength={6}
+                  pattern="\d{6}"
+                />
+              </Field>
             </div>
           </div>
 
           <div className={selected?.type === "releaseBalloon" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">คำอวยพรลูกโป่ง</h2>
-              <label className={labelClass}>คำอวยพร (บรรทัดละ 1 ข้อความ)</label>
-              <textarea
-                className={textareaClass}
-                rows={6}
-                name="releaseBalloon.wishes"
-                defaultValue={content.releaseBalloon.wishes.join("\n")}
-              />
+              <Field label="คำอวยพร (บรรทัดละ 1 ข้อความ)">
+                <Textarea
+                  rows={6}
+                  name="releaseBalloon.wishes"
+                  defaultValue={content.releaseBalloon.wishes.join("\n")}
+                  resize
+                />
+              </Field>
             </div>
           </div>
 
           <div className={selected?.type === "flipPhotoCard" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">การ์ดพลิกรูป</h2>
-              <ImageUrlField name="flipPhotoCard.dogImg" defaultValue={content.flipPhotoCard.dogImg} label="รูปหมา" />
+              <ImageUrlField
+                slug={slug}
+                name="flipPhotoCard.dogImg"
+                defaultValue={content.flipPhotoCard.dogImg}
+                label="รูปหมา"
+              />
               <div className="mt-3">
-                <ImageUrlField name="flipPhotoCard.catImg" defaultValue={content.flipPhotoCard.catImg} label="รูปแมว" />
+                <ImageUrlField
+                  slug={slug}
+                  name="flipPhotoCard.catImg"
+                  defaultValue={content.flipPhotoCard.catImg}
+                  label="รูปแมว"
+                />
               </div>
             </div>
           </div>
@@ -225,26 +209,26 @@ export default function SectionEditor({
           <div className={selected?.type === "slideInIcon" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">ไอคอนเลื่อนเข้า</h2>
-              <label className={labelClass}>หัวข้อ</label>
-              <input className={inputClass} name="slideInIcon.title" defaultValue={content.slideInIcon.title} />
+              <Field label="หัวข้อ">
+                <Input name="slideInIcon.title" defaultValue={content.slideInIcon.title} />
+              </Field>
             </div>
           </div>
 
           <div className={selected?.type === "cinematicBirthdayBear" ? "" : "hidden"}>
             <div className={panelClass}>
               <h2 className="mb-4 text-lg font-semibold text-rose-700">ซีนหมีวันเกิด</h2>
-              <label className={labelClass}>หัวข้อ</label>
-              <input
-                className={inputClass}
-                name="cinematicBirthdayBear.title"
-                defaultValue={content.cinematicBirthdayBear.title}
-              />
-              <label className={`${labelClass} mt-3`}>คำบรรยาย</label>
-              <input
-                className={inputClass}
-                name="cinematicBirthdayBear.subtitle"
-                defaultValue={content.cinematicBirthdayBear.subtitle}
-              />
+              <Field label="หัวข้อ">
+                <Input name="cinematicBirthdayBear.title" defaultValue={content.cinematicBirthdayBear.title} />
+              </Field>
+              <div className="mt-3">
+                <Field label="คำบรรยาย">
+                  <Input
+                    name="cinematicBirthdayBear.subtitle"
+                    defaultValue={content.cinematicBirthdayBear.subtitle}
+                  />
+                </Field>
+              </div>
             </div>
           </div>
 
@@ -255,51 +239,25 @@ export default function SectionEditor({
                 การตั้งค่านี้ใช้ร่วมกันทั้ง 3 การ์ดขูด (YouTube / วิดีโอ / รูปภาพ)
               </p>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                <div>
-                  <label className={labelClass}>ความกว้าง</label>
-                  <input
-                    className={inputClass}
-                    type="number"
-                    name="scratchCard.userWidth"
-                    defaultValue={content.scratchCard.userWidth}
-                  />
-                </div>
-                <div>
-                  <label className={labelClass}>ความสูง</label>
-                  <input
-                    className={inputClass}
-                    type="number"
-                    name="scratchCard.userHeight"
-                    defaultValue={content.scratchCard.userHeight}
-                  />
-                </div>
-                <div>
-                  <label className={labelClass}>ขนาดแปรง</label>
-                  <input
-                    className={inputClass}
-                    type="number"
-                    name="scratchCard.brushRadius"
-                    defaultValue={content.scratchCard.brushRadius}
-                  />
-                </div>
-                <div>
-                  <label className={labelClass}>% ขูดถึงเผย</label>
-                  <input
-                    className={inputClass}
+                <Field label="ความกว้าง">
+                  <Input type="number" name="scratchCard.userWidth" defaultValue={content.scratchCard.userWidth} />
+                </Field>
+                <Field label="ความสูง">
+                  <Input type="number" name="scratchCard.userHeight" defaultValue={content.scratchCard.userHeight} />
+                </Field>
+                <Field label="ขนาดแปรง">
+                  <Input type="number" name="scratchCard.brushRadius" defaultValue={content.scratchCard.brushRadius} />
+                </Field>
+                <Field label="% ขูดถึงเผย">
+                  <Input
                     type="number"
                     name="scratchCard.revealThreshold"
                     defaultValue={content.scratchCard.revealThreshold}
                   />
-                </div>
-                <div>
-                  <label className={labelClass}>ความกว้างวิดีโอสูงสุด</label>
-                  <input
-                    className={inputClass}
-                    type="number"
-                    name="scratchCard.maxVdoWidth"
-                    defaultValue={content.scratchCard.maxVdoWidth}
-                  />
-                </div>
+                </Field>
+                <Field label="ความกว้างวิดีโอสูงสุด">
+                  <Input type="number" name="scratchCard.maxVdoWidth" defaultValue={content.scratchCard.maxVdoWidth} />
+                </Field>
               </div>
             </div>
           </div>
@@ -323,83 +281,54 @@ export default function SectionEditor({
         <div className="shrink-0 lg:w-72">
           <div className="rounded-[24px] border border-rose-100 bg-white/90 p-4 shadow-xl">
             <div className="flex flex-col gap-1">
-              {sections.map((section, i) => (
-                <div
-                  key={section.id}
-                  draggable
-                  onDragStart={() => handleDragStart(i)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => handleDrop(i)}
-                  onClick={() => setSelectedId(section.id)}
-                  className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 transition ${
-                    selectedId === section.id
-                      ? "border-rose-400 bg-rose-50"
-                      : "border-transparent hover:bg-rose-50/60"
-                  } ${!section.enabled ? "opacity-40" : ""}`}
-                >
-                  <span className="cursor-grab select-none text-rose-300">⣿</span>
-                  <span className="flex-1 truncate text-sm font-medium text-rose-800">
-                    {section.label || SECTION_LABELS[section.type]}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      move(i, i - 1);
-                    }}
-                    disabled={i === 0}
-                    className="text-rose-300 hover:text-rose-500 disabled:opacity-20"
-                    title="ขึ้น"
-                  >
-                    ▲
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      move(i, i + 1);
-                    }}
-                    disabled={i === sections.length - 1}
-                    className="text-rose-300 hover:text-rose-500 disabled:opacity-20"
-                    title="ลง"
-                  >
-                    ▼
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleEnabled(section.id);
-                    }}
-                    className="text-rose-400 hover:text-rose-600"
-                    title={section.enabled ? "ซ่อน" : "แสดง"}
-                  >
-                    {section.enabled ? "👁" : "🚫"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      remove(section.id);
-                    }}
-                    className="text-rose-400 hover:text-rose-600"
-                    title="ลบ"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
               {sections.length === 0 && <p className="px-1 py-2 text-sm text-rose-400">ยังไม่มี section</p>}
+              <SortableList items={sections} onReorder={setSections}>
+                {(section, _index, dragHandle) => (
+                  <div
+                    onClick={() => setSelectedId(section.id)}
+                    className={`flex cursor-pointer items-center gap-1 rounded-xl border px-2 py-2 transition ${
+                      selectedId === section.id
+                        ? "border-rose-400 bg-rose-50"
+                        : "border-transparent hover:bg-rose-50/60"
+                    } ${!section.enabled ? "opacity-40" : ""}`}
+                  >
+                    {dragHandle}
+                    <span className="flex-1 truncate text-sm font-medium text-rose-800">
+                      {section.label || SECTION_LABELS[section.type]}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleEnabled(section.id);
+                      }}
+                      title={section.enabled ? "ซ่อน" : "แสดง"}
+                    >
+                      {section.enabled ? <Eye /> : <EyeSlash />}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        remove(section.id);
+                      }}
+                      title="ลบ"
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                )}
+              </SortableList>
             </div>
 
             <div className="mt-3 border-t border-rose-100 pt-3">
-              <button
-                type="button"
-                onClick={openAddModal}
-                className="h-10 w-full rounded-xl bg-linear-to-r from-pink-500 to-rose-500 text-sm font-medium text-white shadow"
-              >
+              <Button type="button" onClick={openAddModal} className="w-full">
                 + Add Section
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -407,59 +336,39 @@ export default function SectionEditor({
 
       <input type="hidden" name="sections" value={JSON.stringify(sections)} />
 
-      {isAddModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
-          onClick={() => setIsAddModalOpen(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-[24px] bg-white p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-4 text-lg font-semibold text-rose-700">เพิ่ม Section ใหม่</h2>
-
-            <label className={labelClass}>Section Name</label>
-            <input
-              className={inputClass}
-              value={newSectionName}
-              onChange={(e) => setNewSectionName(e.target.value)}
-              placeholder="เช่น ของขวัญวันเกิด"
-            />
-
-            <label className={`${labelClass} mt-3`}>Section Type</label>
-            <select
-              value={newSectionType}
-              onChange={(e) => setNewSectionType(e.target.value as SectionType | "")}
-              className="h-11 w-full rounded-2xl border border-rose-200 bg-rose-50 px-4 text-rose-800 outline-none focus:border-rose-400 focus:bg-white"
-            >
-              <option value="">-- เลือกประเภท --</option>
-              {availableTypes.map((type) => (
-                <option key={type} value={type}>
-                  {SECTION_LABELS[type]}
-                </option>
-              ))}
-            </select>
-
-            <div className="mt-5 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAddModalOpen(false)}
-                className="rounded-full border border-rose-200 px-4 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50"
-              >
-                ยกเลิก
-              </button>
-              <button
-                type="button"
-                onClick={confirmAddSection}
-                disabled={!newSectionType}
-                className="rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow disabled:opacity-50"
-              >
-                เพิ่ม
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        open={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        title="เพิ่ม Section ใหม่"
+        footer={
+          <>
+            <Button type="button" variant="secondary" onClick={() => setIsAddModalOpen(false)}>
+              ยกเลิก
+            </Button>
+            <Button type="button" onClick={confirmAddSection} disabled={!newSectionType}>
+              เพิ่ม
+            </Button>
+          </>
+        }
+      >
+        <Field label="Section Name">
+          <Input
+            value={newSectionName}
+            onChange={(e) => setNewSectionName(e.target.value)}
+            placeholder="เช่น ของขวัญวันเกิด"
+          />
+        </Field>
+        <Field label="Section Type" required>
+          <Select
+            value={newSectionType}
+            onChange={(e) => setNewSectionType(e.target.value as SectionType | "")}
+            options={[
+              { value: "", label: "-- เลือกประเภท --" },
+              ...availableTypes.map((type) => ({ value: type, label: SECTION_LABELS[type] })),
+            ]}
+          />
+        </Field>
+      </Modal>
     </div>
   );
 }

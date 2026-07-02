@@ -1,17 +1,29 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { put } from "@vercel/blob";
+import { put, list } from "@vercel/blob";
 import { getCurrentUser } from "@/lib/session";
 import { getPageBySlug, updatePageContent } from "@/lib/pages";
-import { mergeWithDefaults, SECTION_TYPES, SectionInstance } from "@/app/hbd/utils/content-types";
+import { mergeWithDefaults, SECTION_TYPES, SectionInstance } from "@/components/sections/utils/content-types";
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
-export async function uploadImageAction(formData: FormData): Promise<{ url: string } | { error: string }> {
+export async function uploadImageAction(
+  slug: string,
+  formData: FormData
+): Promise<{ url: string } | { error: string }> {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
     return { error: "Unauthorized" };
+  }
+
+  const page = await getPageBySlug(slug);
+  if (!page) {
+    return { error: "Not found" };
+  }
+
+  if (!currentUser.isAdmin && page.user_id !== currentUser.userId) {
+    return { error: "Forbidden" };
   }
 
   const file = formData.get("file");
@@ -26,13 +38,41 @@ export async function uploadImageAction(formData: FormData): Promise<{ url: stri
   }
 
   try {
-    const blob = await put(`uploads/${file.name}`, file, {
+    const blob = await put(`uploads/${slug}/${file.name}`, file, {
       access: "public",
       addRandomSuffix: true,
     });
     return { url: blob.url };
   } catch {
     return { error: "อัปโหลดไม่สำเร็จ ลองใหม่อีกครั้ง" };
+  }
+}
+
+export async function listUploadedImagesAction(
+  slug: string
+): Promise<{ images: { url: string; name: string }[] } | { error: string }> {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return { error: "Unauthorized" };
+  }
+
+  const page = await getPageBySlug(slug);
+  if (!page) {
+    return { error: "Not found" };
+  }
+
+  if (!currentUser.isAdmin && page.user_id !== currentUser.userId) {
+    return { error: "Forbidden" };
+  }
+
+  try {
+    const { blobs } = await list({ prefix: `uploads/${slug}/` });
+    const images = blobs
+      .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime())
+      .map((blob) => ({ url: blob.url, name: blob.pathname.split("/").pop() ?? blob.pathname }));
+    return { images };
+  } catch {
+    return { error: "โหลดรายการไฟล์ไม่สำเร็จ" };
   }
 }
 
