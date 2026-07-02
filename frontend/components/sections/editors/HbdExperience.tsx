@@ -1,10 +1,13 @@
-"use client"
+"use client";
 import { useMemo, useState } from "react";
 import { HbdContent } from "../utils/content-types";
 import { SECTION_REGISTRY } from "@/components/sections/_sections";
 
 export default function HbdExperience({ content }: { content: HbdContent }) {
-    const activeSections = useMemo(() => content.sections.filter((s) => s.enabled), [content.sections]);
+    const activeSections = useMemo(
+        () => content.sections.filter((s) => s.enabled),
+        [content.sections]
+    );
     const [unlockedCount, setUnlockedCount] = useState(1);
     const sparkles = useMemo(
         () => [
@@ -31,7 +34,10 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
                     const Component = entry.component;
                     const visible = i < unlockedCount;
                     return (
-                        <div key={section.id} className={`col-span-12 ${visible ? "block" : "hidden"}`}>
+                        <div
+                            key={section.id}
+                            className={`col-span-12 min-h-screen ${visible ? "block" : "hidden"}`}
+                        >
                             <Component
                                 content={content}
                                 nextStep={() => setUnlockedCount((c) => Math.max(c, i + 2))}
@@ -41,5 +47,5 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
                 })}
             </div>
         </>
-    )
+    );
 }

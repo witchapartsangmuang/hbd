@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { listUploadedImagesAction, uploadImageAction } from "./actions";
+import { listUploadedVideosAction, uploadVideoAction } from "./actions";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
 
-type ImageItem = { url: string; name: string };
+type VideoItem = { url: string; name: string };
 
-export default function ImagePickerModal({
+export default function VideoPickerModal({
     slug,
     open,
     onClose,
@@ -19,7 +19,7 @@ export default function ImagePickerModal({
     onSelect: (url: string) => void;
 }) {
     const fileRef = useRef<HTMLInputElement>(null);
-    const [images, setImages] = useState<ImageItem[]>([]);
+    const [videos, setVideos] = useState<VideoItem[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -31,32 +31,28 @@ export default function ImagePickerModal({
         setSelected(null);
         setError(null);
         setIsLoading(true);
-        listUploadedImagesAction(slug).then((result) => {
+        listUploadedVideosAction(slug).then((result) => {
             setIsLoading(false);
             if ("error" in result) {
                 setError(result.error);
                 return;
             }
-            setImages(result.images);
+            setVideos(result.videos);
         });
     }, [open, slug]);
 
     const handleFile = async (file: File) => {
         setIsUploading(true);
         setError(null);
-
         const formData = new FormData();
         formData.append("file", file);
-        const result = await uploadImageAction(slug, formData);
-
+        const result = await uploadVideoAction(slug, formData);
         setIsUploading(false);
-
         if ("error" in result) {
             setError(result.error);
             return;
         }
-
-        setImages((prev) => [{ url: result.url, name: file.name }, ...prev]);
+        setVideos((prev) => [{ url: result.url, name: file.name }, ...prev]);
         setSelected(result.url);
     };
 
@@ -64,7 +60,7 @@ export default function ImagePickerModal({
         <Modal
             open={open}
             onClose={onClose}
-            title="Select Image"
+            title="Select Video"
             size="xl"
             footer={
                 <div className="flex w-full justify-end gap-3">
@@ -74,9 +70,7 @@ export default function ImagePickerModal({
                     <Button
                         type="button"
                         disabled={!selected}
-                        onClick={() => {
-                            if (selected) onSelect(selected);
-                        }}
+                        onClick={() => { if (selected) onSelect(selected); }}
                     >
                         Select
                     </Button>
@@ -88,10 +82,7 @@ export default function ImagePickerModal({
                     isDragging ? "border-primary bg-primary/5" : "border-gray-200 hover:bg-gray-50"
                 }`}
                 onClick={() => fileRef.current?.click()}
-                onDragOver={(e) => {
-                    e.preventDefault();
-                    setIsDragging(true);
-                }}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={(e) => {
                     e.preventDefault();
@@ -100,11 +91,11 @@ export default function ImagePickerModal({
                     if (file) handleFile(file);
                 }}
             >
-                {isUploading ? "Uploading..." : "Click or drag a file here"}
+                {isUploading ? "Uploading..." : "Click or drag a video file here (mp4, mov, webm)"}
                 <input
                     ref={fileRef}
                     type="file"
-                    accept="image/*"
+                    accept="video/*"
                     className="hidden"
                     onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -116,35 +107,29 @@ export default function ImagePickerModal({
 
             {error && <p className="text-xs font-medium text-rose-500">{error}</p>}
 
-            <div className="grid max-h-96 grid-cols-4 gap-3 overflow-y-auto">
+            <div className="flex max-h-80 flex-col gap-1 overflow-y-auto">
                 {isLoading && (
-                    <p className="col-span-4 py-6 text-center text-sm text-gray-400">
-                        Loading...
-                    </p>
+                    <p className="py-6 text-center text-sm text-gray-400">Loading...</p>
                 )}
-                {!isLoading && images.length === 0 && (
-                    <p className="col-span-4 py-6 text-center text-sm text-gray-400">
-                        No uploaded files yet
-                    </p>
+                {!isLoading && videos.length === 0 && (
+                    <p className="py-6 text-center text-sm text-gray-400">No uploaded videos yet</p>
                 )}
-                {images.map((image) => (
+                {videos.map((video) => (
                     <button
                         type="button"
-                        key={image.url}
-                        onClick={() => setSelected(image.url)}
-                        className={`group relative aspect-square overflow-hidden rounded-lg border-2 ${
-                            selected === image.url ? "border-primary" : "border-transparent"
+                        key={video.url}
+                        onClick={() => setSelected(video.url)}
+                        className={`flex items-center gap-3 rounded-lg border px-3 py-2 text-left text-sm transition ${
+                            selected === video.url
+                                ? "border-rose-400 bg-rose-50 text-rose-700"
+                                : "border-transparent hover:bg-gray-50 text-gray-700"
                         }`}
                     >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={image.url}
-                            alt={image.name}
-                            className="h-full w-full object-cover"
-                        />
-                        <span className="absolute inset-x-0 bottom-0 truncate bg-black/50 px-1.5 py-1 text-[10px] text-white">
-                            {image.name}
-                        </span>
+                        <span className="text-lg">🎬</span>
+                        <span className="flex-1 truncate font-medium">{video.name}</span>
+                        {selected === video.url && (
+                            <span className="shrink-0 text-xs text-rose-500">✓ Selected</span>
+                        )}
                     </button>
                 ))}
             </div>

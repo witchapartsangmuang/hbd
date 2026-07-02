@@ -1,11 +1,17 @@
-"use client"
+"use client";
 import { useEffect, useRef } from "react";
-import { releaseBalloonState } from "@/components/sections/utils/hooks"
+import { releaseBalloonState } from "@/components/sections/utils/hooks";
 import { BalloonItem } from "@/components/sections/utils/type";
 import { HbdContent } from "@/components/sections/utils/content-types";
-export default function ReleaseBalloon({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
+export default function ReleaseBalloon({
+    nextStep,
+    content,
+}: {
+    nextStep: () => void;
+    content: HbdContent;
+}) {
     const { wishes, balloonGradients } = content.releaseBalloon;
-    const { balloons, setballoons, release, setrelease } = releaseBalloonState()
+    const { balloons, setballoons, release, setrelease } = releaseBalloonState();
     const balloonIdRef = useRef(1);
     const balloonZoneRef = useRef<HTMLDivElement | null>(null);
     const handleStartBalloons = () => {
@@ -23,19 +29,19 @@ export default function ReleaseBalloon({ nextStep, content }: { nextStep: () => 
                 prev.filter((item) => !newItems.some((newItem) => newItem.id === item.id))
             );
         }, 11000);
-        setrelease(prev => !prev)
-        nextStep()
+        setrelease((prev) => !prev);
+        nextStep();
     };
     useEffect(() => {
         console.log("balloons", balloons);
-    }, [balloons])
+    }, [balloons]);
     return (
         <section className="relative flex flex-col items-center min-h-screen p-5">
             {/* <h2 className="text-center text-3xl font-bold text-rose-700">
                 🎈 Floating Wishes
             </h2>
             <p className="mt-3 max-w-2xl text-center text-rose-900/80">
-                คำอวยพรเล็ก ๆ จะลอยขึ้นไปบนฟ้า
+                Little wishes floating up to the sky
             </p> */}
             <div ref={balloonZoneRef} className="relative h-[calc(100vh-2.5rem)] w-full">
                 {balloons.map((balloon) => (
@@ -44,7 +50,7 @@ export default function ReleaseBalloon({ nextStep, content }: { nextStep: () => 
                         className={`animate-rise absolute -bottom-56 flex h-28 w-24 items-center justify-center rounded-[50%_50%_45%_45%] bg-linear-to-br ${balloonGradients[balloon.styleIndex]} px-2 text-center text-xs leading-5 text-white shadow-xl`}
                         style={{
                             left: balloon.left,
-                            animationDuration: `${balloon.duration}s`
+                            animationDuration: `${balloon.duration}s`,
                         }}
                     >
                         {balloon.text}
@@ -52,18 +58,17 @@ export default function ReleaseBalloon({ nextStep, content }: { nextStep: () => 
                     </div>
                 ))}
                 <div className="flex w-full h-full items-center justify-center">
-                    {
-                        !release &&
+                    {!release && (
                         <button
                             type="button"
                             onClick={handleStartBalloons}
                             className="mt-6 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
                         >
-                            ปล่อยบอลลูน
+                            Release Balloon
                         </button>
-                    }
+                    )}
                 </div>
             </div>
         </section>
-    )
+    );
 }

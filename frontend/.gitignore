@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local uploads (fallback when BLOB_READ_WRITE_TOKEN is not set)
+/public/uploads/

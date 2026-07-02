@@ -5,13 +5,16 @@ import { flipPhotoCardState } from "@/components/sections/utils/hooks";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
-	const { catImg, dogImg } = content.flipPhotoCard;
+	const { catImg, dogImg, dogEmoji, catEmoji } = content.flipPhotoCard;
 	const { flipped, setflipped, imgSelect, setimgSelect } = flipPhotoCardState();
 	useEffect(() => {
 		if (imgSelect === "") return;
 		setflipped(true);
 		nextStep()
 	}, [imgSelect, setflipped]);
+
+	const isUrl = (val: string) => val.startsWith("/") || val.startsWith("http");
+
 	return (
 		<section className="relative flex flex-col items-center min-h-screen p-5">
 			<div className="relative z-10 w-full max-w-md">
@@ -21,7 +24,7 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						Photo Flip Card
 					</h1>
 					<p className="mt-2 text-sm text-slate-600 sm:text-base">
-						เลือกสิ่งที่ชอบ แล้วการ์ดจะพลิกเผยรูปด้านใน
+						Choose your favorite, and the card will flip to reveal the photo inside
 					</p>
 				</div>
 
@@ -48,12 +51,12 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						>
 							<div className="mb-4 text-5xl drop-shadow sm:text-6xl">🎁</div>
 							<p className="mt-3 max-w-55 text-sm leading-relaxed text-white/90 sm:text-base">
-								เลือก “หมา 🐶” หรือ “แมว 🐱” ด้านล่างเพื่อเปิดการ์ด
+								Choose "Dog 🐶" or "Cat 🐱" below to open the card
 							</p>
 
 							{!imgSelect && (
 								<div className="mt-5 rounded-full bg-white/20 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm sm:text-sm">
-									ยังไม่ได้เลือกรูป
+									No photo selected yet
 								</div>
 							)}
 						</div>
@@ -68,21 +71,22 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						>
 							<div className="relative h-full w-full">
 								{imgSelect ? (
-									<>
+									isUrl(imgSelect) ? (
 										<img
 											src={imgSelect}
 											alt="photo card"
 											className="h-full w-full object-cover"
 										/>
-										{/* <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/50 via-black/10 to-transparent p-4 text-white">
-											<p className="text-sm font-medium sm:text-base">
-												เปิดการ์ดสำเร็จแล้ว ✨
-											</p>
-										</div> */}
-									</>
+									) : (
+										<div className="flex h-full items-center justify-center bg-linear-to-br from-rose-50 to-pink-100">
+											<span className="select-none text-[96px] leading-none drop-shadow-md sm:text-[120px]">
+												{imgSelect}
+											</span>
+										</div>
+									)
 								) : (
 									<div className="flex h-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-500">
-										<p className="text-sm sm:text-base">ยังไม่มีรูปที่เลือก</p>
+										<p className="text-sm sm:text-base">No photo selected</p>
 									</div>
 								)}
 							</div>
@@ -94,29 +98,29 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 				<div className="mt-3 rounded-3xl border border-white/60 bg-white/80 p-4 shadow-lg backdrop-blur-md sm:mt-8 sm:p-5">
 					<div className="mb-3 text-center">
 						<p className="text-sm font-semibold text-slate-700 sm:text-base">
-							ชอบอะไรระหว่าง
+							Which do you prefer?
 						</p>
 					</div>
 					<div className="grid grid-cols-2 gap-3">
 						<button
 							type="button"
-							onClick={() => setimgSelect(dogImg)}
+							onClick={() => setimgSelect(dogEmoji || dogImg)}
 							className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-sky-200 bg-linear-to-br from-sky-50 to-cyan-100 px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
 						>
 							<span className="text-2xl transition-transform group-hover:scale-110">
 								🐶
 							</span>
-							<span className="font-semibold">หมา</span>
+							<span className="font-semibold">Dog</span>
 						</button>
 						<button
 							type="button"
-							onClick={() => setimgSelect(catImg)}
+							onClick={() => setimgSelect(catEmoji || catImg)}
 							className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-pink-200 bg-linear-to-br from-pink-50 to-rose-100 px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
 						>
 							<span className="text-2xl transition-transform group-hover:scale-110">
 								🐱
 							</span>
-							<span className="font-semibold">แมว</span>
+							<span className="font-semibold">Cat</span>
 						</button>
 					</div>
 				</div>

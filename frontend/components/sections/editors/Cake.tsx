@@ -4,25 +4,21 @@ import { launchConfetti } from "@/components/sections/utils/functions";
 import { cakeState, confettiState } from "@/components/sections/utils/hooks";
 import { HbdContent } from "@/components/sections/utils/content-types";
 export default function Cake({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
-    const { wishText: cakeWishText } = content.cake;
-    const confettiIdRef = useRef(2)
-    const { confetti, setConfetti } = confettiState()
-    const { blown, setblown } = cakeState()
+    const { wishText: cakeWishText, wishTextAlign = "center" } = content.cake;
+    const confettiIdRef = useRef(2);
+    const { confetti, setConfetti } = confettiState();
+    const { blown, setblown } = cakeState();
     const handleBlowCandles = () => {
         launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
-        setblown(prev => !prev);
-        nextStep()
+        setblown((prev) => !prev);
+        nextStep();
     };
     return (
         <>
             {/* min-h-screen */}
             <section className="relative flex flex-col items-center p-5">
-                <p className="mt-6 text-3xl font-bold text-pink-600">
-                    🎂 Make a Wish
-                </p>
-                <p className="mt-3 text-center text-rose-900/80">
-                    อธิษฐานในใจ แล้วค่อยเป่าเทียนนะ
-                </p>
+                <p className="mt-6 text-3xl font-bold text-pink-600">🎂 Make a Wish</p>
+                <p className="mt-3 text-center text-rose-900/80">Make a wish, then blow out the candles</p>
                 <div className="w-full z-1000 h-1">
                     {confetti.map((piece) => (
                         <span
@@ -71,9 +67,13 @@ export default function Cake({ nextStep, content }: { nextStep: () => void; cont
                     className={`mt-3 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 
                     font-medium text-white shadow-lg transition hover:-translate-y-0.5 ${blown && "hidden"}`}
                 >
-                    เป่าเทียน 🕯️
+                    Blow out 🕯️
                 </button>
-                <p className={`mt-5 mb-5 text-center font-semibold text-rose-700 ${blown ? "opacity-100" : "opacity-0"}`}>{cakeWishText}</p>
+                <p
+                    className={`mt-5 mb-5 whitespace-pre-line font-semibold text-rose-700 transition-opacity ${wishTextAlign === "left" ? "text-left" : "text-center"} ${blown ? "opacity-100" : "opacity-0"}`}
+                >
+                    {cakeWishText}
+                </p>
             </section>
         </>
     );

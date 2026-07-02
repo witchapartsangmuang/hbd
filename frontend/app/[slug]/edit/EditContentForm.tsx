@@ -8,14 +8,20 @@ import SectionEditor from "./SectionEditor";
 const initialState = { error: null as string | null, savedAt: null as number | null };
 
 export default function EditContentForm({ slug, content }: { slug: string; content: HbdContent }) {
-  const boundAction = saveContentAction.bind(null, slug);
-  const [state, formAction, isPending] = useActionState(async (_prev: typeof initialState, formData: FormData) => {
-    return boundAction(formData);
-  }, initialState);
+    const [state, formAction, isPending] = useActionState(
+        saveContentAction.bind(null, slug),
+        initialState
+    );
 
-  return (
-    <form action={formAction}>
-      <SectionEditor slug={slug} content={content} error={state.error} savedAt={state.savedAt} isPending={isPending} />
-    </form>
-  );
+    return (
+        <form action={formAction}>
+            <SectionEditor
+                slug={slug}
+                content={content}
+                error={state.error}
+                savedAt={state.savedAt}
+                isPending={isPending}
+            />
+        </form>
+    );
 }

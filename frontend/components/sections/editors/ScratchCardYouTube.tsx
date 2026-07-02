@@ -1,27 +1,46 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { confettiState, scratchCardState } from "@/components/sections/utils/hooks";
 import { launchConfetti } from "@/components/sections/utils/functions";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
-export default function ScratchCardYoutube({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
-    const { brushRadius, revealThreshold, userWidth, userHeight } = content.scratchCard;
-    const confettiIdRef = useRef(3)
+export default function ScratchCardYoutube({
+    nextStep,
+    content,
+}: {
+    nextStep: () => void;
+    content: HbdContent;
+}) {
+    const { brushRadius, revealThreshold, userWidth, aspectRatio, headingText, subText, revealedText } = content.scratchCard;
+    const confettiIdRef = useRef(3);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const isDrawingRef = useRef(false);
     const revealedRef = useRef(false);
-    const { confetti, setConfetti } = confettiState()
-    const { mounted, setmouted, progress, setprogress, isRevealed, setisRevealed, isFading, setisFading, cardSize, setCardSize, showVideo, setshowVideo } = scratchCardState()
+    const { confetti, setConfetti } = confettiState();
+    const {
+        mounted,
+        setmouted,
+        progress,
+        setprogress,
+        isRevealed,
+        setisRevealed,
+        isFading,
+        setisFading,
+        cardSize,
+        setCardSize,
+        showVideo,
+        setshowVideo,
+    } = scratchCardState();
     useEffect(() => {
-        setmouted(true)
-    }, [])
+        setmouted(true);
+    }, []);
     useEffect(() => {
         if (progress === revealThreshold) {
             launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         }
-    }, [progress])
+    }, [progress]);
 
     const isMobile = cardSize.width < 720;
     const actualBrushRadius = isMobile ? Math.max(26, brushRadius * 0.6) : brushRadius;
@@ -29,7 +48,7 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
     const initCanvas = (renderWidth: number, renderHeight: number) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-        const padding = 0
+        const padding = 0;
         const dpr = window.devicePixelRatio || 1;
         canvas.width = Math.floor(renderWidth * dpr);
         canvas.height = Math.floor(renderHeight * dpr);
@@ -63,7 +82,7 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
         // ctx.font = isMobile ? "500 13px sans-serif" : "500 16px sans-serif";
         // ctx.fillStyle = "rgba(255,255,255,0.92)";
         // ctx.fillText(
-        //     "ลากเพื่อเปิดเซอร์ไพรส์วันเกิด",
+        //     "Drag to reveal birthday surprise",
         //     renderWidth / 2,
         //     renderHeight / 2 + (isMobile ? 24 : 28)
         // );
@@ -74,24 +93,17 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
     };
     useEffect(() => {
         console.log("cardSize", cardSize);
-    }, [cardSize])
+    }, [cardSize]);
     useEffect(() => {
         if (typeof window === "undefined") return;
         const updateSize = () => {
             const wrapper = containerRef.current;
             if (!wrapper) return;
-            const current = window.innerWidth;
-            const aspectRatio = window.innerWidth / window.innerHeight;
+            const [rw, rh] = (aspectRatio ?? "16:9").split(":").map(Number);
             const parentWidth = wrapper.clientWidth;
-            const nextWidth = Math.min(current, parentWidth, userWidth);
-            const recommendRatio = Math.round(nextWidth / aspectRatio);
-            const nextHeight = Math.min(recommendRatio, userHeight);
-            console.log("current, parentWidth, userWidth", current, parentWidth, userWidth);
-            console.log("recommendRatio, userHeight", recommendRatio, userHeight);
-            setCardSize({
-                width: nextWidth - 10,
-                height: nextHeight - 10,
-            });
+            const nextWidth = Math.min(window.innerWidth, parentWidth, userWidth);
+            const nextHeight = Math.round(nextWidth * (rh / rw));
+            setCardSize({ width: nextWidth - 10, height: nextHeight - 10 });
         };
         updateSize();
         const observer = new ResizeObserver(() => {
@@ -108,7 +120,9 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
         if (!cardSize.width || !cardSize.height) return;
         initCanvas(cardSize.width, cardSize.height);
     }, [cardSize.width, cardSize.height]);
-    const getPoint = (e: | React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const getPoint = (
+        e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+    ) => {
         const canvas = canvasRef.current;
         if (!canvas) return null;
         const rect = canvas.getBoundingClientRect();
@@ -142,7 +156,7 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
         setTimeout(() => {
             setshowVideo(true);
         }, 1000);
-        nextStep()
+        nextStep();
     };
 
     const scratchAt = (x: number, y: number) => {
@@ -215,16 +229,11 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
         isDrawingRef.current = false;
     };
 
-
     return (
         // min-h-screen
         <section className="relative flex flex-col items-center p-5">
-            <p className="mt-6 text-3xl font-bold text-pink-600">
-                ลองขูดการ์ดดูสิ!
-            </p>
-            <p className="mt-3 text-center text-rose-900/80">
-                ในการ์ดมีอะไรซ่อนอยู่น้าาา
-            </p>
+            <p className="mt-6 text-3xl font-bold text-pink-600">{headingText}</p>
+            <p className="mt-3 text-center text-rose-900/80">{subText}</p>
             <div className="w-full z-1000 h-1">
                 {confetti.map((piece) => (
                     <span
@@ -246,20 +255,28 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
                 ))}
             </div>
             <div className="flex w-full p-2 justify-center">
-                {
-                    mounted && <>
-                        <div ref={containerRef} style={{ minWidth: cardSize.width, minHeight: cardSize.height }} className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2">
+                {mounted && (
+                    <>
+                        <div
+                            ref={containerRef}
+                            style={{ minWidth: cardSize.width, minHeight: cardSize.height }}
+                            className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2"
+                        >
                             <div
                                 className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
-                                style={{ width: cardSize.width, height: cardSize.height }}>
+                                style={{ width: cardSize.width, height: cardSize.height }}
+                            >
                                 {!showVideo && (
                                     <>
                                         <canvas
                                             ref={canvasRef}
-                                            className={`absolute z-10 transition-opacity duration-500 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
-                                                }`}
+                                            className={`absolute z-10 transition-opacity duration-500 touch-none ${
+                                                isRevealed
+                                                    ? "pointer-events-none"
+                                                    : "cursor-crosshair"
+                                            }`}
                                             style={{
-                                                opacity: isFading ? 0 : 1
+                                                opacity: isFading ? 0 : 1,
                                             }}
                                             onMouseDown={handleMouseDown}
                                             onMouseMove={handleMouseMove}
@@ -269,17 +286,19 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
                                             onTouchMove={handleTouchMove}
                                             onTouchEnd={handleTouchEnd}
                                         />
-                                        <div className="absolute z-5 transition-opacity duration-500 bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)]"
+                                        <div
+                                            className="absolute z-5 transition-opacity duration-500 bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)]"
                                             style={{
                                                 width: cardSize.width,
                                                 height: cardSize.height,
                                                 opacity: isFading ? 0 : 1,
-                                            }} />
+                                            }}
+                                        />
                                     </>
                                 )}
                                 <iframe
                                     className="absolute h-full w-full"
-                                    src={`https://www.youtube.com/embed/S43vWT9waGQ?autoplay=${showVideo ? "1" : "0"}&rel=0`}
+                                    src={`${content.scratchCard.youtubeUrl ?? "https://www.youtube.com/embed/S43vWT9waGQ"}?autoplay=${showVideo ? "1" : "0"}&rel=0`}
                                     title="Birthday Video"
                                     allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                                     allowFullScreen
@@ -287,16 +306,13 @@ export default function ScratchCardYoutube({ nextStep, content }: { nextStep: ()
                             </div>
                         </div>
                     </>
-                }
+                )}
             </div>
             <div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
                 <p className="text-sm font-medium text-rose-600">
-                    {isRevealed
-                        ? "ยังมีอันต่อไปนะ 💌"
-                        : "ค่อยๆ ขูดนะ ✨"}
+                    {isRevealed ? revealedText : "Scratch slowly ✨"}
                 </p>
             </div>
         </section>
-
     );
 }

@@ -12,7 +12,7 @@ export default function ScratchCardVdo({
     nextStep: () => void;
     content: HbdContent;
 }) {
-    const { brushRadius, revealThreshold, userWidth, userHeight, maxVdoWidth } = content.scratchCard;
+    const { brushRadius, revealThreshold, userWidth, aspectRatio, headingText, subText, revealedText } = content.scratchCard;
     const confettiIdRef = useRef(3);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -47,9 +47,7 @@ export default function ScratchCardVdo({
     }, [progress, setConfetti]);
 
     const isMobile = cardSize.width < 720;
-    const actualBrushRadius = isMobile
-        ? Math.max(26, brushRadius * 0.6)
-        : brushRadius;
+    const actualBrushRadius = isMobile ? Math.max(26, brushRadius * 0.6) : brushRadius;
 
     const initCanvas = (renderWidth: number, renderHeight: number) => {
         const canvas = canvasRef.current;
@@ -111,18 +109,11 @@ export default function ScratchCardVdo({
         const updateSize = () => {
             const wrapper = containerRef.current;
             if (!wrapper) return;
-
-            const current = window.innerWidth;
-            const aspectRatio = window.innerWidth / window.innerHeight;
+            const [rw, rh] = (aspectRatio ?? "16:9").split(":").map(Number);
             const parentWidth = wrapper.clientWidth;
-            const nextWidth = Math.min(current, parentWidth, userWidth);
-            const recommendRatio = Math.round(nextWidth / aspectRatio);
-            const nextHeight = Math.min(recommendRatio, userHeight);
-
-            setCardSize({
-                width: nextWidth,
-                height: nextHeight,
-            });
+            const nextWidth = Math.min(window.innerWidth, parentWidth, userWidth);
+            const nextHeight = Math.round(nextWidth * (rh / rw));
+            setCardSize({ width: nextWidth, height: nextHeight });
         };
 
         updateSize();
@@ -279,10 +270,8 @@ export default function ScratchCardVdo({
 
     return (
         <section className="relative flex flex-col items-center p-5">
-            <p className="mt-6 text-3xl font-bold text-pink-600">ลองขูดการ์ดดูสิ!</p>
-            <p className="mt-3 text-center text-rose-900/80">
-                ในการ์ดมีอะไรซ่อนอยู่น้าาา
-            </p>
+            <p className="mt-6 text-3xl font-bold text-pink-600">{headingText}</p>
+            <p className="mt-3 text-center text-rose-900/80">{subText}</p>
             <div className="w-full z-1000 h-1">
                 {confetti.map((piece) => (
                     <span
@@ -304,20 +293,25 @@ export default function ScratchCardVdo({
                 ))}
             </div>
             <div className="flex w-full p-2 justify-center">
-                {
-                    mounted &&
-                    <div ref={containerRef} style={{ minWidth: cardSize.width, minHeight: cardSize.height }} className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2">
+                {mounted && (
+                    <div
+                        ref={containerRef}
+                        style={{ minWidth: cardSize.width, minHeight: cardSize.height }}
+                        className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2"
+                    >
                         <div
                             className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
-                            style={{ width: cardSize.width, height: cardSize.height }}>
+                            style={{ width: cardSize.width, height: cardSize.height }}
+                        >
                             {!showVideo && (
                                 <>
                                     <canvas
                                         ref={canvasRef}
-                                        className={`absolute z-10 transition-opacity duration-1000 touch-none ${isRevealed ? "pointer-events-none" : "cursor-crosshair"
-                                            }`}
+                                        className={`absolute z-10 transition-opacity duration-1000 touch-none ${
+                                            isRevealed ? "pointer-events-none" : "cursor-crosshair"
+                                        }`}
                                         style={{
-                                            opacity: isFading ? 0 : 1
+                                            opacity: isFading ? 0 : 1,
                                         }}
                                         onMouseDown={handleMouseDown}
                                         onMouseMove={handleMouseMove}
@@ -327,34 +321,32 @@ export default function ScratchCardVdo({
                                         onTouchMove={handleTouchMove}
                                         onTouchEnd={handleTouchEnd}
                                     />
-                                    <div className="absolute z-5 transition-opacity duration-1000 bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)]"
+                                    <div
+                                        className="absolute z-5 transition-opacity duration-1000 bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)]"
                                         style={{
                                             width: cardSize.width,
                                             height: cardSize.height,
                                             opacity: isFading ? 0 : 1,
-                                        }} />
+                                        }}
+                                    />
                                 </>
                             )}
                             <video
                                 ref={videoRef}
-                                style={{
-                                    width: Math.min(maxVdoWidth, cardSize.width),
-                                    height: cardSize.height,
-                                }}
                                 controls={showVideo}
                                 playsInline
                                 preload="auto"
-                                className="absolute h-full w-full object-cover"
+                                className="absolute inset-0 w-full h-full object-contain"
                             >
-                                <source src="/video/nm-tt.mp4" type="video/mp4" />
+                                <source src={content.scratchCard.videoSrc ?? "/video/nm-tt.mp4"} type="video/mp4" />
                             </video>
                         </div>
                     </div>
-                }
+                )}
             </div>
             <div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
                 <p className="text-sm font-medium text-rose-600">
-                    {isRevealed ? "ยังมีอันต่อไปนะ 💌" : "ค่อยๆ ขูดนะ ✨"}
+                    {isRevealed ? revealedText : "Scratch slowly ✨"}
                 </p>
             </div>
         </section>

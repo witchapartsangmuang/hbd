@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { BalloonItem, ConfettiPiece } from "./type";
 export function confettiState() {
-    const [confetti, setConfetti] = useState<ConfettiPiece[]>([])
+    const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
     return {
         confetti,
-        setConfetti
-    }
+        setConfetti,
+    };
 }
 // BirthGift.tsx
 export function birthGiftState() {
     const [isOpenGift, setisOpenGift] = useState<boolean>(false);
-    const [isPressing, setisPressing] = useState<boolean>(false)
+    const [isPressing, setisPressing] = useState<boolean>(false);
     const [isOpenDisplayImgArea, setisOpenDisplayImgArea] = useState<boolean>(false);
     const [isShaking, setisShaking] = useState<boolean>(false);
     const [showSurpriseText, setshowSurpriseText] = useState<boolean>(false);
@@ -24,7 +24,7 @@ export function birthGiftState() {
         isShaking,
         setisShaking,
         showSurpriseText,
-        setshowSurpriseText
+        setshowSurpriseText,
     };
 }
 // Cake.tsx
@@ -35,12 +35,12 @@ export function cakeState() {
         blown,
         setblown,
         wishText,
-        setwishText
-    }
+        setwishText,
+    };
 }
-// ScratchCardImg.tsx + ScratchCardVdo.tsx 
+// ScratchCardImg.tsx + ScratchCardVdo.tsx
 export function scratchCardState() {
-    const [mounted, setmouted] = useState(false)
+    const [mounted, setmouted] = useState(false);
     const [progress, setprogress] = useState(0);
     const [isRevealed, setisRevealed] = useState(false);
     const [isFading, setisFading] = useState(false);
@@ -52,12 +52,13 @@ export function scratchCardState() {
             // width: 340,
             // height: 340 * 0.4
             width: window.innerWidth,
-            height: window.innerHeight * 0.4
+            height: window.innerHeight * 0.4,
         };
-    })
+    });
     const [showVideo, setshowVideo] = useState(false);
     return {
-        mounted, setmouted,
+        mounted,
+        setmouted,
         progress,
         setprogress,
         isRevealed,
@@ -67,8 +68,8 @@ export function scratchCardState() {
         cardSize,
         setCardSize,
         showVideo,
-        setshowVideo
-    }
+        setshowVideo,
+    };
 }
 // TypingText.tsx
 export function typingTextState() {
@@ -78,8 +79,8 @@ export function typingTextState() {
         typedText,
         settypedText,
         typeStarted,
-        settypeStarted
-    }
+        settypeStarted,
+    };
 }
 // DateOfBirth.tsx
 export function dateOfBirthState() {
@@ -95,29 +96,29 @@ export function dateOfBirthState() {
         success,
         setsuccess,
         error,
-        seterror
-    }
+        seterror,
+    };
 }
 // ReleaseBalloon.tsx
 export function releaseBalloonState() {
     const [balloons, setballoons] = useState<BalloonItem[]>([]);
     const [release, setrelease] = useState(false);
-    release
+    release;
     return {
         balloons,
         setballoons,
         release,
-        setrelease
-    }
+        setrelease,
+    };
 }
 // FlipPhotoCard.tsx
 export function flipPhotoCardState() {
     const [flipped, setflipped] = useState(false);
-    const [imgSelect, setimgSelect] = useState<string>("")
+    const [imgSelect, setimgSelect] = useState<string>("");
     return {
         flipped,
         setflipped,
         imgSelect,
-        setimgSelect
-    }
+        setimgSelect,
+    };
 }
