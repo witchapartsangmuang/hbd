@@ -6,8 +6,11 @@ import { mkdir, readdir, writeFile } from "fs/promises";
 import { join } from "path";
 import { getCurrentUser } from "@/lib/session";
 import { getPageBySlug, updatePageContent } from "@/lib/pages";
-import { mergeWithDefaults } from "@/components/sections/utils/defaults";
-import { SECTION_TYPES, SectionInstance } from "@/components/sections/utils/content-types";
+import {
+    mergeWithDefaults,
+    SECTION_TYPES,
+    SectionInstance,
+} from "@/components/sections/utils/content-types";
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
@@ -288,7 +291,9 @@ export async function saveContentAction(
                     .map((c) => ({
                         imgPath: String(c.imgPath),
                         caption: typeof c.caption === "string" ? c.caption : "",
-                        rotateAngle: Number.isFinite(Number(c.rotateAngle)) ? Number(c.rotateAngle) : 0,
+                        rotateAngle: Number.isFinite(Number(c.rotateAngle))
+                            ? Number(c.rotateAngle)
+                            : 0,
                         aspectRatio: typeof c.aspectRatio === "string" ? c.aspectRatio : "3:4",
                     }));
             }
@@ -303,7 +308,7 @@ export async function saveContentAction(
 
     const correctCode = str(formData, "dateOfBirth.correctCode").trim();
     const _dc = Number(str(formData, "dateOfBirth.digitCount"));
-    const digitCount = (_dc === 4 || _dc === 8) ? _dc : 6;
+    const digitCount = _dc === 4 || _dc === 8 ? _dc : 6;
 
     const prizesRaw = str(formData, "spinTheWheel.prizes");
     const prizes = prizesRaw
@@ -383,11 +388,15 @@ export async function saveContentAction(
         },
         cake: {
             wishText: str(formData, "cake.wishText") || existing.cake.wishText,
-            wishTextAlign: (str(formData, "cake.wishTextAlign") || existing.cake.wishTextAlign || "center") as "left" | "center",
+            wishTextAlign: (str(formData, "cake.wishTextAlign") ||
+                existing.cake.wishTextAlign ||
+                "center") as "left" | "center",
         },
         scratchCard: {
             aspectRatio:
-                str(formData, "scratchCard.aspectRatio") || existing.scratchCard.aspectRatio || "16:9",
+                str(formData, "scratchCard.aspectRatio") ||
+                existing.scratchCard.aspectRatio ||
+                "16:9",
             brushRadius: num(formData, "scratchCard.brushRadius", existing.scratchCard.brushRadius),
             revealThreshold: num(
                 formData,
@@ -399,21 +408,29 @@ export async function saveContentAction(
             )
                 ? str(formData, "scratchCard.revealType")
                 : existing.scratchCard.revealType) as "youtube" | "video" | "image",
-            youtubeUrl:
-                str(formData, "scratchCard.youtubeUrl") || existing.scratchCard.youtubeUrl,
+            youtubeUrl: str(formData, "scratchCard.youtubeUrl") || existing.scratchCard.youtubeUrl,
             videoSrc: str(formData, "scratchCard.videoSrc") || existing.scratchCard.videoSrc,
             imageSrc: str(formData, "scratchCard.imageSrc") || existing.scratchCard.imageSrc,
-            headingText: str(formData, "scratchCard.headingText") || existing.scratchCard.headingText,
+            headingText:
+                str(formData, "scratchCard.headingText") || existing.scratchCard.headingText,
             subText: str(formData, "scratchCard.subText") || existing.scratchCard.subText,
-            revealedText: str(formData, "scratchCard.revealedText") || existing.scratchCard.revealedText,
+            revealedText:
+                str(formData, "scratchCard.revealedText") || existing.scratchCard.revealedText,
         },
         typingText: {
             message: str(formData, "typingText.message") || existing.typingText.message,
-            messageAlign: (str(formData, "typingText.messageAlign") || existing.typingText.messageAlign || "left") as "left" | "center",
+            messageAlign: (str(formData, "typingText.messageAlign") ||
+                existing.typingText.messageAlign ||
+                "left") as "left" | "center",
         },
         dateOfBirth: {
             digitCount: digitCount as 4 | 6,
-            formatPlaceholder: digitCount === 4 ? ["D", "D", "M", "M"] : digitCount === 8 ? ["D", "D", "M", "M", "Y", "Y", "Y", "Y"] : ["D", "D", "M", "M", "Y", "Y"],
+            formatPlaceholder:
+                digitCount === 4
+                    ? ["D", "D", "M", "M"]
+                    : digitCount === 8
+                      ? ["D", "D", "M", "M", "Y", "Y", "Y", "Y"]
+                      : ["D", "D", "M", "M", "Y", "Y"],
             emptyDigits: Array(digitCount).fill(""),
             correctCode: new RegExp(`^\\d{${digitCount}}$`).test(correctCode)
                 ? correctCode
@@ -424,13 +441,18 @@ export async function saveContentAction(
             wishes: wishes.length > 0 ? wishes : existing.releaseBalloon.wishes,
         },
         flipPhotoCard: {
-            aspectRatio: str(formData, "flipPhotoCard.aspectRatio") || existing.flipPhotoCard.aspectRatio || "3:4",
+            aspectRatio:
+                str(formData, "flipPhotoCard.aspectRatio") ||
+                existing.flipPhotoCard.aspectRatio ||
+                "3:4",
             dogImg: str(formData, "flipPhotoCard.dogImg") || existing.flipPhotoCard.dogImg,
             catImg: str(formData, "flipPhotoCard.catImg") || existing.flipPhotoCard.catImg,
             dogEmoji: str(formData, "flipPhotoCard.dogEmoji"),
             catEmoji: str(formData, "flipPhotoCard.catEmoji"),
-            dogLabel: str(formData, "flipPhotoCard.dogLabel") || existing.flipPhotoCard.dogLabel || "Dog",
-            catLabel: str(formData, "flipPhotoCard.catLabel") || existing.flipPhotoCard.catLabel || "Cat",
+            dogLabel:
+                str(formData, "flipPhotoCard.dogLabel") || existing.flipPhotoCard.dogLabel || "Dog",
+            catLabel:
+                str(formData, "flipPhotoCard.catLabel") || existing.flipPhotoCard.catLabel || "Cat",
         },
         slideInIcon: {
             title: str(formData, "slideInIcon.title") || existing.slideInIcon.title,
@@ -452,7 +474,10 @@ export async function saveContentAction(
                 existing.jigsawPhotoPuzzle.imagePath,
             gridSize: Math.min(
                 5,
-                Math.max(2, num(formData, "jigsawPhotoPuzzle.gridSize", existing.jigsawPhotoPuzzle.gridSize))
+                Math.max(
+                    2,
+                    num(formData, "jigsawPhotoPuzzle.gridSize", existing.jigsawPhotoPuzzle.gridSize)
+                )
             ),
         },
         quizAboutYou: {
@@ -467,7 +492,8 @@ export async function saveContentAction(
             message: str(formData, "giftBoxUnwrap.message") || existing.giftBoxUnwrap.message,
         },
         envelopeOpen: {
-            senderName: str(formData, "envelopeOpen.senderName") || existing.envelopeOpen.senderName,
+            senderName:
+                str(formData, "envelopeOpen.senderName") || existing.envelopeOpen.senderName,
             message: str(formData, "envelopeOpen.message") || existing.envelopeOpen.message,
         },
         polaroidShake: {
@@ -517,14 +543,16 @@ export async function saveContentAction(
         },
         digitalSignature: {
             promptText:
-                str(formData, "digitalSignature.promptText") || existing.digitalSignature.promptText,
+                str(formData, "digitalSignature.promptText") ||
+                existing.digitalSignature.promptText,
         },
         backgroundMusicPlayer: {
             audioSrc:
                 str(formData, "backgroundMusicPlayer.audioSrc") ||
                 existing.backgroundMusicPlayer.audioSrc,
             label:
-                str(formData, "backgroundMusicPlayer.label") || existing.backgroundMusicPlayer.label,
+                str(formData, "backgroundMusicPlayer.label") ||
+                existing.backgroundMusicPlayer.label,
         },
         cinematicRabbit: {
             title: str(formData, "cinematicRabbit.title") || existing.cinematicRabbit.title,
@@ -533,8 +561,7 @@ export async function saveContentAction(
         },
         cinematicPanda: {
             title: str(formData, "cinematicPanda.title") || existing.cinematicPanda.title,
-            subtitle:
-                str(formData, "cinematicPanda.subtitle") || existing.cinematicPanda.subtitle,
+            subtitle: str(formData, "cinematicPanda.subtitle") || existing.cinematicPanda.subtitle,
         },
         fireworksFinale: {
             message: str(formData, "fireworksFinale.message") || existing.fireworksFinale.message,

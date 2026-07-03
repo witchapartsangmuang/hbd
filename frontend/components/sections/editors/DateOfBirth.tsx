@@ -11,7 +11,11 @@ export default function DateOfBirth({
     content: HbdContent;
     nextStep: () => void;
 }) {
-    const { digitCount = 6, formatPlaceholder, correctCode } = content.dateOfBirth as typeof content.dateOfBirth & { digitCount: 4 | 6 | 8 };
+    const {
+        digitCount = 6,
+        formatPlaceholder,
+        correctCode,
+    } = content.dateOfBirth as typeof content.dateOfBirth & { digitCount: 4 | 6 | 8 };
     const emptyArr = useMemo<string[]>(() => Array(digitCount).fill(""), [digitCount]);
     const { digits, setdigits, shake, setshake, success, setsuccess, error, seterror } =
         dateOfBirthState(digitCount);
@@ -94,7 +98,9 @@ export default function DateOfBirth({
         const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, digitCount);
         if (!pasted) return;
         const next = [...emptyArr];
-        pasted.split("").forEach((char, i) => { next[i] = char; });
+        pasted.split("").forEach((char, i) => {
+            next[i] = char;
+        });
         setdigits(next);
         focusInput(Math.min(pasted.length, last));
     };
@@ -108,25 +114,24 @@ export default function DateOfBirth({
     };
 
     const formatLabel = digitCount === 4 ? "DDMM" : digitCount === 8 ? "DDMMYYYY" : "DDMMYY";
-    const exampleHint = digitCount === 4 ? "18/12 → 1812" : digitCount === 8 ? "18/12/1999 → 18121999" : "18/12/99 → 181299";
+    const exampleHint =
+        digitCount === 4
+            ? "18/12 → 1812"
+            : digitCount === 8
+              ? "18/12/1999 → 18121999"
+              : "18/12/99 → 181299";
 
     return (
         <div className="mx-auto w-full max-w-md rounded-[28px] border border-(--theme-border) bg-white/90 p-6 shadow-xl backdrop-blur">
             <div className="mb-5 text-center">
-<<<<<<< HEAD
-                <h2 className="text-2xl font-bold text-rose-600">Enter Birthday Code</h2>
-                <p className="mt-2 text-sm text-rose-900/70">
+                <h2 className="text-2xl font-bold text-(--theme-primary-dark)">
+                    🔐 Enter Birthday Code
+                </h2>
+                <p className="mt-2 text-sm text-[#3a2433]/70">
                     Enter your {digitCount}-digit code in the format{" "}
                     <span className="font-semibold">{formatLabel}</span>
                 </p>
-                <p className="mt-1 text-xs text-rose-500">Example: {exampleHint}</p>
-=======
-                <h2 className="text-2xl font-bold text-(--theme-primary-dark)">🔐 Enter Birthday Code</h2>
-                <p className="mt-2 text-sm text-[#3a2433]/70">
-                    Enter your 6-digit code in the format <span className="font-semibold">DDMMYY</span>
-                </p>
-                <p className="mt-1 text-xs text-(--theme-primary)">Example: 18/12/99 → 181299</p>
->>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
+                <p className="mt-1 text-xs text-(--theme-primary)">Example: {exampleHint}</p>
             </div>
 
             <div className="mb-3 flex justify-center gap-2">
@@ -150,7 +155,9 @@ export default function DateOfBirth({
                     return (
                         <div key={index} className="flex items-center gap-1">
                             <input
-                                ref={(el) => { inputRefs.current[index] = el; }}
+                                ref={(el) => {
+                                    inputRefs.current[index] = el;
+                                }}
                                 type="text"
                                 inputMode="numeric"
                                 autoComplete="one-time-code"
@@ -170,13 +177,9 @@ export default function DateOfBirth({
                                 }`}
                             />
                             {showDivider && (
-<<<<<<< HEAD
-                                <span className="select-none text-xl font-bold text-rose-300">/</span>
-=======
                                 <span className="select-none text-xl font-bold text-(--theme-primary-light)">
                                     /
                                 </span>
->>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
                             )}
                         </div>
                     );
@@ -189,12 +192,7 @@ export default function DateOfBirth({
                         Correct 🎉 Continue to your birthday surprise
                     </p>
                 )}
-<<<<<<< HEAD
-                {!success && error && <p className="font-medium text-rose-500">{error}</p>}
-=======
-
                 {!success && error && <p className="font-medium text-(--theme-primary)">{error}</p>}
->>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -205,24 +203,13 @@ export default function DateOfBirth({
                 >
                     Clear
                 </button>
-<<<<<<< HEAD
-                <div className="rounded-full bg-rose-100 px-4 py-2 text-sm text-rose-700">
+                <div className="rounded-full bg-(--theme-soft) px-4 py-2 text-sm text-(--theme-primary-dark)">
                     {joinedCode.length}/{digitCount} digits
                 </div>
             </div>
 
-            <p className="mt-4 text-center text-xs text-rose-400">
-                Hint: Use your date of birth as {digitCount} digits
-=======
-
-                <div className="rounded-full bg-(--theme-soft) px-4 py-2 text-sm text-(--theme-primary-dark)">
-                    {joinedCode.length}/6 digits
-                </div>
-            </div>
-
             <p className="mt-4 text-center text-xs text-(--theme-primary-light)">
-                Hint: Use your date of birth as 6 digits
->>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
+                Hint: Use your date of birth as {digitCount} digits
             </p>
         </div>
     );

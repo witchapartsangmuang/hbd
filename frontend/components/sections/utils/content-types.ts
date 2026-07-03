@@ -267,8 +267,6 @@ export interface HbdContent {
     confettiColors: string[];
     sections: SectionInstance[];
 }
-<<<<<<< HEAD
-=======
 
 export const defaultContent: HbdContent = {
     theme: {
@@ -281,21 +279,25 @@ export const defaultContent: HbdContent = {
                 imgPath: "/img/1.jpg",
                 caption: "Wishing you the brightest year yet",
                 rotateAngle: -3,
+                aspectRatio: "3:4",
             },
             {
                 imgPath: "/img/2.jpg",
                 caption: "Wishing you the brightest year yet",
                 rotateAngle: 3,
+                aspectRatio: "3:4",
             },
             {
                 imgPath: "/img/3.jpg",
                 caption: "Wishing you the brightest year yet",
                 rotateAngle: -3,
+                aspectRatio: "3:4",
             },
             {
                 imgPath: "/img/4.jpg",
                 caption: "Wishing you the brightest year yet",
                 rotateAngle: 3,
+                aspectRatio: "3:4",
             },
         ],
     },
@@ -304,11 +306,9 @@ export const defaultContent: HbdContent = {
         wishTextAlign: "center" as const,
     },
     scratchCard: {
-        userWidth: 720,
         aspectRatio: "16:9",
         brushRadius: 56,
         revealThreshold: 50,
-        maxVdoWidth: 360,
         revealType: "youtube",
         youtubeUrl: "https://www.youtube.com/embed/S43vWT9waGQ",
         videoSrc: "/video/nm-tt.mp4",
@@ -323,6 +323,7 @@ export const defaultContent: HbdContent = {
         messageAlign: "left" as const,
     },
     dateOfBirth: {
+        digitCount: 6,
         formatPlaceholder: ["D", "D", "M", "M", "Y", "Y"],
         correctCode: "181299",
         emptyDigits: ["", "", "", "", "", ""],
@@ -344,17 +345,21 @@ export const defaultContent: HbdContent = {
         ],
     },
     flipPhotoCard: {
+        aspectRatio: "3:4",
         dogImg: "/img/nm_dog.jpg",
         catImg: "/img/nm_cat.jpg",
         dogEmoji: "",
         catEmoji: "",
+        dogLabel: "Dog",
+        catLabel: "Cat",
     },
     slideInIcon: {
         title: "Someone is holding a sign for you...",
     },
     cinematicBirthdayBear: {
         title: "A special surprise is coming your way 🧸",
-        subtitle: "When this section slides in, a little bear will appear holding an HBD sign with cute effects",
+        subtitle:
+            "When this section slides in, a little bear will appear holding an HBD sign with cute effects",
     },
     spinTheWheel: {
         prizes: [
@@ -503,4 +508,3 @@ export function mergeWithDefaults(content: Partial<HbdContent> | null | undefine
         sections: content?.sections ?? [],
     };
 }
->>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37

@@ -87,9 +87,7 @@ export default function SectionEditor({
     const [correctCode, setCorrectCode] = useState(content.dateOfBirth.correctCode);
 
     // releaseBalloon
-    const [balloonWishes, setBalloonWishes] = useState(
-        content.releaseBalloon.wishes.join("\n")
-    );
+    const [balloonWishes, setBalloonWishes] = useState(content.releaseBalloon.wishes.join("\n"));
 
     // flipPhotoCard
     const [flipAspectRatio, setFlipAspectRatio] = useState(
@@ -134,11 +132,16 @@ export default function SectionEditor({
     const addImgCard = () =>
         setImgCards((prev) => [
             ...prev,
-            { id: crypto.randomUUID(), imgPath: "", caption: "", rotateAngle: 0, aspectRatio: "3:4" },
+            {
+                id: crypto.randomUUID(),
+                imgPath: "",
+                caption: "",
+                rotateAngle: 0,
+                aspectRatio: "3:4",
+            },
         ]);
 
-    const removeImgCard = (id: string) =>
-        setImgCards((prev) => prev.filter((c) => c.id !== id));
+    const removeImgCard = (id: string) => setImgCards((prev) => prev.filter((c) => c.id !== id));
 
     const updateImgCard = (id: string, patch: Partial<ImgCardItem>) =>
         setImgCards((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)));
@@ -149,7 +152,11 @@ export default function SectionEditor({
 
     useEffect(() => {
         if (savedAt) {
-            setToast({ key: ++toastKeyRef.current, message: "Saved successfully", variant: "success" });
+            setToast({
+                key: ++toastKeyRef.current,
+                message: "Saved successfully",
+                variant: "success",
+            });
         }
     }, [savedAt]);
 
@@ -197,7 +204,15 @@ export default function SectionEditor({
         setSelectedId(newSection.id);
         setIsAddModalOpen(false);
         if (newSectionType === "birthGift") {
-            setImgCards([{ id: crypto.randomUUID(), imgPath: "", caption: "", rotateAngle: 0, aspectRatio: "3:4" }]);
+            setImgCards([
+                {
+                    id: crypto.randomUUID(),
+                    imgPath: "",
+                    caption: "",
+                    rotateAngle: 0,
+                    aspectRatio: "3:4",
+                },
+            ]);
         }
     };
 
@@ -207,7 +222,9 @@ export default function SectionEditor({
                 <h1 className="text-lg font-semibold text-rose-700">
                     <span className="text-rose-400">[{slug}]</span>{" "}
                     <span className="text-rose-300">/</span>{" "}
-                    {selected ? selected.label || SECTION_LABELS[selected.type] : "Select a section"}
+                    {selected
+                        ? selected.label || SECTION_LABELS[selected.type]
+                        : "Select a section"}
                 </h1>
                 <div className="flex items-center gap-2">
                     <a
@@ -289,7 +306,9 @@ export default function SectionEditor({
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-1">
                                                     {dragHandle}
-                                                    <span className="text-sm font-medium text-rose-700">Photo {i + 1}</span>
+                                                    <span className="text-sm font-medium text-rose-700">
+                                                        Photo {i + 1}
+                                                    </span>
                                                 </div>
                                                 {imgCards.length > 1 && (
                                                     <Button
@@ -306,21 +325,30 @@ export default function SectionEditor({
                                                 key={`${card.id}-${card.aspectRatio}-${card.rotateAngle}`}
                                                 slug={slug}
                                                 defaultValue={card.imgPath}
-                                                onValueChange={(url) => updateImgCard(card.id, { imgPath: url })}
+                                                onValueChange={(url) =>
+                                                    updateImgCard(card.id, { imgPath: url })
+                                                }
                                                 rotateAngle={card.rotateAngle}
                                                 aspectRatio={card.aspectRatio ?? "3:4"}
                                             />
                                             <Field label="Caption">
                                                 <Input
                                                     value={card.caption}
-                                                    onChange={(e) => updateImgCard(card.id, { caption: e.target.value })}
+                                                    onChange={(e) =>
+                                                        updateImgCard(card.id, {
+                                                            caption: e.target.value,
+                                                        })
+                                                    }
                                                 />
                                             </Field>
                                             <div>
                                                 <div className="mb-1.5 flex items-center justify-between">
-                                                    <span className="text-sm text-gray-600">Tilt angle</span>
+                                                    <span className="text-sm text-gray-600">
+                                                        Tilt angle
+                                                    </span>
                                                     <span className="text-sm font-semibold tabular-nums text-rose-600">
-                                                        {card.rotateAngle > 0 ? "+" : ""}{card.rotateAngle}°
+                                                        {card.rotateAngle > 0 ? "+" : ""}
+                                                        {card.rotateAngle}°
                                                     </span>
                                                 </div>
                                                 <input
@@ -329,7 +357,11 @@ export default function SectionEditor({
                                                     max="10"
                                                     step="1"
                                                     value={card.rotateAngle}
-                                                    onChange={(e) => updateImgCard(card.id, { rotateAngle: Number(e.target.value) })}
+                                                    onChange={(e) =>
+                                                        updateImgCard(card.id, {
+                                                            rotateAngle: Number(e.target.value),
+                                                        })
+                                                    }
                                                     className="w-full accent-rose-500"
                                                 />
                                                 <div className="flex justify-between text-[10px] text-gray-400">
@@ -342,13 +374,26 @@ export default function SectionEditor({
                                                 <Field label="Aspect ratio">
                                                     <Select
                                                         value={card.aspectRatio ?? "3:4"}
-                                                        onChange={(e) => updateImgCard(card.id, { aspectRatio: e.target.value })}
+                                                        onChange={(e) =>
+                                                            updateImgCard(card.id, {
+                                                                aspectRatio: e.target.value,
+                                                            })
+                                                        }
                                                         options={[
                                                             { value: "1:1", label: "1:1 — Square" },
-                                                            { value: "3:4", label: "3:4 — Portrait" },
-                                                            { value: "4:3", label: "4:3 — Classic" },
+                                                            {
+                                                                value: "3:4",
+                                                                label: "3:4 — Portrait",
+                                                            },
+                                                            {
+                                                                value: "4:3",
+                                                                label: "4:3 — Classic",
+                                                            },
                                                             { value: "9:16", label: "9:16 — Tall" },
-                                                            { value: "16:9", label: "16:9 — Landscape" },
+                                                            {
+                                                                value: "16:9",
+                                                                label: "16:9 — Landscape",
+                                                            },
                                                         ]}
                                                     />
                                                 </Field>
@@ -357,7 +402,12 @@ export default function SectionEditor({
                                     )}
                                 </SortableList>
                             </div>
-                            <Button type="button" variant="secondary" onClick={addImgCard} className="mt-3 w-full">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={addImgCard}
+                                className="mt-3 w-full"
+                            >
                                 + Add Photo
                             </Button>
                         </div>
@@ -384,10 +434,16 @@ export default function SectionEditor({
                                             { value: "left", label: "Left" },
                                         ]}
                                         value={cakeWishTextAlign}
-                                        onChange={(v) => setCakeWishTextAlign(v as "left" | "center")}
+                                        onChange={(v) =>
+                                            setCakeWishTextAlign(v as "left" | "center")
+                                        }
                                         fullWidth
                                     />
-                                    <input type="hidden" name="cake.wishTextAlign" value={cakeWishTextAlign} />
+                                    <input
+                                        type="hidden"
+                                        name="cake.wishTextAlign"
+                                        value={cakeWishTextAlign}
+                                    />
                                 </Field>
                             </div>
                         </div>
@@ -396,7 +452,9 @@ export default function SectionEditor({
                     {/* Typing Text */}
                     <div className={selected?.type === "typingText" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Typing Text</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Typing Text
+                            </h2>
                             <Field label="Message (newlines supported)">
                                 <Textarea
                                     rows={4}
@@ -417,7 +475,11 @@ export default function SectionEditor({
                                         onChange={(v) => setMessageAlign(v as "left" | "center")}
                                         fullWidth
                                     />
-                                    <input type="hidden" name="typingText.messageAlign" value={messageAlign} />
+                                    <input
+                                        type="hidden"
+                                        name="typingText.messageAlign"
+                                        value={messageAlign}
+                                    />
                                 </Field>
                             </div>
                         </div>
@@ -426,7 +488,9 @@ export default function SectionEditor({
                     {/* Birthday Code */}
                     <div className={selected?.type === "dateOfBirth" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Birthday Code</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Birthday Code
+                            </h2>
                             <input type="hidden" name="dateOfBirth.digitCount" value={digitCount} />
                             <div className="mb-4">
                                 <Field label="จำนวนหลัก">
@@ -445,16 +509,26 @@ export default function SectionEditor({
                                     />
                                 </Field>
                             </div>
-                            <Field label={`รหัส ${digitCount} หลัก (${digitCount === 4 ? "DDMM" : digitCount === 8 ? "DDMMYYYY" : "DDMMYY"})`}>
+                            <Field
+                                label={`รหัส ${digitCount} หลัก (${digitCount === 4 ? "DDMM" : digitCount === 8 ? "DDMMYYYY" : "DDMMYY"})`}
+                            >
                                 <Input
                                     name="dateOfBirth.correctCode"
                                     value={correctCode}
                                     onChange={(e) =>
-                                        setCorrectCode(e.target.value.replace(/\D/g, "").slice(0, digitCount))
+                                        setCorrectCode(
+                                            e.target.value.replace(/\D/g, "").slice(0, digitCount)
+                                        )
                                     }
                                     maxLength={digitCount}
                                     pattern={`\\d{${digitCount}}`}
-                                    placeholder={digitCount === 4 ? "เช่น 1812" : digitCount === 8 ? "เช่น 18121999" : "เช่น 181299"}
+                                    placeholder={
+                                        digitCount === 4
+                                            ? "เช่น 1812"
+                                            : digitCount === 8
+                                              ? "เช่น 18121999"
+                                              : "เช่น 181299"
+                                    }
                                 />
                             </Field>
                         </div>
@@ -463,7 +537,9 @@ export default function SectionEditor({
                     {/* Release Balloon */}
                     <div className={selected?.type === "releaseBalloon" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Balloon Wishes</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Balloon Wishes
+                            </h2>
                             <Field label="Wishes (one per line)">
                                 <Textarea
                                     rows={6}
@@ -479,8 +555,14 @@ export default function SectionEditor({
                     {/* Flip Photo Card */}
                     <div className={selected?.type === "flipPhotoCard" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Flip Photo Card</h2>
-                            <input type="hidden" name="flipPhotoCard.aspectRatio" value={flipAspectRatio} />
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Flip Photo Card
+                            </h2>
+                            <input
+                                type="hidden"
+                                name="flipPhotoCard.aspectRatio"
+                                value={flipAspectRatio}
+                            />
                             <div className="mb-4">
                                 <Field label="Aspect ratio">
                                     <Select
@@ -499,7 +581,9 @@ export default function SectionEditor({
                             </div>
                             <div className="flex flex-col gap-4 sm:flex-row">
                                 <div className="flex-1 rounded-xl border border-rose-100 p-3">
-                                    <p className="mb-2 text-sm font-medium text-rose-700">ปุ่มซ้าย</p>
+                                    <p className="mb-2 text-sm font-medium text-rose-700">
+                                        ปุ่มซ้าย
+                                    </p>
                                     <Field label="Emoji บนปุ่ม">
                                         <Input
                                             name="flipPhotoCard.dogEmoji"
@@ -528,7 +612,9 @@ export default function SectionEditor({
                                     </div>
                                 </div>
                                 <div className="flex-1 rounded-xl border border-rose-100 p-3">
-                                    <p className="mb-2 text-sm font-medium text-rose-700">ปุ่มขวา</p>
+                                    <p className="mb-2 text-sm font-medium text-rose-700">
+                                        ปุ่มขวา
+                                    </p>
                                     <Field label="Emoji บนปุ่ม">
                                         <Input
                                             name="flipPhotoCard.catEmoji"
@@ -563,7 +649,9 @@ export default function SectionEditor({
                     {/* Slide-In Icon */}
                     <div className={selected?.type === "slideInIcon" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Slide-In Icon</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Slide-In Icon
+                            </h2>
                             <Field label="Title">
                                 <Input
                                     name="slideInIcon.title"
@@ -577,7 +665,9 @@ export default function SectionEditor({
                     {/* Cinematic Birthday Bear */}
                     <div className={selected?.type === "cinematicBirthdayBear" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Birthday Bear Scene</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Birthday Bear Scene
+                            </h2>
                             <Field label="Title">
                                 <Input
                                     name="cinematicBirthdayBear.title"
@@ -597,12 +687,11 @@ export default function SectionEditor({
                         </div>
                     </div>
 
-<<<<<<< HEAD
-                    {/* Scratch Card */}
-=======
                     <div className={selected?.type === "spinTheWheel" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Spin the Wheel</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Spin the Wheel
+                            </h2>
                             <Field label="Prizes (one per line)">
                                 <Textarea
                                     rows={6}
@@ -616,7 +705,9 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "jigsawPhotoPuzzle" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Jigsaw Puzzle</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Jigsaw Puzzle
+                            </h2>
                             <ImageUrlField
                                 slug={slug}
                                 name="jigsawPhotoPuzzle.imagePath"
@@ -646,7 +737,11 @@ export default function SectionEditor({
                                 <Textarea
                                     rows={10}
                                     name="quizAboutYou.questionsJson"
-                                    defaultValue={JSON.stringify(content.quizAboutYou.questions, null, 2)}
+                                    defaultValue={JSON.stringify(
+                                        content.quizAboutYou.questions,
+                                        null,
+                                        2
+                                    )}
                                     resize
                                 />
                             </Field>
@@ -658,7 +753,9 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "candleBlow" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Blow the Candle</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Blow the Candle
+                            </h2>
                             <Field label="Number of candles">
                                 <Input
                                     type="number"
@@ -703,7 +800,9 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "envelopeOpen" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Open the Envelope</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Open the Envelope
+                            </h2>
                             <Field label="Sender name">
                                 <Input
                                     name="envelopeOpen.senderName"
@@ -783,12 +882,18 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "memoryTimeline" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Memory Timeline</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Memory Timeline
+                            </h2>
                             <Field label="Timeline items (JSON)">
                                 <Textarea
                                     rows={10}
                                     name="memoryTimeline.itemsJson"
-                                    defaultValue={JSON.stringify(content.memoryTimeline.items, null, 2)}
+                                    defaultValue={JSON.stringify(
+                                        content.memoryTimeline.items,
+                                        null,
+                                        2
+                                    )}
                                     resize
                                 />
                             </Field>
@@ -800,7 +905,9 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "voiceMessage" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Voice Message</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Voice Message
+                            </h2>
                             <Field label="Audio URL">
                                 <Input
                                     name="voiceMessage.audioSrc"
@@ -821,7 +928,9 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "zodiacReveal" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Zodiac Reveal</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Zodiac Reveal
+                            </h2>
                             <Field label="Intro message">
                                 <Input
                                     name="zodiacReveal.customMessage"
@@ -836,12 +945,18 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "guestbookWall" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Guestbook Wall</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Guestbook Wall
+                            </h2>
                             <Field label="Wishes (JSON)">
                                 <Textarea
                                     rows={10}
                                     name="guestbookWall.wishesJson"
-                                    defaultValue={JSON.stringify(content.guestbookWall.wishes, null, 2)}
+                                    defaultValue={JSON.stringify(
+                                        content.guestbookWall.wishes,
+                                        null,
+                                        2
+                                    )}
                                     resize
                                 />
                             </Field>
@@ -853,7 +968,9 @@ export default function SectionEditor({
 
                     <div className={selected?.type === "digitalSignature" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Sign the Card</h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Sign the Card
+                            </h2>
                             <Field label="Prompt text">
                                 <Input
                                     name="digitalSignature.promptText"
@@ -944,7 +1061,7 @@ export default function SectionEditor({
                         </div>
                     </div>
 
->>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
+                    {/* Scratch Card */}
                     <div
                         className={
                             selected && SCRATCH_CARD_TYPES.includes(selected.type) ? "" : "hidden"
@@ -966,7 +1083,9 @@ export default function SectionEditor({
                                             ]}
                                             value={scratchRevealType}
                                             onChange={(v) =>
-                                                setScratchRevealType(v as "youtube" | "video" | "image")
+                                                setScratchRevealType(
+                                                    v as "youtube" | "video" | "image"
+                                                )
                                             }
                                             fullWidth
                                         />
@@ -1087,22 +1206,26 @@ export default function SectionEditor({
                                     selected?.type === "scratchCard"
                                         ? scratchRevealType
                                         : selected?.type === "scratchCardYoutube"
-                                        ? "youtube"
-                                        : selected?.type === "scratchCardVdo"
-                                        ? "video"
-                                        : "image";
+                                          ? "youtube"
+                                          : selected?.type === "scratchCardVdo"
+                                            ? "video"
+                                            : "image";
                                 return (
                                     <div className="mt-4 space-y-1.5">
                                         <div className="flex items-center justify-between">
-                                            <p className="text-sm font-medium text-rose-700">Content Preview</p>
-                                            <p className="text-xs text-gray-400">{scratchAspectRatio}</p>
+                                            <p className="text-sm font-medium text-rose-700">
+                                                Content Preview
+                                            </p>
+                                            <p className="text-xs text-gray-400">
+                                                {scratchAspectRatio}
+                                            </p>
                                         </div>
                                         <div
                                             className="relative w-full overflow-hidden rounded-xl border border-rose-100 bg-black"
                                             style={{ aspectRatio: `${aw}/${ah}` }}
                                         >
-                                            {revealType === "youtube" && (
-                                                youtubeUrl ? (
+                                            {revealType === "youtube" &&
+                                                (youtubeUrl ? (
                                                     <iframe
                                                         src={youtubeUrl}
                                                         className="absolute inset-0 h-full w-full"
@@ -1113,10 +1236,9 @@ export default function SectionEditor({
                                                     <div className="absolute inset-0 flex items-center justify-center bg-pink-50 text-sm text-rose-300">
                                                         No URL set
                                                     </div>
-                                                )
-                                            )}
-                                            {revealType === "video" && (
-                                                videoSrc ? (
+                                                ))}
+                                            {revealType === "video" &&
+                                                (videoSrc ? (
                                                     <video
                                                         key={videoSrc}
                                                         src={videoSrc}
@@ -1128,10 +1250,9 @@ export default function SectionEditor({
                                                     <div className="absolute inset-0 flex items-center justify-center bg-pink-50 text-sm text-rose-300">
                                                         No video selected
                                                     </div>
-                                                )
-                                            )}
-                                            {revealType === "image" && (
-                                                imageSrc ? (
+                                                ))}
+                                            {revealType === "image" &&
+                                                (imageSrc ? (
                                                     // eslint-disable-next-line @next/next/no-img-element
                                                     <img
                                                         src={imageSrc}
@@ -1142,8 +1263,7 @@ export default function SectionEditor({
                                                     <div className="absolute inset-0 flex items-center justify-center bg-pink-50 text-sm text-rose-300">
                                                         No image selected
                                                     </div>
-                                                )
-                                            )}
+                                                ))}
                                         </div>
                                     </div>
                                 );
