@@ -112,12 +112,12 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
     };
 
     return (
-        <main className="min-h-[100dvh] overflow-hidden bg-gradient-to-b from-pink-100 via-rose-50 to-sky-100">
+        <main className="min-h-[100dvh] overflow-hidden bg-linear-to-b from-(--theme-soft) via-(--theme-softer) to-sky-100">
             <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-6">
                 <header className="mb-3 rounded-[24px] border border-white/60 bg-white/75 p-4 shadow-lg backdrop-blur sm:mb-4 sm:rounded-3xl sm:p-5">
                     <div className="flex flex-col gap-4">
                         <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-rose-500 sm:text-sm">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-(--theme-primary) sm:text-sm">
                                 Birthday Mini Game
                             </p>
                             <h1 className="mt-1 text-2xl font-bold text-slate-800 sm:text-3xl">
@@ -129,9 +129,9 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
-                            <div className="rounded-2xl bg-rose-100 px-4 py-3 text-center">
-                                <p className="text-[11px] text-rose-700 sm:text-xs">Score</p>
-                                <p className="text-xl font-bold text-rose-600 sm:text-2xl">
+                            <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                                <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                                <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                                     {score}
                                 </p>
                             </div>
@@ -176,7 +176,7 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
                         </div>
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-pink-200/70 to-transparent sm:h-28" />
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-(--theme-border)/70 to-transparent sm:h-28" />
 
                     {balloons.map((balloon) => (
                         <button
@@ -211,12 +211,12 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
                                 <p className="mt-3 text-sm text-slate-600 sm:text-base">
                                     You popped
                                 </p>
-                                <p className="mt-2 text-4xl font-extrabold text-rose-500 sm:text-5xl">
+                                <p className="mt-2 text-4xl font-extrabold text-(--theme-primary) sm:text-5xl">
                                     {score}
                                 </p>
                                 <p className="mt-2 text-xs text-slate-500 sm:text-sm">points</p>
 
-                                <div className="mt-5 rounded-2xl bg-rose-50 p-4 text-sm text-rose-700 sm:mt-6">
+                                <div className="mt-5 rounded-2xl bg-(--theme-softer) p-4 text-sm text-(--theme-primary-dark) sm:mt-6">
                                     Amazing 🎂 Continue to your birthday surprise
                                 </div>
 
@@ -229,7 +229,7 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
                                     </button>
                                     <button
                                         onClick={nextStep}
-                                        className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                                        className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
                                     >
                                         Next ▶
                                     </button>

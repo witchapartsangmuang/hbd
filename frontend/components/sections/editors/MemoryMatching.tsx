@@ -147,10 +147,10 @@ export default function MemoryMatching({
     };
 
     return (
-        <section className="mx-auto w-full max-w-5xl rounded-[32px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-6 shadow-xl">
+        <section className="mx-auto w-full max-w-5xl rounded-[32px] border border-(--theme-border) bg-linear-to-br from-white via-(--theme-softer) to-(--theme-soft) p-6 shadow-xl">
             <div className="mb-6 flex flex-col gap-4 rounded-[24px] bg-white/80 p-5 shadow-sm md:flex-row md:items-center md:justify-between">
                 <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-500">
+                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                         Birthday Mini Game
                     </p>
                     <h2 className="text-3xl font-bold text-slate-800">Memory Matching 💌</h2>
@@ -160,14 +160,14 @@ export default function MemoryMatching({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                    <div className="rounded-2xl bg-rose-100 px-4 py-3 text-center">
-                        <p className="text-xs text-rose-700">Moves</p>
-                        <p className="text-2xl font-bold text-rose-600">{moves}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-xs text-(--theme-primary-dark)">Moves</p>
+                        <p className="text-2xl font-bold text-(--theme-primary-dark)">{moves}</p>
                     </div>
 
-                    <div className="rounded-2xl bg-pink-100 px-4 py-3 text-center">
-                        <p className="text-xs text-pink-700">Matched</p>
-                        <p className="text-2xl font-bold text-pink-600">
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-xs text-(--theme-primary-dark)">Matched</p>
+                        <p className="text-2xl font-bold text-(--theme-primary-dark)">
                             {matchedCount / 2}/{cards.length / 2 || 0}
                         </p>
                     </div>
@@ -204,7 +204,7 @@ export default function MemoryMatching({
                                     showFront ? "[transform:rotateY(180deg)]" : ""
                                 }`}
                             >
-                                <div className="absolute inset-0 flex items-center justify-center rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-400 to-pink-500 text-3xl text-white shadow-lg [backface-visibility:hidden]">
+                                <div className="absolute inset-0 flex items-center justify-center rounded-3xl border border-(--theme-border) bg-linear-to-br from-(--theme-primary-light) to-(--theme-primary) text-3xl text-white shadow-lg [backface-visibility:hidden]">
                                     🎀
                                 </div>
 
@@ -226,20 +226,20 @@ export default function MemoryMatching({
             {isFinished && (
                 <div className="mt-6 rounded-[24px] bg-white/85 p-6 text-center shadow-lg">
                     <div className="mb-3 text-6xl">🎉</div>
-                    <h3 className="text-3xl font-bold text-rose-600">All Matched!</h3>
+                    <h3 className="text-3xl font-bold text-(--theme-primary-dark)">All Matched!</h3>
                     <p className="mt-2 text-slate-600">
                         You used <span className="font-semibold">{moves}</span> moves in{" "}
                         <span className="font-semibold">{formatTime(seconds)}</span>
                     </p>
 
-                    <div className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-rose-700">
+                    <div className="mt-4 rounded-2xl bg-(--theme-softer) px-4 py-3 text-(--theme-primary-dark)">
                         Well done 💖 Continue to your birthday surprise
                     </div>
 
                     <button
                         type="button"
                         onClick={startNewGame}
-                        className="mt-5 rounded-2xl bg-rose-500 px-5 py-3 font-semibold text-white transition hover:scale-[1.02] active:scale-95"
+                        className="mt-5 rounded-2xl bg-(--theme-primary) px-5 py-3 font-semibold text-white transition hover:scale-[1.02] active:scale-95"
                     >
                         Play Again
                     </button>

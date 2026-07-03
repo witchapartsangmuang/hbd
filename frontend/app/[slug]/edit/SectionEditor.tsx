@@ -10,6 +10,7 @@ import {
     HbdContent,
     ImgCardItem,
 } from "@/components/sections/utils/content-types";
+import { THEME_PRESETS } from "@/components/sections/utils/theme";
 import ImageUrlField from "./ImageUrlField";
 import VideoUrlField from "./VideoUrlField";
 import { Button } from "@/components/Button";
@@ -58,6 +59,7 @@ export default function SectionEditor({
     isPending: boolean;
 }) {
     const [sections, setSections] = useState<SectionInstance[]>(content.sections);
+    const [themeBaseColor, setThemeBaseColor] = useState(content.theme.baseColor);
     const [selectedId, setSelectedId] = useState<string | null>(content.sections[0]?.id ?? null);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [newSectionName, setNewSectionName] = useState("");
@@ -230,6 +232,37 @@ export default function SectionEditor({
                     onDismiss={() => setToast(null)}
                 />
             )}
+
+            <div className="mb-4 rounded-[20px] border border-rose-100 bg-white/90 px-5 py-4 shadow-lg">
+                <p className="mb-3 text-sm font-semibold text-rose-700">Page theme</p>
+                <div className="flex flex-wrap items-center gap-3">
+                    {THEME_PRESETS.map((preset) => (
+                        <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => setThemeBaseColor(preset.baseColor)}
+                            title={preset.label}
+                            className={`h-9 w-9 rounded-full border-2 transition ${
+                                themeBaseColor.toLowerCase() === preset.baseColor.toLowerCase()
+                                    ? "border-rose-500 scale-110"
+                                    : "border-white shadow ring-1 ring-gray-200"
+                            }`}
+                            style={{ backgroundColor: preset.baseColor }}
+                        />
+                    ))}
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="color"
+                            value={themeBaseColor}
+                            onChange={(e) => setThemeBaseColor(e.target.value)}
+                            className="h-9 w-9 cursor-pointer rounded-full border border-gray-200 bg-transparent p-0"
+                            title="Custom color"
+                        />
+                        <span className="text-xs text-gray-500">Custom</span>
+                    </div>
+                </div>
+                <input type="hidden" name="theme.baseColor" value={themeBaseColor} />
+            </div>
 
             <div className="flex flex-col gap-6 lg:flex-row">
                 <div className="flex-1">
@@ -564,7 +597,354 @@ export default function SectionEditor({
                         </div>
                     </div>
 
+<<<<<<< HEAD
                     {/* Scratch Card */}
+=======
+                    <div className={selected?.type === "spinTheWheel" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Spin the Wheel</h2>
+                            <Field label="Prizes (one per line)">
+                                <Textarea
+                                    rows={6}
+                                    name="spinTheWheel.prizes"
+                                    defaultValue={content.spinTheWheel.prizes.join("\n")}
+                                    resize
+                                />
+                            </Field>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "jigsawPhotoPuzzle" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Jigsaw Puzzle</h2>
+                            <ImageUrlField
+                                slug={slug}
+                                name="jigsawPhotoPuzzle.imagePath"
+                                defaultValue={content.jigsawPhotoPuzzle.imagePath}
+                                label="Puzzle image"
+                            />
+                            <div className="mt-3">
+                                <Field label="Grid size (e.g. 3 = 3x3)">
+                                    <Input
+                                        type="number"
+                                        name="jigsawPhotoPuzzle.gridSize"
+                                        defaultValue={content.jigsawPhotoPuzzle.gridSize}
+                                        min={2}
+                                        max={5}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "quizAboutYou" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                How Well Do You Know Me
+                            </h2>
+                            <Field label="Questions (JSON)">
+                                <Textarea
+                                    rows={10}
+                                    name="quizAboutYou.questionsJson"
+                                    defaultValue={JSON.stringify(content.quizAboutYou.questions, null, 2)}
+                                    resize
+                                />
+                            </Field>
+                            <p className="mt-2 text-xs text-rose-900/50">
+                                Array of {"{ question, options[], correctIndex }"}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "candleBlow" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Blow the Candle</h2>
+                            <Field label="Number of candles">
+                                <Input
+                                    type="number"
+                                    name="candleBlow.candleCount"
+                                    defaultValue={content.candleBlow.candleCount}
+                                    min={1}
+                                    max={10}
+                                />
+                            </Field>
+                            <div className="mt-3">
+                                <Field label="Message">
+                                    <Input
+                                        name="candleBlow.message"
+                                        defaultValue={content.candleBlow.message}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "giftBoxUnwrap" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Unwrap the Gift Box
+                            </h2>
+                            <ImageUrlField
+                                slug={slug}
+                                name="giftBoxUnwrap.imgPath"
+                                defaultValue={content.giftBoxUnwrap.imgPath}
+                                label="Reveal image"
+                            />
+                            <div className="mt-3">
+                                <Field label="Message">
+                                    <Input
+                                        name="giftBoxUnwrap.message"
+                                        defaultValue={content.giftBoxUnwrap.message}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "envelopeOpen" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Open the Envelope</h2>
+                            <Field label="Sender name">
+                                <Input
+                                    name="envelopeOpen.senderName"
+                                    defaultValue={content.envelopeOpen.senderName}
+                                />
+                            </Field>
+                            <div className="mt-3">
+                                <Field label="Message">
+                                    <Textarea
+                                        rows={3}
+                                        name="envelopeOpen.message"
+                                        defaultValue={content.envelopeOpen.message}
+                                        resize
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "polaroidShake" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Shake the Polaroid
+                            </h2>
+                            <ImageUrlField
+                                slug={slug}
+                                name="polaroidShake.imgPath"
+                                defaultValue={content.polaroidShake.imgPath}
+                                label="Photo"
+                            />
+                            <div className="mt-3">
+                                <Field label="Caption">
+                                    <Input
+                                        name="polaroidShake.caption"
+                                        defaultValue={content.polaroidShake.caption}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "countdownToNextBirthday" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Countdown to Next Birthday
+                            </h2>
+                            <div className="grid grid-cols-2 gap-4">
+                                <Field label="Birthday month (1-12)">
+                                    <Input
+                                        type="number"
+                                        name="countdownToNextBirthday.birthdayMonth"
+                                        defaultValue={content.countdownToNextBirthday.birthdayMonth}
+                                        min={1}
+                                        max={12}
+                                    />
+                                </Field>
+                                <Field label="Birthday day">
+                                    <Input
+                                        type="number"
+                                        name="countdownToNextBirthday.birthdayDay"
+                                        defaultValue={content.countdownToNextBirthday.birthdayDay}
+                                        min={1}
+                                        max={31}
+                                    />
+                                </Field>
+                            </div>
+                            <div className="mt-3">
+                                <Field label="Message">
+                                    <Input
+                                        name="countdownToNextBirthday.message"
+                                        defaultValue={content.countdownToNextBirthday.message}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "memoryTimeline" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Memory Timeline</h2>
+                            <Field label="Timeline items (JSON)">
+                                <Textarea
+                                    rows={10}
+                                    name="memoryTimeline.itemsJson"
+                                    defaultValue={JSON.stringify(content.memoryTimeline.items, null, 2)}
+                                    resize
+                                />
+                            </Field>
+                            <p className="mt-2 text-xs text-rose-900/50">
+                                Array of {"{ year, imgPath, caption }"}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "voiceMessage" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Voice Message</h2>
+                            <Field label="Audio URL">
+                                <Input
+                                    name="voiceMessage.audioSrc"
+                                    defaultValue={content.voiceMessage.audioSrc}
+                                    placeholder="https://.../voice.mp3"
+                                />
+                            </Field>
+                            <div className="mt-3">
+                                <Field label="Message">
+                                    <Input
+                                        name="voiceMessage.message"
+                                        defaultValue={content.voiceMessage.message}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "zodiacReveal" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Zodiac Reveal</h2>
+                            <Field label="Intro message">
+                                <Input
+                                    name="zodiacReveal.customMessage"
+                                    defaultValue={content.zodiacReveal.customMessage}
+                                />
+                            </Field>
+                            <p className="mt-2 text-xs text-rose-900/50">
+                                Zodiac sign is calculated from the Birthday Code section&apos;s date
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "guestbookWall" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Guestbook Wall</h2>
+                            <Field label="Wishes (JSON)">
+                                <Textarea
+                                    rows={10}
+                                    name="guestbookWall.wishesJson"
+                                    defaultValue={JSON.stringify(content.guestbookWall.wishes, null, 2)}
+                                    resize
+                                />
+                            </Field>
+                            <p className="mt-2 text-xs text-rose-900/50">
+                                Array of {"{ name, message }"}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "digitalSignature" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Sign the Card</h2>
+                            <Field label="Prompt text">
+                                <Input
+                                    name="digitalSignature.promptText"
+                                    defaultValue={content.digitalSignature.promptText}
+                                />
+                            </Field>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "backgroundMusicPlayer" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Background Music
+                            </h2>
+                            <Field label="Audio URL">
+                                <Input
+                                    name="backgroundMusicPlayer.audioSrc"
+                                    defaultValue={content.backgroundMusicPlayer.audioSrc}
+                                    placeholder="https://.../song.mp3"
+                                />
+                            </Field>
+                            <div className="mt-3">
+                                <Field label="Label">
+                                    <Input
+                                        name="backgroundMusicPlayer.label"
+                                        defaultValue={content.backgroundMusicPlayer.label}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "cinematicRabbit" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Cinematic Rabbit
+                            </h2>
+                            <Field label="Title">
+                                <Input
+                                    name="cinematicRabbit.title"
+                                    defaultValue={content.cinematicRabbit.title}
+                                />
+                            </Field>
+                            <div className="mt-3">
+                                <Field label="Subtitle">
+                                    <Input
+                                        name="cinematicRabbit.subtitle"
+                                        defaultValue={content.cinematicRabbit.subtitle}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "cinematicPanda" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Cinematic Panda
+                            </h2>
+                            <Field label="Title">
+                                <Input
+                                    name="cinematicPanda.title"
+                                    defaultValue={content.cinematicPanda.title}
+                                />
+                            </Field>
+                            <div className="mt-3">
+                                <Field label="Subtitle">
+                                    <Input
+                                        name="cinematicPanda.subtitle"
+                                        defaultValue={content.cinematicPanda.subtitle}
+                                    />
+                                </Field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={selected?.type === "fireworksFinale" ? "" : "hidden"}>
+                        <div className={panelClass}>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                                Fireworks Finale
+                            </h2>
+                            <Field label="Closing message">
+                                <Input
+                                    name="fireworksFinale.message"
+                                    defaultValue={content.fireworksFinale.message}
+                                />
+                            </Field>
+                        </div>
+                    </div>
+
+>>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
                     <div
                         className={
                             selected && SCRATCH_CARD_TYPES.includes(selected.type) ? "" : "hidden"

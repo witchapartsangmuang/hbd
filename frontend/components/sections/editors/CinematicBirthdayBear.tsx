@@ -39,7 +39,7 @@ export default function CinematicBirthdayBear({
     return (
         <section
             ref={containerRef}
-            className="relative mx-auto my-24 flex min-h-[420px] max-w-6xl items-center overflow-hidden rounded-[32px] border border-pink-100 bg-gradient-to-br from-rose-50 via-pink-50 to-white px-6 py-12 shadow-[0_20px_80px_rgba(244,114,182,0.18)] sm:px-10"
+            className="relative mx-auto my-24 flex min-h-[420px] max-w-6xl items-center overflow-hidden rounded-[32px] border border-(--theme-border) bg-linear-to-br from-(--theme-softer) via-(--theme-softer) to-white px-6 py-12 shadow-[0_20px_80px_rgba(244,114,182,0.18)] sm:px-10"
         >
             <style jsx>{`
                 @keyframes cinematic-enter {
@@ -168,12 +168,12 @@ export default function CinematicBirthdayBear({
 
             <div className="absolute inset-0 overflow-hidden">
                 <div
-                    className={`absolute -left-20 -top-20 h-56 w-56 rounded-full bg-pink-200/45 blur-3xl transition-all duration-1000 ${
+                    className={`absolute -left-20 -top-20 h-56 w-56 rounded-full bg-(--theme-border)/45 blur-3xl transition-all duration-1000 ${
                         isVisible ? "opacity-100" : "opacity-0"
                     }`}
                 />
                 <div
-                    className={`absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-rose-200/40 blur-3xl transition-all duration-1000 delay-200 ${
+                    className={`absolute -bottom-20 right-0 h-64 w-64 rounded-full bg-(--theme-border)/40 blur-3xl transition-all duration-1000 delay-200 ${
                         isVisible ? "opacity-100" : "opacity-0"
                     }`}
                 />
@@ -189,10 +189,10 @@ export default function CinematicBirthdayBear({
                         const delay = `${i * 60}ms`;
                         const duration = `${1600 + (i % 5) * 220}ms`;
                         const colors = [
-                            "bg-pink-400",
-                            "bg-rose-400",
+                            "bg-(--theme-primary-light)",
+                            "bg-(--theme-primary-light)",
                             "bg-yellow-300",
-                            "bg-fuchsia-400",
+                            "bg-(--theme-primary-light)",
                             "bg-orange-300",
                         ];
 
@@ -247,7 +247,7 @@ export default function CinematicBirthdayBear({
             <div className="relative z-10 grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
                 <div className="max-w-2xl">
                     <p
-                        className={`text-sm font-semibold uppercase tracking-[0.25em] text-pink-500 ${
+                        className={`text-sm font-semibold uppercase tracking-[0.25em] text-(--theme-primary) ${
                             isVisible ? "" : "opacity-0"
                         }`}
                         style={
@@ -293,13 +293,13 @@ export default function CinematicBirthdayBear({
                                 : undefined
                         }
                     >
-                        <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-rose-500 shadow-sm ring-1 ring-pink-100">
+                        <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-(--theme-primary) shadow-sm ring-1 ring-(--theme-border)">
                             🎉 Happy Birthday
                         </span>
-                        <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-amber-600 shadow-sm ring-1 ring-pink-100">
+                        <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-amber-600 shadow-sm ring-1 ring-(--theme-border)">
                             🧸 Bear Delivery
                         </span>
-                        <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-fuchsia-500 shadow-sm ring-1 ring-pink-100">
+                        <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-(--theme-primary) shadow-sm ring-1 ring-(--theme-border)">
                             ✨ Surprise Mode
                         </span>
                     </div>
@@ -308,8 +308,8 @@ export default function CinematicBirthdayBear({
                 <div className="relative flex min-h-[320px] items-center justify-center">
                     {balloons.map((i) => {
                         const palette = [
-                            "from-pink-400 to-rose-400",
-                            "from-fuchsia-400 to-pink-500",
+                            "from-(--theme-primary-light) to-(--theme-gradient-to)",
+                            "from-(--theme-primary-light) to-(--theme-primary)",
                             "from-amber-300 to-orange-300",
                         ];
                         const positions = ["left-2 top-4", "left-20 top-0", "right-8 top-8"];
@@ -325,15 +325,15 @@ export default function CinematicBirthdayBear({
                                 }}
                             >
                                 <div
-                                    className={`h-16 w-12 rounded-[999px] bg-gradient-to-b ${palette[i]} shadow-lg`}
+                                    className={`h-16 w-12 rounded-[999px] bg-linear-to-b ${palette[i]} shadow-lg`}
                                 />
-                                <div className="mx-auto h-10 w-px bg-pink-300/70" />
+                                <div className="mx-auto h-10 w-px bg-(--theme-primary-light)/70" />
                             </div>
                         );
                     })}
 
                     <div
-                        className={`absolute inset-x-10 bottom-4 h-8 rounded-full bg-pink-200/50 blur-xl transition-all duration-700 ${
+                        className={`absolute inset-x-10 bottom-4 h-8 rounded-full bg-(--theme-border)/50 blur-xl transition-all duration-700 ${
                             isVisible ? "scale-100 opacity-100" : "scale-75 opacity-0"
                         }`}
                     />
@@ -350,7 +350,7 @@ export default function CinematicBirthdayBear({
                         }
                     >
                         <div
-                            className="absolute inset-0 rounded-full bg-pink-300/35 blur-2xl"
+                            className="absolute inset-0 rounded-full bg-(--theme-primary-light)/35 blur-2xl"
                             style={
                                 isVisible
                                     ? { animation: "glow-pulse 2200ms ease-in-out infinite" }
@@ -376,7 +376,7 @@ export default function CinematicBirthdayBear({
                                         : undefined
                                 }
                             >
-                                <div className="relative rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-fuchsia-500 px-5 py-3 text-lg font-black tracking-wide text-white shadow-[0_14px_30px_rgba(244,114,182,0.35)]">
+                                <div className="relative rounded-2xl bg-linear-to-r from-(--theme-gradient-from) via-(--theme-primary) to-(--theme-gradient-to) px-5 py-3 text-lg font-black tracking-wide text-white shadow-[0_14px_30px_rgba(244,114,182,0.35)]">
                                     HBD 🎉
                                     <div className="absolute left-1/2 top-full h-8 w-1 -translate-x-1/2 bg-amber-700" />
                                 </div>
@@ -410,8 +410,8 @@ export default function CinematicBirthdayBear({
                                     </div>
 
                                     <div className="absolute left-1/2 top-[98px] h-3 w-8 -translate-x-1/2 rounded-b-full border-b-[3px] border-amber-900" />
-                                    <div className="absolute left-[24px] top-[76px] h-3 w-3 rounded-full bg-rose-300/60" />
-                                    <div className="absolute right-[24px] top-[76px] h-3 w-3 rounded-full bg-rose-300/60" />
+                                    <div className="absolute left-[24px] top-[76px] h-3 w-3 rounded-full bg-(--theme-primary-light)/60" />
+                                    <div className="absolute right-[24px] top-[76px] h-3 w-3 rounded-full bg-(--theme-primary-light)/60" />
                                 </div>
 
                                 <div className="absolute bottom-3 h-[118px] w-[140px] rounded-[44px] bg-amber-300 shadow-[0_18px_30px_rgba(120,53,15,0.16)]">
@@ -444,7 +444,7 @@ export default function CinematicBirthdayBear({
                 <button
                     type="button"
                     onClick={nextStep}
-                    className="absolute bottom-6 right-6 z-40 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+                    className="absolute bottom-6 right-6 z-40 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
                 >
                     Next ▶
                 </button>

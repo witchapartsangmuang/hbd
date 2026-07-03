@@ -19,7 +19,7 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 			<div className="relative z-10 w-full max-w-md">
 				{/* heading */}
 				<div className="mb-6 text-center sm:mb-8">
-					<h1 className="text-2xl font-extrabold tracking-tight text-rose-600 sm:text-3xl">
+					<h1 className="text-2xl font-extrabold tracking-tight text-(--theme-primary-dark) sm:text-3xl">
 						Photo Flip Card
 					</h1>
 					<p className="mt-2 text-sm text-slate-600 sm:text-base">
@@ -40,7 +40,7 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 					>
 						{/* front */}
 						<div
-							className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-[28px] border border-rose-200 bg-linear-to-br from-rose-400 via-pink-400 to-fuchsia-500 p-6 text-center text-white shadow-[0_20px_60px_rgba(236,72,153,0.28)] sm:p-8"
+							className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-[28px] border border-(--theme-border) bg-linear-to-br from-(--theme-primary-light) via-(--theme-primary-light) to-(--theme-gradient-to) p-6 text-center text-white shadow-[0_20px_60px_rgba(236,72,153,0.28)] sm:p-8"
 							style={{ backfaceVisibility: "hidden" }}
 						>
 							<div className="mb-4 text-5xl drop-shadow sm:text-6xl">🎁</div>
@@ -61,11 +61,27 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						>
 							<div className="relative h-full w-full">
 								{imgSelect ? (
+<<<<<<< HEAD
 									<img
 										src={imgSelect}
 										alt="photo card"
 										className="h-full w-full object-cover"
 									/>
+=======
+									isUrl(imgSelect) ? (
+										<img
+											src={imgSelect}
+											alt="photo card"
+											className="h-full w-full object-cover"
+										/>
+									) : (
+										<div className="flex h-full items-center justify-center bg-linear-to-br from-(--theme-softer) to-(--theme-soft)">
+											<span className="select-none text-[96px] leading-none drop-shadow-md sm:text-[120px]">
+												{imgSelect}
+											</span>
+										</div>
+									)
+>>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
 								) : (
 									<div className="flex h-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-500">
 										<p className="text-sm sm:text-base">No photo selected</p>
@@ -96,8 +112,13 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						</button>
 						<button
 							type="button"
+<<<<<<< HEAD
 							onClick={() => setimgSelect(catImg)}
 							className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-pink-200 bg-linear-to-br from-pink-50 to-rose-100 px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
+=======
+							onClick={() => setimgSelect(catEmoji || catImg)}
+							className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-(--theme-border) bg-linear-to-br from-(--theme-softer) to-(--theme-soft) px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
+>>>>>>> 86186fc85f85b263506d3394eaa423f0576a6c37
 						>
 							<span className="text-2xl transition-transform group-hover:scale-110">
 								{catEmoji || "🐱"}

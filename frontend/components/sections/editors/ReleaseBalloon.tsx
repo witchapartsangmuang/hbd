@@ -37,10 +37,10 @@ export default function ReleaseBalloon({
     }, [balloons]);
     return (
         <section className="relative flex flex-col items-center min-h-screen p-5">
-            {/* <h2 className="text-center text-3xl font-bold text-rose-700">
+            {/* <h2 className="text-center text-3xl font-bold text-(--theme-primary-dark)">
                 🎈 Floating Wishes
             </h2>
-            <p className="mt-3 max-w-2xl text-center text-rose-900/80">
+            <p className="mt-3 max-w-2xl text-center text-[#3a2433]/80">
                 Little wishes floating up to the sky
             </p> */}
             <div ref={balloonZoneRef} className="relative h-[calc(100vh-2.5rem)] w-full">
@@ -62,7 +62,7 @@ export default function ReleaseBalloon({
                         <button
                             type="button"
                             onClick={handleStartBalloons}
-                            className="mt-6 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+                            className="mt-6 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
                         >
                             Release Balloon
                         </button>

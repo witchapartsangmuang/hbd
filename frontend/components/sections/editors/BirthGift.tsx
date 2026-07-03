@@ -57,8 +57,8 @@ export default function BirthGift({
     return (
         <>
             <section className="relative flex flex-col items-center min-h-screen p-5">
-                <p className="mt-6 text-4xl font-bold text-pink-600">Happy Birthday 🎂</p>
-                <p className="mt-3 text-center text-rose-900/80">Try opening the gift box</p>
+                <p className="mt-6 text-4xl font-bold text-(--theme-primary-dark)">Happy Birthday 🎂</p>
+                <p className="mt-3 text-center text-[#3a2433]/80">Try opening the gift box</p>
                 <div className="w-full z-1000 h-1">
                     {confetti.map((piece) => (
                         <span
@@ -94,12 +94,12 @@ export default function BirthGift({
                             transition-transform duration-200`}
                     >
                         <span
-                            className={`absolute -left-2 top-7.5 z-20 h-11.5 w-59 rounded-xl bg-linear-to-br from-pink-200 to-pink-400 shadow-xl ${
+                            className={`absolute -left-2 top-7.5 z-20 h-11.5 w-59 rounded-xl bg-linear-to-br from-(--theme-border) to-(--theme-primary-light) shadow-xl ${
                                 isOpenGift ? "lid-open" : ""
                             }`}
                             style={{ transformOrigin: "50% 80%" }}
                         />
-                        <span className="absolute bottom-0 left-0 h-37.5 w-55 rounded-xl bg-linear-to-br from-pink-300 to-pink-500 shadow-xl" />
+                        <span className="absolute bottom-0 left-0 h-37.5 w-55 rounded-xl bg-linear-to-br from-(--theme-primary-light) to-(--theme-primary) shadow-xl" />
                         <span className="absolute left-24 top-0 z-30 h-55 w-7 rounded-lg bg-amber-300" />
                         <span className="absolute left-0 top-11.5 z-30 h-6 w-55 rounded-lg bg-amber-300" />
                         <span className="absolute left-17 top-0 z-40 h-13 w-21">
@@ -109,7 +109,7 @@ export default function BirthGift({
                     </div>
                 </button>
                 <div
-                    className={`mt-6 text-lg font-medium text-rose-500 transition-all duration-700 ease-out ${
+                    className={`mt-6 text-lg font-medium text-(--theme-primary) transition-all duration-700 ease-out ${
                         showSurpriseText ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"
                     }`}
                 >

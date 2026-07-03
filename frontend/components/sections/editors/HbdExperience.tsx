@@ -2,11 +2,16 @@
 import { useMemo, useState } from "react";
 import { HbdContent } from "../utils/content-types";
 import { SECTION_REGISTRY } from "@/components/sections/_sections";
+import { buildThemeTokens, themeTokensToCssVars } from "@/components/sections/utils/theme";
 
 export default function HbdExperience({ content }: { content: HbdContent }) {
     const activeSections = useMemo(
         () => content.sections.filter((s) => s.enabled),
         [content.sections]
+    );
+    const themeStyle = useMemo(
+        () => themeTokensToCssVars(buildThemeTokens(content.theme.baseColor)),
+        [content.theme.baseColor]
     );
     const [unlockedCount, setUnlockedCount] = useState(1);
     const sparkles = useMemo(
@@ -28,7 +33,10 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
                     {item.emoji}
                 </div>
             ))}
-            <div className="grid grid-cols-12 bg-linear-to-br from-rose-50 via-pink-50 to-fuchsia-100">
+            <div
+                className="grid grid-cols-12 bg-linear-to-br from-(--theme-softer) via-(--theme-soft) to-(--theme-border)"
+                style={themeStyle}
+            >
                 {activeSections.map((section, i) => {
                     const entry = SECTION_REGISTRY[section.type];
                     const Component = entry.component;

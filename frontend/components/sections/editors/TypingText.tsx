@@ -46,11 +46,11 @@ export default function TypingText({
 
     return (
         <section className="relative flex flex-col items-center p-5">
-            <h2 className="text-center text-3xl font-bold text-rose-700">💌 A Special Message</h2>
+            <h2 className="text-center text-3xl font-bold text-(--theme-primary-dark)">💌 A Special Message</h2>
             <div className="mt-8 w-full rounded-3xl border border-white/60 bg-white/70 p-7 shadow-xl backdrop-blur">
                 <div
                     ref={messageRef}
-                    className={`min-h-35 whitespace-pre-line text-lg leading-8 text-rose-900 ${messageAlign === "center" ? "text-center" : "text-left"}`}
+                    className={`min-h-35 whitespace-pre-line text-lg leading-8 text-[#3a2433] ${messageAlign === "center" ? "text-center" : "text-left"}`}
                 >
                     <span className="typewriter-cursor">{typedText}</span>
                 </div>

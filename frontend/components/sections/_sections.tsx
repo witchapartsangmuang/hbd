@@ -20,6 +20,23 @@ import WhackAMoleBirthday from "./editors/WhackAMoleBirthday";
 import CinematicBirthdayBear from "./editors/CinematicBirthdayBear";
 import CinematicCat from "./editors/CinematicCat";
 import CinematicDog from "./editors/CinematicDog";
+import SpinTheWheel from "./editors/SpinTheWheel";
+import JigsawPhotoPuzzle from "./editors/JigsawPhotoPuzzle";
+import QuizAboutYou from "./editors/QuizAboutYou";
+import CandleBlow from "./editors/CandleBlow";
+import GiftBoxUnwrap from "./editors/GiftBoxUnwrap";
+import EnvelopeOpen from "./editors/EnvelopeOpen";
+import PolaroidShake from "./editors/PolaroidShake";
+import CountdownToNextBirthday from "./editors/CountdownToNextBirthday";
+import MemoryTimeline from "./editors/MemoryTimeline";
+import VoiceMessage from "./editors/VoiceMessage";
+import ZodiacReveal from "./editors/ZodiacReveal";
+import GuestbookWall from "./editors/GuestbookWall";
+import DigitalSignature from "./editors/DigitalSignature";
+import BackgroundMusicPlayer from "./editors/BackgroundMusicPlayer";
+import CinematicRabbit from "./editors/CinematicRabbit";
+import CinematicPanda from "./editors/CinematicPanda";
+import FireworksFinale from "./editors/FireworksFinale";
 
 export interface SectionComponentProps {
     nextStep: () => void;
@@ -53,4 +70,27 @@ export const SECTION_REGISTRY: Record<
     },
     cinematicCat: { label: SECTION_LABELS.cinematicCat, component: CinematicCat },
     cinematicDog: { label: SECTION_LABELS.cinematicDog, component: CinematicDog },
+    spinTheWheel: { label: SECTION_LABELS.spinTheWheel, component: SpinTheWheel },
+    jigsawPhotoPuzzle: { label: SECTION_LABELS.jigsawPhotoPuzzle, component: JigsawPhotoPuzzle },
+    quizAboutYou: { label: SECTION_LABELS.quizAboutYou, component: QuizAboutYou },
+    candleBlow: { label: SECTION_LABELS.candleBlow, component: CandleBlow },
+    giftBoxUnwrap: { label: SECTION_LABELS.giftBoxUnwrap, component: GiftBoxUnwrap },
+    envelopeOpen: { label: SECTION_LABELS.envelopeOpen, component: EnvelopeOpen },
+    polaroidShake: { label: SECTION_LABELS.polaroidShake, component: PolaroidShake },
+    countdownToNextBirthday: {
+        label: SECTION_LABELS.countdownToNextBirthday,
+        component: CountdownToNextBirthday,
+    },
+    memoryTimeline: { label: SECTION_LABELS.memoryTimeline, component: MemoryTimeline },
+    voiceMessage: { label: SECTION_LABELS.voiceMessage, component: VoiceMessage },
+    zodiacReveal: { label: SECTION_LABELS.zodiacReveal, component: ZodiacReveal },
+    guestbookWall: { label: SECTION_LABELS.guestbookWall, component: GuestbookWall },
+    digitalSignature: { label: SECTION_LABELS.digitalSignature, component: DigitalSignature },
+    backgroundMusicPlayer: {
+        label: SECTION_LABELS.backgroundMusicPlayer,
+        component: BackgroundMusicPlayer,
+    },
+    cinematicRabbit: { label: SECTION_LABELS.cinematicRabbit, component: CinematicRabbit },
+    cinematicPanda: { label: SECTION_LABELS.cinematicPanda, component: CinematicPanda },
+    fireworksFinale: { label: SECTION_LABELS.fireworksFinale, component: FireworksFinale },
 };
