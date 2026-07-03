@@ -221,8 +221,8 @@ export default function ScratchCardImg({
     return (
         // min-h-screen
         <section className="relative flex flex-col items-center p-5">
-            <p className="mt-6 text-3xl font-bold text-pink-600">{headingText}</p>
-            <p className="mt-3 text-center text-rose-900/80">{subText}</p>
+            <p className="mt-6 text-3xl font-bold text-(--theme-primary-dark)">{headingText}</p>
+            <p className="mt-3 text-center text-[#3a2433]/80">{subText}</p>
             <div className="w-full z-1000 h-1">
                 {confetti.map((piece) => (
                     <span
@@ -251,7 +251,7 @@ export default function ScratchCardImg({
                         className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2"
                     >
                         <div
-                            className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-rose-100 bg-linear-to-br from-rose-100 via-pink-50 to-white"
+                            className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-(--theme-border) bg-linear-to-br from-(--theme-soft) via-(--theme-softer) to-white"
                             style={{ width: cardSize.width, height: cardSize.height }}
                         >
                             <canvas
@@ -276,7 +276,7 @@ export default function ScratchCardImg({
                 )}
             </div>
             <div className="mt-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:mt-5 sm:rounded-[20px]">
-                <p className="text-sm font-medium text-rose-600">
+                <p className="text-sm font-medium text-(--theme-primary-dark)">
                     {isRevealed ? revealedText : "Scratch slowly ✨"}
                 </p>
             </div>

@@ -160,10 +160,10 @@ export default function FindTheHiddenGift({
     };
 
     return (
-        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-3 shadow-xl sm:rounded-[32px] sm:p-6">
+        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-(--theme-border) bg-linear-to-br from-white via-(--theme-softer) to-(--theme-soft) p-3 shadow-xl sm:rounded-[32px] sm:p-6">
             <div className="mb-4 flex flex-col gap-4 rounded-[20px] bg-white/85 p-4 shadow-sm sm:mb-5 sm:rounded-[24px] sm:p-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-rose-500 sm:text-sm sm:tracking-[0.2em]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--theme-primary) sm:text-sm sm:tracking-[0.2em]">
                         Birthday Mini Game
                     </p>
                     <h2 className="text-2xl font-bold text-slate-800 sm:text-3xl">
@@ -178,16 +178,16 @@ export default function FindTheHiddenGift({
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
-                    <div className="rounded-2xl bg-rose-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-rose-700 sm:text-xs">Round</p>
-                        <p className="text-xl font-bold text-rose-600 sm:text-2xl">
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Round</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                             {Math.min(round, TOTAL_ROUNDS)}/{TOTAL_ROUNDS}
                         </p>
                     </div>
 
-                    <div className="rounded-2xl bg-pink-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-pink-700 sm:text-xs">Found</p>
-                        <p className="text-xl font-bold text-pink-600 sm:text-2xl">{foundCount}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Found</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{foundCount}</p>
                     </div>
 
                     <div className="rounded-2xl bg-sky-100 px-4 py-3 text-center">
@@ -211,7 +211,7 @@ export default function FindTheHiddenGift({
             </div>
 
             <div className="mb-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:rounded-[20px]">
-                <p className="text-sm font-medium text-rose-600">{message}</p>
+                <p className="text-sm font-medium text-(--theme-primary-dark)">{message}</p>
             </div>
 
             <div
@@ -231,7 +231,7 @@ export default function FindTheHiddenGift({
                     <div className="absolute right-[20%] top-16 text-xl opacity-60 sm:right-[22%] sm:top-24 sm:text-2xl">
                         ✨
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-rose-200/70 to-transparent sm:h-24" />
+                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-(--theme-border)/70 to-transparent sm:h-24" />
                 </div>
 
                 {sceneItems.map((item) => (
@@ -279,7 +279,7 @@ export default function FindTheHiddenGift({
                                     <button
                                         type="button"
                                         onClick={handleNextRound}
-                                        className="mt-6 rounded-2xl bg-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                                        className="mt-6 rounded-2xl bg-(--theme-primary) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
                                     >
                                         Round {round + 1}
                                     </button>
@@ -293,11 +293,11 @@ export default function FindTheHiddenGift({
                                     </h3>
 
                                     <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
-                                        <div className="rounded-2xl bg-rose-50 p-3">
-                                            <p className="text-[10px] text-rose-700 sm:text-xs">
+                                        <div className="rounded-2xl bg-(--theme-softer) p-3">
+                                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
                                                 Found
                                             </p>
-                                            <p className="text-lg font-bold text-rose-600 sm:text-xl">
+                                            <p className="text-lg font-bold text-(--theme-primary-dark) sm:text-xl">
                                                 {foundCount}
                                             </p>
                                         </div>
@@ -309,17 +309,17 @@ export default function FindTheHiddenGift({
                                                 {accuracy}%
                                             </p>
                                         </div>
-                                        <div className="rounded-2xl bg-pink-50 p-3">
-                                            <p className="text-[10px] text-pink-700 sm:text-xs">
+                                        <div className="rounded-2xl bg-(--theme-softer) p-3">
+                                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
                                                 Mistakes
                                             </p>
-                                            <p className="text-lg font-bold text-pink-600 sm:text-xl">
+                                            <p className="text-lg font-bold text-(--theme-primary-dark) sm:text-xl">
                                                 {mistakeCount}
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="mt-5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                    <div className="mt-5 rounded-2xl bg-(--theme-softer) px-4 py-3 text-sm text-(--theme-primary-dark)">
                                         Amazing 🎁 Continue to your birthday surprise
                                     </div>
 
@@ -334,7 +334,7 @@ export default function FindTheHiddenGift({
                                         <button
                                             type="button"
                                             onClick={nextStep}
-                                            className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                                            className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
                                         >
                                             Next ▶
                                         </button>

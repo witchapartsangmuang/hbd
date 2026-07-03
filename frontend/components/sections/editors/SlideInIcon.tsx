@@ -41,7 +41,7 @@ export default function SlideInIcon({
             className="relative mx-auto my-24 flex min-h-[280px] max-w-4xl items-center justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-10 shadow-sm"
         >
             <div className="max-w-xl">
-                <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-pink-600">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-(--theme-primary-dark)">
                     Birthday Surprise
                 </p>
 
@@ -64,7 +64,7 @@ export default function SlideInIcon({
                 >
                     <div className="relative flex flex-col items-center">
                         {/* SIGN */}
-                        <div className="mb-2 rounded-xl bg-pink-500 px-4 py-2 text-sm font-bold text-white shadow-md animate-bounce">
+                        <div className="mb-2 rounded-xl bg-(--theme-primary) px-4 py-2 text-sm font-bold text-white shadow-md animate-bounce">
                             HBD 🎉
                         </div>
 
@@ -92,7 +92,7 @@ export default function SlideInIcon({
                 <button
                     type="button"
                     onClick={nextStep}
-                    className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+                    className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
                 >
                     Next ▶
                 </button>

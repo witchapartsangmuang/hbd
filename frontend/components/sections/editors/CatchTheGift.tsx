@@ -261,10 +261,10 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
     };
 
     return (
-        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-3 shadow-xl sm:rounded-[32px] sm:p-6">
+        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-(--theme-border) bg-linear-to-br from-white via-(--theme-softer) to-(--theme-soft) p-3 shadow-xl sm:rounded-[32px] sm:p-6">
             <div className="mb-4 flex flex-col gap-4 rounded-[20px] bg-white/85 p-4 shadow-sm sm:mb-5 sm:rounded-[24px] sm:p-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-rose-500 sm:text-sm sm:tracking-[0.2em]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--theme-primary) sm:text-sm sm:tracking-[0.2em]">
                         Birthday Mini Game
                     </p>
                     <h2 className="text-2xl font-bold text-slate-800 sm:text-3xl">
@@ -279,14 +279,14 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
-                    <div className="rounded-2xl bg-rose-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-rose-700 sm:text-xs">Score</p>
-                        <p className="text-xl font-bold text-rose-600 sm:text-2xl">{score}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
                     </div>
 
-                    <div className="rounded-2xl bg-pink-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-pink-700 sm:text-xs">Caught</p>
-                        <p className="text-xl font-bold text-pink-600 sm:text-2xl">{caught}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Caught</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{caught}</p>
                     </div>
 
                     <div className="rounded-2xl bg-sky-100 px-4 py-3 text-center">
@@ -319,7 +319,7 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                         flash === "catch"
                             ? "ring-4 ring-emerald-200"
                             : flash === "miss"
-                              ? "ring-4 ring-rose-200"
+                              ? "ring-4 ring-(--theme-border)"
                               : ""
                     }`}
                     style={{
@@ -339,7 +339,7 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                         <div className="absolute right-[20%] top-16 text-xl opacity-60 sm:right-[22%] sm:top-24 sm:text-2xl">
                             ✨
                         </div>
-                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-rose-200/70 to-transparent sm:h-24" />
+                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-(--theme-border)/70 to-transparent sm:h-24" />
                     </div>
 
                     {gifts.map((gift) => (
@@ -368,14 +368,14 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                             minHeight: "34px",
                         }}
                     >
-                        <div className="relative flex h-full w-full items-end justify-center rounded-b-[24px] border-[3px] border-rose-300 bg-gradient-to-b from-amber-100 to-amber-300 shadow-lg sm:rounded-b-[28px] sm:border-4">
-                            <div className="absolute -top-2 h-3 w-[92%] rounded-full border-[3px] border-rose-300 bg-amber-50 sm:-top-3 sm:h-4 sm:border-4" />
+                        <div className="relative flex h-full w-full items-end justify-center rounded-b-[24px] border-[3px] border-(--theme-primary-light) bg-linear-to-b from-amber-100 to-amber-300 shadow-lg sm:rounded-b-[28px] sm:border-4">
+                            <div className="absolute -top-2 h-3 w-[92%] rounded-full border-[3px] border-(--theme-primary-light) bg-amber-50 sm:-top-3 sm:h-4 sm:border-4" />
                             <span className="pb-0.5 text-lg sm:pb-1 sm:text-2xl">🧺</span>
                         </div>
                     </div>
 
                     {!isGameOver && (
-                        <div className="pointer-events-none absolute left-1/2 top-3 -translate-x-1/2 rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium text-rose-500 shadow sm:top-4 sm:px-4 sm:py-1.5 sm:text-xs">
+                        <div className="pointer-events-none absolute left-1/2 top-3 -translate-x-1/2 rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium text-(--theme-primary) shadow sm:top-4 sm:px-4 sm:py-1.5 sm:text-xs">
                             Drag to move the basket
                         </div>
                     )}
@@ -390,17 +390,17 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                                 <p className="mt-3 text-sm text-slate-600 sm:text-base">
                                     You caught
                                 </p>
-                                <p className="mt-2 text-4xl font-extrabold text-rose-500 sm:text-5xl">
+                                <p className="mt-2 text-4xl font-extrabold text-(--theme-primary) sm:text-5xl">
                                     {caught}
                                 </p>
                                 <p className="mt-1 text-xs text-slate-500 sm:text-sm">gifts</p>
 
                                 <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
-                                    <div className="rounded-2xl bg-rose-50 p-3">
-                                        <p className="text-[10px] text-rose-700 sm:text-xs">
+                                    <div className="rounded-2xl bg-(--theme-softer) p-3">
+                                        <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
                                             Score
                                         </p>
-                                        <p className="text-lg font-bold text-rose-600 sm:text-xl">
+                                        <p className="text-lg font-bold text-(--theme-primary-dark) sm:text-xl">
                                             {score}
                                         </p>
                                     </div>
@@ -412,17 +412,17 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                                             {accuracy}%
                                         </p>
                                     </div>
-                                    <div className="rounded-2xl bg-pink-50 p-3">
-                                        <p className="text-[10px] text-pink-700 sm:text-xs">
+                                    <div className="rounded-2xl bg-(--theme-softer) p-3">
+                                        <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
                                             Missed
                                         </p>
-                                        <p className="text-lg font-bold text-pink-600 sm:text-xl">
+                                        <p className="text-lg font-bold text-(--theme-primary-dark) sm:text-xl">
                                             {missed}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="mt-5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                                <div className="mt-5 rounded-2xl bg-(--theme-softer) px-4 py-3 text-sm text-(--theme-primary-dark)">
                                     Amazing 🎂 Continue to your birthday surprise
                                 </div>
 
@@ -437,7 +437,7 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                                     <button
                                         type="button"
                                         onClick={nextStep}
-                                        className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                                        className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
                                     >
                                         Next ▶
                                     </button>

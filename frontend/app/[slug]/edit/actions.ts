@@ -275,6 +275,11 @@ export async function saveContentAction(
 
     const existing = mergeWithDefaults(page.content);
 
+    const themeBaseColorRaw = str(formData, "theme.baseColor").trim();
+    const themeBaseColor = /^#[0-9a-fA-F]{6}$/.test(themeBaseColorRaw)
+        ? themeBaseColorRaw
+        : existing.theme.baseColor;
+
     const imgCardsRaw = str(formData, "imgCards");
     let imgCards = existing.birthGift.imgCards;
     if (imgCardsRaw) {
@@ -300,8 +305,77 @@ export async function saveContentAction(
 
     const correctCode = str(formData, "dateOfBirth.correctCode").trim();
 
+    const prizesRaw = str(formData, "spinTheWheel.prizes");
+    const prizes = prizesRaw
+        .split("\n")
+        .map((p) => p.trim())
+        .filter(Boolean);
+
+    function parseJsonArray<T>(raw: string, isValid: (item: unknown) => item is T): T[] | null {
+        if (!raw) return null;
+        try {
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed)) return null;
+            const valid = parsed.filter(isValid);
+            return valid.length > 0 ? valid : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function isQuizQuestion(item: unknown): item is {
+        question: string;
+        options: string[];
+        correctIndex: number;
+    } {
+        if (!item || typeof item !== "object") return false;
+        const q = item as Record<string, unknown>;
+        return (
+            typeof q.question === "string" &&
+            Array.isArray(q.options) &&
+            q.options.every((o) => typeof o === "string") &&
+            typeof q.correctIndex === "number"
+        );
+    }
+
+    function isMemoryTimelineItem(item: unknown): item is {
+        year: string;
+        imgPath: string;
+        caption: string;
+    } {
+        if (!item || typeof item !== "object") return false;
+        const i = item as Record<string, unknown>;
+        return (
+            typeof i.year === "string" &&
+            typeof i.imgPath === "string" &&
+            typeof i.caption === "string"
+        );
+    }
+
+    function isGuestbookEntry(item: unknown): item is { name: string; message: string } {
+        if (!item || typeof item !== "object") return false;
+        const i = item as Record<string, unknown>;
+        return typeof i.name === "string" && typeof i.message === "string";
+    }
+
+    const quizQuestions = parseJsonArray(
+        str(formData, "quizAboutYou.questionsJson"),
+        isQuizQuestion
+    );
+    const memoryTimelineItems = parseJsonArray(
+        str(formData, "memoryTimeline.itemsJson"),
+        isMemoryTimelineItem
+    );
+    const guestbookWishes = parseJsonArray(
+        str(formData, "guestbookWall.wishesJson"),
+        isGuestbookEntry
+    );
+
     const updated = {
         ...existing,
+        theme: {
+            baseColor: themeBaseColor,
+        },
         birthGift: {
             surpriseText:
                 str(formData, "birthGift.surpriseText") || existing.birthGift.surpriseText,
@@ -365,6 +439,102 @@ export async function saveContentAction(
             subtitle:
                 str(formData, "cinematicBirthdayBear.subtitle") ||
                 existing.cinematicBirthdayBear.subtitle,
+        },
+        spinTheWheel: {
+            prizes: prizes.length > 0 ? prizes : existing.spinTheWheel.prizes,
+        },
+        jigsawPhotoPuzzle: {
+            imagePath:
+                str(formData, "jigsawPhotoPuzzle.imagePath") ||
+                existing.jigsawPhotoPuzzle.imagePath,
+            gridSize: Math.min(
+                5,
+                Math.max(2, num(formData, "jigsawPhotoPuzzle.gridSize", existing.jigsawPhotoPuzzle.gridSize))
+            ),
+        },
+        quizAboutYou: {
+            questions: quizQuestions ?? existing.quizAboutYou.questions,
+        },
+        candleBlow: {
+            candleCount: num(formData, "candleBlow.candleCount", existing.candleBlow.candleCount),
+            message: str(formData, "candleBlow.message") || existing.candleBlow.message,
+        },
+        giftBoxUnwrap: {
+            imgPath: str(formData, "giftBoxUnwrap.imgPath") || existing.giftBoxUnwrap.imgPath,
+            message: str(formData, "giftBoxUnwrap.message") || existing.giftBoxUnwrap.message,
+        },
+        envelopeOpen: {
+            senderName: str(formData, "envelopeOpen.senderName") || existing.envelopeOpen.senderName,
+            message: str(formData, "envelopeOpen.message") || existing.envelopeOpen.message,
+        },
+        polaroidShake: {
+            imgPath: str(formData, "polaroidShake.imgPath") || existing.polaroidShake.imgPath,
+            caption: str(formData, "polaroidShake.caption") || existing.polaroidShake.caption,
+        },
+        countdownToNextBirthday: {
+            birthdayMonth: Math.min(
+                12,
+                Math.max(
+                    1,
+                    num(
+                        formData,
+                        "countdownToNextBirthday.birthdayMonth",
+                        existing.countdownToNextBirthday.birthdayMonth
+                    )
+                )
+            ),
+            birthdayDay: Math.min(
+                31,
+                Math.max(
+                    1,
+                    num(
+                        formData,
+                        "countdownToNextBirthday.birthdayDay",
+                        existing.countdownToNextBirthday.birthdayDay
+                    )
+                )
+            ),
+            message:
+                str(formData, "countdownToNextBirthday.message") ||
+                existing.countdownToNextBirthday.message,
+        },
+        memoryTimeline: {
+            items: memoryTimelineItems ?? existing.memoryTimeline.items,
+        },
+        voiceMessage: {
+            audioSrc: str(formData, "voiceMessage.audioSrc") || existing.voiceMessage.audioSrc,
+            message: str(formData, "voiceMessage.message") || existing.voiceMessage.message,
+        },
+        zodiacReveal: {
+            customMessage:
+                str(formData, "zodiacReveal.customMessage") || existing.zodiacReveal.customMessage,
+        },
+        guestbookWall: {
+            wishes: guestbookWishes ?? existing.guestbookWall.wishes,
+        },
+        digitalSignature: {
+            promptText:
+                str(formData, "digitalSignature.promptText") || existing.digitalSignature.promptText,
+        },
+        backgroundMusicPlayer: {
+            audioSrc:
+                str(formData, "backgroundMusicPlayer.audioSrc") ||
+                existing.backgroundMusicPlayer.audioSrc,
+            label:
+                str(formData, "backgroundMusicPlayer.label") || existing.backgroundMusicPlayer.label,
+        },
+        cinematicRabbit: {
+            title: str(formData, "cinematicRabbit.title") || existing.cinematicRabbit.title,
+            subtitle:
+                str(formData, "cinematicRabbit.subtitle") || existing.cinematicRabbit.subtitle,
+        },
+        cinematicPanda: {
+            title: str(formData, "cinematicPanda.title") || existing.cinematicPanda.title,
+            subtitle:
+                str(formData, "cinematicPanda.subtitle") || existing.cinematicPanda.subtitle,
+        },
+        fireworksFinale: {
+            message: str(formData, "fireworksFinale.message") || existing.fireworksFinale.message,
         },
         sections: parseSections(formData, existing.sections),
     };

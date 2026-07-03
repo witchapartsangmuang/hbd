@@ -245,10 +245,10 @@ export default function WhackAMoleBirthday({
     };
 
     return (
-        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-3 shadow-xl sm:rounded-[32px] sm:p-6">
+        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-(--theme-border) bg-linear-to-br from-white via-(--theme-softer) to-(--theme-soft) p-3 shadow-xl sm:rounded-[32px] sm:p-6">
             <div className="mb-4 flex flex-col gap-4 rounded-[20px] bg-white/85 p-4 shadow-sm sm:mb-5 sm:rounded-[24px] sm:p-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-rose-500 sm:text-sm sm:tracking-[0.2em]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--theme-primary) sm:text-sm sm:tracking-[0.2em]">
                         Birthday Mini Game
                     </p>
                     <h2 className="text-2xl font-bold text-slate-800 sm:text-3xl">
@@ -263,14 +263,14 @@ export default function WhackAMoleBirthday({
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
-                    <div className="rounded-2xl bg-rose-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-rose-700 sm:text-xs">Score</p>
-                        <p className="text-xl font-bold text-rose-600 sm:text-2xl">{score}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
                     </div>
 
-                    <div className="rounded-2xl bg-pink-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-pink-700 sm:text-xs">Hits</p>
-                        <p className="text-xl font-bold text-pink-600 sm:text-2xl">{hits}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Hits</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{hits}</p>
                     </div>
 
                     <div className="rounded-2xl bg-sky-100 px-4 py-3 text-center">
@@ -296,11 +296,11 @@ export default function WhackAMoleBirthday({
             <div className="mb-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:rounded-[20px]">
                 <div className="mb-2 flex items-center justify-between gap-3 text-xs sm:text-sm">
                     <span className="font-medium text-slate-600">Current Status</span>
-                    <span className="font-semibold text-rose-600">
+                    <span className="font-semibold text-(--theme-primary-dark)">
                         Streak x{streak} · Best x{bestStreak}
                     </span>
                 </div>
-                <p className="min-h-6 text-sm font-medium text-rose-600">{message}</p>
+                <p className="min-h-6 text-sm font-medium text-(--theme-primary-dark)">{message}</p>
             </div>
 
             <div className="grid grid-cols-3 gap-2 rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,#ffe4ef_0%,#fff3f8_45%,#fffdfd_100%)] p-3 shadow-2xl sm:gap-4 sm:rounded-[28px] sm:p-5">
@@ -310,14 +310,14 @@ export default function WhackAMoleBirthday({
                         type="button"
                         onClick={() => handleHit(hole.id)}
                         disabled={!hole.isVisible || hole.isHit || isGameOver}
-                        className="group relative aspect-square overflow-hidden rounded-[20px] border border-rose-100 bg-white/75 shadow-sm select-none touch-manipulation sm:rounded-[28px]"
+                        className="group relative aspect-square overflow-hidden rounded-[20px] border border-(--theme-border) bg-white/75 shadow-sm select-none touch-manipulation sm:rounded-[28px]"
                     >
                         <div className="absolute inset-x-0 top-2 text-center text-lg opacity-35 sm:top-3 sm:text-2xl">
                             ✨
                         </div>
 
                         <div className="absolute inset-x-0 bottom-1.5 flex justify-center sm:bottom-2">
-                            <div className="h-12 w-[78%] rounded-full bg-gradient-to-b from-amber-200 to-amber-400 shadow-inner sm:h-16" />
+                            <div className="h-12 w-[78%] rounded-full bg-linear-to-b from-amber-200 to-amber-400 shadow-inner sm:h-16" />
                         </div>
 
                         <div
@@ -335,7 +335,7 @@ export default function WhackAMoleBirthday({
                         </div>
 
                         <div className="absolute inset-x-0 bottom-3 flex justify-center sm:bottom-5">
-                            <div className="h-8 w-[86%] rounded-full bg-gradient-to-b from-rose-500 to-rose-700 shadow-lg sm:h-10" />
+                            <div className="h-8 w-[86%] rounded-full bg-linear-to-b from-(--theme-primary) to-(--theme-primary-dark) shadow-lg sm:h-10" />
                         </div>
                     </button>
                 ))}
@@ -347,13 +347,13 @@ export default function WhackAMoleBirthday({
                     <h3 className="text-2xl font-bold text-slate-800 sm:text-3xl">Game Over</h3>
 
                     <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-                        <div className="rounded-2xl bg-rose-50 p-3 sm:p-4">
-                            <p className="text-[10px] text-rose-700 sm:text-xs">Score</p>
-                            <p className="text-xl font-bold text-rose-600 sm:text-2xl">{score}</p>
+                        <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
+                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                            <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
                         </div>
-                        <div className="rounded-2xl bg-pink-50 p-3 sm:p-4">
-                            <p className="text-[10px] text-pink-700 sm:text-xs">Hits</p>
-                            <p className="text-xl font-bold text-pink-600 sm:text-2xl">{hits}</p>
+                        <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
+                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">Hits</p>
+                            <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{hits}</p>
                         </div>
                         <div className="rounded-2xl bg-sky-50 p-3 sm:p-4">
                             <p className="text-[10px] text-sky-700 sm:text-xs">Misses</p>
@@ -367,7 +367,7 @@ export default function WhackAMoleBirthday({
                         </div>
                     </div>
 
-                    <div className="mt-5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                    <div className="mt-5 rounded-2xl bg-(--theme-softer) px-4 py-3 text-sm text-(--theme-primary-dark)">
                         {message}
                     </div>
 
@@ -382,7 +382,7 @@ export default function WhackAMoleBirthday({
                         <button
                             type="button"
                             onClick={nextStep}
-                            className="rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
+                            className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
                         >
                             Next ▶
                         </button>

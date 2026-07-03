@@ -264,10 +264,10 @@ export default function HeartCollector({
     };
 
     return (
-        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-pink-100 bg-gradient-to-br from-white via-rose-50 to-pink-100 p-3 shadow-xl sm:rounded-[32px] sm:p-6">
+        <section className="mx-auto w-full max-w-6xl rounded-[24px] border border-(--theme-border) bg-linear-to-br from-white via-(--theme-softer) to-(--theme-soft) p-3 shadow-xl sm:rounded-[32px] sm:p-6">
             <div className="mb-4 flex flex-col gap-4 rounded-[20px] bg-white/85 p-4 shadow-sm sm:mb-5 sm:rounded-[24px] sm:p-5 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-rose-500 sm:text-sm sm:tracking-[0.2em]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-(--theme-primary) sm:text-sm sm:tracking-[0.2em]">
                         Birthday Mini Game
                     </p>
                     <h2 className="text-2xl font-bold text-slate-800 sm:text-3xl">
@@ -282,14 +282,14 @@ export default function HeartCollector({
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
-                    <div className="rounded-2xl bg-rose-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-rose-700 sm:text-xs">Score</p>
-                        <p className="text-xl font-bold text-rose-600 sm:text-2xl">{score}</p>
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
                     </div>
 
-                    <div className="rounded-2xl bg-pink-100 px-4 py-3 text-center">
-                        <p className="text-[11px] text-pink-700 sm:text-xs">Collected</p>
-                        <p className="text-xl font-bold text-pink-600 sm:text-2xl">
+                    <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Collected</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                             {collectedCount}
                         </p>
                     </div>
@@ -317,19 +317,19 @@ export default function HeartCollector({
             <div className="mb-4 rounded-[18px] bg-white/80 p-4 shadow-sm sm:rounded-[20px]">
                 <div className="mb-2 flex items-center justify-between gap-3 text-xs sm:text-sm">
                     <span className="font-medium text-slate-600">Progress to Surprise</span>
-                    <span className="font-semibold text-rose-600">
+                    <span className="font-semibold text-(--theme-primary-dark)">
                         {score}/{targetScore}
                     </span>
                 </div>
 
-                <div className="h-3 overflow-hidden rounded-full bg-rose-100">
+                <div className="h-3 overflow-hidden rounded-full bg-(--theme-soft)">
                     <div
-                        className="h-full rounded-full bg-gradient-to-r from-rose-400 via-pink-500 to-fuchsia-500 transition-all duration-300"
+                        className="h-full rounded-full bg-linear-to-r from-(--theme-primary-light) via-(--theme-primary) to-(--theme-gradient-to) transition-all duration-300"
                         style={{ width: `${progressPercent}%` }}
                     />
                 </div>
 
-                <p className="mt-3 min-h-6 text-sm font-medium text-rose-600">{message}</p>
+                <p className="mt-3 min-h-6 text-sm font-medium text-(--theme-primary-dark)">{message}</p>
 
                 {isUnlocked && !isGameOver && (
                     <div className="mt-3 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
@@ -355,7 +355,7 @@ export default function HeartCollector({
                     <div className="absolute right-[20%] top-16 text-xl opacity-60 sm:right-[22%] sm:top-28 sm:text-2xl">
                         ✨
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-rose-200/70 to-transparent sm:h-24" />
+                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-(--theme-border)/70 to-transparent sm:h-24" />
                 </div>
 
                 {hearts.map((heart) => (
@@ -385,7 +385,7 @@ export default function HeartCollector({
                 {floatingTexts.map((item) => (
                     <div
                         key={item.id}
-                        className="pointer-events-none absolute animate-[floatScore_0.8s_ease-out_forwards] text-xs font-bold text-rose-600 sm:text-sm"
+                        className="pointer-events-none absolute animate-[floatScore_0.8s_ease-out_forwards] text-xs font-bold text-(--theme-primary-dark) sm:text-sm"
                         style={{
                             left: `${(item.x / WORLD_WIDTH) * 100}%`,
                             top: `${(item.y / WORLD_HEIGHT) * 100}%`,
@@ -397,7 +397,7 @@ export default function HeartCollector({
                 ))}
 
                 {!isGameOver && (
-                    <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium text-rose-500 shadow sm:bottom-4 sm:px-5 sm:py-2 sm:text-sm">
+                    <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium text-(--theme-primary) shadow sm:bottom-4 sm:px-5 sm:py-2 sm:text-sm">
                         Tap the floating hearts 💖
                     </div>
                 )}
@@ -411,17 +411,17 @@ export default function HeartCollector({
                             </h3>
 
                             <div className="mt-5 grid grid-cols-2 gap-3">
-                                <div className="rounded-2xl bg-rose-50 p-3 sm:p-4">
-                                    <p className="text-[10px] text-rose-700 sm:text-xs">Score</p>
-                                    <p className="text-xl font-bold text-rose-600 sm:text-2xl">
+                                <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
+                                    <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                                    <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                                         {score}
                                     </p>
                                 </div>
-                                <div className="rounded-2xl bg-pink-50 p-3 sm:p-4">
-                                    <p className="text-[10px] text-pink-700 sm:text-xs">
+                                <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
+                                    <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
                                         Collected
                                     </p>
-                                    <p className="text-xl font-bold text-pink-600 sm:text-2xl">
+                                    <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                                         {collectedCount}
                                     </p>
                                 </div>
@@ -441,7 +441,7 @@ export default function HeartCollector({
                                 </div>
                             </div>
 
-                            <div className="mt-5 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                            <div className="mt-5 rounded-2xl bg-(--theme-softer) px-4 py-3 text-sm text-(--theme-primary-dark)">
                                 {message}
                             </div>
 

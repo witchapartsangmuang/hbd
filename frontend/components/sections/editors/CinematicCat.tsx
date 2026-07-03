@@ -28,7 +28,7 @@ export default function CinematicCat({ nextStep }: { nextStep: () => void; conte
     return (
         <section
             ref={ref}
-            className="relative mx-auto my-24 flex min-h-[350px] max-w-5xl items-center justify-between overflow-hidden rounded-3xl bg-pink-50 p-10"
+            className="relative mx-auto my-24 flex min-h-[350px] max-w-5xl items-center justify-between overflow-hidden rounded-3xl bg-(--theme-softer) p-10"
         >
             <div className="max-w-lg">
                 <h2 className="text-3xl font-bold text-slate-900">A little cat has come for you 🐱</h2>
@@ -44,7 +44,7 @@ export default function CinematicCat({ nextStep }: { nextStep: () => void; conte
                     }`}
                 >
                     <div className="relative flex flex-col items-center">
-                        <div className="mb-3 rounded-xl bg-pink-500 px-4 py-2 text-white font-bold shadow">
+                        <div className="mb-3 rounded-xl bg-(--theme-primary) px-4 py-2 text-white font-bold shadow">
                             Meow! 🎉
                         </div>
 
@@ -58,7 +58,7 @@ export default function CinematicCat({ nextStep }: { nextStep: () => void; conte
                             <div className="absolute right-7 top-10 h-2 w-2 rounded-full bg-black"></div>
 
                             {/* nose */}
-                            <div className="absolute left-1/2 top-14 h-3 w-3 -translate-x-1/2 rotate-45 bg-pink-400"></div>
+                            <div className="absolute left-1/2 top-14 h-3 w-3 -translate-x-1/2 rotate-45 bg-(--theme-primary-light)"></div>
 
                             {/* mouth */}
                             <div className="absolute left-1/2 top-[66px] h-2 w-6 -translate-x-1/2 border-b-2 border-black rounded-b-full"></div>
@@ -71,7 +71,7 @@ export default function CinematicCat({ nextStep }: { nextStep: () => void; conte
                 <button
                     type="button"
                     onClick={nextStep}
-                    className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+                    className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
                 >
                     Next ▶
                 </button>

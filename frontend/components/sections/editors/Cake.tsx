@@ -17,8 +17,8 @@ export default function Cake({ nextStep, content }: { nextStep: () => void; cont
         <>
             {/* min-h-screen */}
             <section className="relative flex flex-col items-center p-5">
-                <p className="mt-6 text-3xl font-bold text-pink-600">🎂 Make a Wish</p>
-                <p className="mt-3 text-center text-rose-900/80">Make a wish, then blow out the candles</p>
+                <p className="mt-6 text-3xl font-bold text-(--theme-primary-dark)">🎂 Make a Wish</p>
+                <p className="mt-3 text-center text-[#3a2433]/80">Make a wish, then blow out the candles</p>
                 <div className="w-full z-1000 h-1">
                     {confetti.map((piece) => (
                         <span
@@ -41,10 +41,10 @@ export default function Cake({ nextStep, content }: { nextStep: () => void; cont
                 </div>
                 <div className="relative mt-8 h-65 w-65">
                     <div className="absolute bottom-6.25 left-5 h-4.5 w-55 rounded-full bg-zinc-300" />
-                    <div className="absolute bottom-10.75 left-10 h-21.25 w-45 rounded-xl bg-linear-to-br from-pink-300 to-pink-500" />
-                    <div className="absolute bottom-9.5 left-10 h-3.5 w-45 rounded-full bg-rose-50" />
-                    <div className="absolute bottom-30 left-15.5 h-15 w-34 rounded-xl bg-linear-to-br from-pink-100 to-pink-300" />
-                    <div className="absolute bottom-28.75 left-15.5 h-3.5 w-34 rounded-full bg-rose-50" />
+                    <div className="absolute bottom-10.75 left-10 h-21.25 w-45 rounded-xl bg-linear-to-br from-(--theme-primary-light) to-(--theme-primary)" />
+                    <div className="absolute bottom-9.5 left-10 h-3.5 w-45 rounded-full bg-(--theme-softer)" />
+                    <div className="absolute bottom-30 left-15.5 h-15 w-34 rounded-xl bg-linear-to-br from-(--theme-soft) to-(--theme-primary-light)" />
+                    <div className="absolute bottom-28.75 left-15.5 h-3.5 w-34 rounded-full bg-(--theme-softer)" />
                     {[92, 124, 156].map((left, index) => (
                         <div
                             key={index}
@@ -64,13 +64,13 @@ export default function Cake({ nextStep, content }: { nextStep: () => void; cont
                 <button
                     type="button"
                     onClick={handleBlowCandles}
-                    className={`mt-3 rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 
+                    className={`mt-3 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 
                     font-medium text-white shadow-lg transition hover:-translate-y-0.5 ${blown && "hidden"}`}
                 >
                     Blow out 🕯️
                 </button>
                 <p
-                    className={`mt-5 mb-5 whitespace-pre-line font-semibold text-rose-700 transition-opacity ${wishTextAlign === "left" ? "text-left" : "text-center"} ${blown ? "opacity-100" : "opacity-0"}`}
+                    className={`mt-5 mb-5 whitespace-pre-line font-semibold text-(--theme-primary-dark) transition-opacity ${wishTextAlign === "left" ? "text-left" : "text-center"} ${blown ? "opacity-100" : "opacity-0"}`}
                 >
                     {cakeWishText}
                 </p>
