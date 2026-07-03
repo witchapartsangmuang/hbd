@@ -2,7 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import { getPageBySlug } from "@/lib/pages";
 import { getUserById, isUserActiveNow } from "@/lib/users";
-import { mergeWithDefaults } from "@/components/sections/utils/content-types";
+import { mergeWithDefaults } from "@/components/sections/utils/defaults";
 import EditContentForm from "./EditContentForm";
 
 export default async function EditPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -32,7 +32,7 @@ export default async function EditPage({ params }: { params: Promise<{ slug: str
     const content = mergeWithDefaults(page.content);
 
     return (
-        <section className="min-h-screen p-6">
+        <section className="mx-auto min-h-screen max-w-5xl p-6">
             <EditContentForm slug={slug} content={content} />
         </section>
     );

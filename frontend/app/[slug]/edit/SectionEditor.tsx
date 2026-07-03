@@ -62,21 +62,68 @@ export default function SectionEditor({
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [newSectionName, setNewSectionName] = useState("");
     const [newSectionType, setNewSectionType] = useState<SectionType | "">("");
-    const [scratchRevealType, setScratchRevealType] = useState<"youtube" | "video" | "image">(
-        content.scratchCard.revealType ?? "youtube"
-    );
-    const [youtubeUrl, setYoutubeUrl] = useState(content.scratchCard.youtubeUrl ?? "");
+
+    // birthGift
+    const [surpriseText, setSurpriseText] = useState(content.birthGift.surpriseText);
+
+    // cake
+    const [cakeWishText, setCakeWishText] = useState(content.cake.wishText);
     const [cakeWishTextAlign, setCakeWishTextAlign] = useState<"left" | "center">(
         content.cake.wishTextAlign ?? "center"
     );
+
+    // typingText
+    const [typingMessage, setTypingMessage] = useState(content.typingText.message);
     const [messageAlign, setMessageAlign] = useState<"left" | "center">(
         content.typingText.messageAlign ?? "left"
     );
-    const [scratchWidth, setScratchWidth] = useState(content.scratchCard.userWidth ?? 436);
-    const [scratchAspectRatio, setScratchAspectRatio] = useState(content.scratchCard.aspectRatio ?? "16:9");
+
+    // dateOfBirth
+    const [digitCount, setDigitCount] = useState<4 | 6 | 8>(
+        (content.dateOfBirth.digitCount ?? 6) as 4 | 6 | 8
+    );
+    const [correctCode, setCorrectCode] = useState(content.dateOfBirth.correctCode);
+
+    // releaseBalloon
+    const [balloonWishes, setBalloonWishes] = useState(
+        content.releaseBalloon.wishes.join("\n")
+    );
+
+    // flipPhotoCard
+    const [flipAspectRatio, setFlipAspectRatio] = useState(
+        content.flipPhotoCard.aspectRatio ?? "3:4"
+    );
+    const [dogEmoji, setDogEmoji] = useState(content.flipPhotoCard.dogEmoji);
+    const [dogLabel, setDogLabel] = useState(content.flipPhotoCard.dogLabel);
+    const [catEmoji, setCatEmoji] = useState(content.flipPhotoCard.catEmoji);
+    const [catLabel, setCatLabel] = useState(content.flipPhotoCard.catLabel);
+
+    // slideInIcon
+    const [slideInTitle, setSlideInTitle] = useState(content.slideInIcon.title);
+
+    // cinematicBirthdayBear
+    const [bearTitle, setBearTitle] = useState(content.cinematicBirthdayBear.title);
+    const [bearSubtitle, setBearSubtitle] = useState(content.cinematicBirthdayBear.subtitle);
+
+    // scratchCard
+    const [scratchRevealType, setScratchRevealType] = useState<"youtube" | "video" | "image">(
+        content.scratchCard.revealType ?? "youtube"
+    );
+    const [scratchAspectRatio, setScratchAspectRatio] = useState(
+        content.scratchCard.aspectRatio ?? "16:9"
+    );
+    const [youtubeUrl, setYoutubeUrl] = useState(content.scratchCard.youtubeUrl ?? "");
     const [videoSrc, setVideoSrc] = useState(content.scratchCard.videoSrc ?? "");
     const [imageSrc, setImageSrc] = useState(content.scratchCard.imageSrc ?? "");
+    const [headingText, setHeadingText] = useState(content.scratchCard.headingText);
+    const [subText, setSubText] = useState(content.scratchCard.subText);
+    const [revealedText, setRevealedText] = useState(content.scratchCard.revealedText);
+    const [brushRadius, setBrushRadius] = useState(String(content.scratchCard.brushRadius));
+    const [revealThreshold, setRevealThreshold] = useState(
+        String(content.scratchCard.revealThreshold)
+    );
 
+    // imgCards
     type ImgCardState = ImgCardItem & { id: string };
     const [imgCards, setImgCards] = useState<ImgCardState[]>(
         content.birthGift.imgCards.map((c, i) => ({ ...c, id: String(i) }))
@@ -85,7 +132,7 @@ export default function SectionEditor({
     const addImgCard = () =>
         setImgCards((prev) => [
             ...prev,
-            { id: crypto.randomUUID(), imgPath: "", caption: "", rotateAngle: 0 },
+            { id: crypto.randomUUID(), imgPath: "", caption: "", rotateAngle: 0, aspectRatio: "3:4" },
         ]);
 
     const removeImgCard = (id: string) =>
@@ -147,6 +194,9 @@ export default function SectionEditor({
         setSections((prev) => [...prev, newSection]);
         setSelectedId(newSection.id);
         setIsAddModalOpen(false);
+        if (newSectionType === "birthGift") {
+            setImgCards([{ id: crypto.randomUUID(), imgPath: "", caption: "", rotateAngle: 0, aspectRatio: "3:4" }]);
+        }
     };
 
     return (
@@ -183,15 +233,15 @@ export default function SectionEditor({
 
             <div className="flex flex-col gap-6 lg:flex-row">
                 <div className="flex-1">
+                    {/* Gift Box */}
                     <div className={selected?.type === "birthGift" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Gift Box
-                            </h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Gift Box</h2>
                             <Field label="Surprise text">
                                 <Input
                                     name="birthGift.surpriseText"
-                                    defaultValue={content.birthGift.surpriseText}
+                                    value={surpriseText}
+                                    onChange={(e) => setSurpriseText(e.target.value)}
                                 />
                             </Field>
                             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -220,10 +270,12 @@ export default function SectionEditor({
                                                 )}
                                             </div>
                                             <ImageUrlField
+                                                key={`${card.id}-${card.aspectRatio}-${card.rotateAngle}`}
                                                 slug={slug}
                                                 defaultValue={card.imgPath}
                                                 onValueChange={(url) => updateImgCard(card.id, { imgPath: url })}
                                                 rotateAngle={card.rotateAngle}
+                                                aspectRatio={card.aspectRatio ?? "3:4"}
                                             />
                                             <Field label="Caption">
                                                 <Input
@@ -240,18 +292,33 @@ export default function SectionEditor({
                                                 </div>
                                                 <input
                                                     type="range"
-                                                    min="-15"
-                                                    max="15"
+                                                    min="-10"
+                                                    max="10"
                                                     step="1"
                                                     value={card.rotateAngle}
                                                     onChange={(e) => updateImgCard(card.id, { rotateAngle: Number(e.target.value) })}
                                                     className="w-full accent-rose-500"
                                                 />
                                                 <div className="flex justify-between text-[10px] text-gray-400">
-                                                    <span>-15°</span>
+                                                    <span>-10°</span>
                                                     <span>0°</span>
-                                                    <span>+15°</span>
+                                                    <span>+10°</span>
                                                 </div>
+                                            </div>
+                                            <div className="mt-3">
+                                                <Field label="Aspect ratio">
+                                                    <Select
+                                                        value={card.aspectRatio ?? "3:4"}
+                                                        onChange={(e) => updateImgCard(card.id, { aspectRatio: e.target.value })}
+                                                        options={[
+                                                            { value: "1:1", label: "1:1 — Square" },
+                                                            { value: "3:4", label: "3:4 — Portrait" },
+                                                            { value: "4:3", label: "4:3 — Classic" },
+                                                            { value: "9:16", label: "9:16 — Tall" },
+                                                            { value: "16:9", label: "16:9 — Landscape" },
+                                                        ]}
+                                                    />
+                                                </Field>
                                             </div>
                                         </div>
                                     )}
@@ -263,13 +330,15 @@ export default function SectionEditor({
                         </div>
                     </div>
 
+                    {/* Cake */}
                     <div className={selected?.type === "cake" ? "" : "hidden"}>
                         <div className={panelClass}>
                             <h2 className="mb-4 text-lg font-semibold text-rose-700">Cake</h2>
-                            <Field label="Wish text (รองรับหลายบรรทัด)">
+                            <Field label="Wish text (Supports multiple lines)">
                                 <Textarea
                                     name="cake.wishText"
-                                    defaultValue={content.cake.wishText}
+                                    value={cakeWishText}
+                                    onChange={(e) => setCakeWishText(e.target.value)}
                                     rows={4}
                                     resize
                                 />
@@ -291,16 +360,16 @@ export default function SectionEditor({
                         </div>
                     </div>
 
+                    {/* Typing Text */}
                     <div className={selected?.type === "typingText" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Typing Text
-                            </h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Typing Text</h2>
                             <Field label="Message (newlines supported)">
                                 <Textarea
                                     rows={4}
                                     name="typingText.message"
-                                    defaultValue={content.typingText.message}
+                                    value={typingMessage}
+                                    onChange={(e) => setTypingMessage(e.target.value)}
                                     resize
                                 />
                             </Field>
@@ -321,79 +390,136 @@ export default function SectionEditor({
                         </div>
                     </div>
 
+                    {/* Birthday Code */}
                     <div className={selected?.type === "dateOfBirth" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Birthday Code
-                            </h2>
-                            <Field label="6-digit code (DDMMYY)">
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Birthday Code</h2>
+                            <input type="hidden" name="dateOfBirth.digitCount" value={digitCount} />
+                            <div className="mb-4">
+                                <Field label="จำนวนหลัก">
+                                    <SegmentedControl
+                                        fullWidth
+                                        value={String(digitCount)}
+                                        onChange={(v) => {
+                                            setDigitCount(Number(v) as 4 | 6 | 8);
+                                            setCorrectCode("");
+                                        }}
+                                        options={[
+                                            { value: "4", label: "4 หลัก (DDMM)" },
+                                            { value: "6", label: "6 หลัก (DDMMYY)" },
+                                            { value: "8", label: "8 หลัก (DDMMYYYY)" },
+                                        ]}
+                                    />
+                                </Field>
+                            </div>
+                            <Field label={`รหัส ${digitCount} หลัก (${digitCount === 4 ? "DDMM" : digitCount === 8 ? "DDMMYYYY" : "DDMMYY"})`}>
                                 <Input
                                     name="dateOfBirth.correctCode"
-                                    defaultValue={content.dateOfBirth.correctCode}
-                                    maxLength={6}
-                                    pattern="\d{6}"
+                                    value={correctCode}
+                                    onChange={(e) =>
+                                        setCorrectCode(e.target.value.replace(/\D/g, "").slice(0, digitCount))
+                                    }
+                                    maxLength={digitCount}
+                                    pattern={`\\d{${digitCount}}`}
+                                    placeholder={digitCount === 4 ? "เช่น 1812" : digitCount === 8 ? "เช่น 18121999" : "เช่น 181299"}
                                 />
                             </Field>
                         </div>
                     </div>
 
+                    {/* Release Balloon */}
                     <div className={selected?.type === "releaseBalloon" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Balloon Wishes
-                            </h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Balloon Wishes</h2>
                             <Field label="Wishes (one per line)">
                                 <Textarea
                                     rows={6}
                                     name="releaseBalloon.wishes"
-                                    defaultValue={content.releaseBalloon.wishes.join("\n")}
+                                    value={balloonWishes}
+                                    onChange={(e) => setBalloonWishes(e.target.value)}
                                     resize
                                 />
                             </Field>
                         </div>
                     </div>
 
+                    {/* Flip Photo Card */}
                     <div className={selected?.type === "flipPhotoCard" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Flip Photo Card
-                            </h2>
-                            <div className="flex flex-col gap-4">
-                                <div className="rounded-xl border border-rose-100 p-3">
-                                    <p className="mb-2 text-sm font-medium text-rose-700">🐶 Dog card</p>
-                                    <Field label="Emoji (แสดงใหญ่เมื่อพลิกการ์ด)">
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Flip Photo Card</h2>
+                            <input type="hidden" name="flipPhotoCard.aspectRatio" value={flipAspectRatio} />
+                            <div className="mb-4">
+                                <Field label="Aspect ratio">
+                                    <Select
+                                        name="_flipPhotoCard.aspectRatio"
+                                        value={flipAspectRatio}
+                                        onChange={(e) => setFlipAspectRatio(e.target.value)}
+                                        options={[
+                                            { value: "1:1", label: "1:1 — Square" },
+                                            { value: "3:4", label: "3:4 — Portrait" },
+                                            { value: "4:3", label: "4:3 — Landscape" },
+                                            { value: "9:16", label: "9:16 — Tall" },
+                                            { value: "16:9", label: "16:9 — Wide" },
+                                        ]}
+                                    />
+                                </Field>
+                            </div>
+                            <div className="flex flex-col gap-4 sm:flex-row">
+                                <div className="flex-1 rounded-xl border border-rose-100 p-3">
+                                    <p className="mb-2 text-sm font-medium text-rose-700">ปุ่มซ้าย</p>
+                                    <Field label="Emoji บนปุ่ม">
                                         <Input
                                             name="flipPhotoCard.dogEmoji"
-                                            defaultValue={content.flipPhotoCard.dogEmoji}
-                                            placeholder="เช่น 🐶 🎸 🌟"
+                                            value={dogEmoji}
+                                            onChange={(e) => setDogEmoji(e.target.value)}
+                                            placeholder="🐶"
                                         />
                                     </Field>
+                                    <div className="mt-2">
+                                        <Field label="ข้อความบนปุ่ม">
+                                            <Input
+                                                name="flipPhotoCard.dogLabel"
+                                                value={dogLabel}
+                                                onChange={(e) => setDogLabel(e.target.value)}
+                                                placeholder="Dog"
+                                            />
+                                        </Field>
+                                    </div>
                                     <div className="mt-2">
                                         <ImageUrlField
                                             slug={slug}
                                             name="flipPhotoCard.dogImg"
                                             defaultValue={content.flipPhotoCard.dogImg}
-                                            label="หรือ รูปภาพ (ใช้เมื่อไม่ได้ใส่ emoji)"
-                                            compact
+                                            label="รูปภาพที่แสดงเมื่อพลิกการ์ด"
                                         />
                                     </div>
                                 </div>
-                                <div className="rounded-xl border border-rose-100 p-3">
-                                    <p className="mb-2 text-sm font-medium text-rose-700">🐱 Cat card</p>
-                                    <Field label="Emoji (แสดงใหญ่เมื่อพลิกการ์ด)">
+                                <div className="flex-1 rounded-xl border border-rose-100 p-3">
+                                    <p className="mb-2 text-sm font-medium text-rose-700">ปุ่มขวา</p>
+                                    <Field label="Emoji บนปุ่ม">
                                         <Input
                                             name="flipPhotoCard.catEmoji"
-                                            defaultValue={content.flipPhotoCard.catEmoji}
-                                            placeholder="เช่น 🐱 🎀 💖"
+                                            value={catEmoji}
+                                            onChange={(e) => setCatEmoji(e.target.value)}
+                                            placeholder="🐱"
                                         />
                                     </Field>
+                                    <div className="mt-2">
+                                        <Field label="ข้อความบนปุ่ม">
+                                            <Input
+                                                name="flipPhotoCard.catLabel"
+                                                value={catLabel}
+                                                onChange={(e) => setCatLabel(e.target.value)}
+                                                placeholder="Cat"
+                                            />
+                                        </Field>
+                                    </div>
                                     <div className="mt-2">
                                         <ImageUrlField
                                             slug={slug}
                                             name="flipPhotoCard.catImg"
                                             defaultValue={content.flipPhotoCard.catImg}
-                                            label="หรือ รูปภาพ (ใช้เมื่อไม่ได้ใส่ emoji)"
-                                            compact
+                                            label="รูปภาพที่แสดงเมื่อพลิกการ์ด"
                                         />
                                     </div>
                                 </div>
@@ -401,42 +527,44 @@ export default function SectionEditor({
                         </div>
                     </div>
 
+                    {/* Slide-In Icon */}
                     <div className={selected?.type === "slideInIcon" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Slide-In Icon
-                            </h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Slide-In Icon</h2>
                             <Field label="Title">
                                 <Input
                                     name="slideInIcon.title"
-                                    defaultValue={content.slideInIcon.title}
+                                    value={slideInTitle}
+                                    onChange={(e) => setSlideInTitle(e.target.value)}
                                 />
                             </Field>
                         </div>
                     </div>
 
+                    {/* Cinematic Birthday Bear */}
                     <div className={selected?.type === "cinematicBirthdayBear" ? "" : "hidden"}>
                         <div className={panelClass}>
-                            <h2 className="mb-4 text-lg font-semibold text-rose-700">
-                                Birthday Bear Scene
-                            </h2>
+                            <h2 className="mb-4 text-lg font-semibold text-rose-700">Birthday Bear Scene</h2>
                             <Field label="Title">
                                 <Input
                                     name="cinematicBirthdayBear.title"
-                                    defaultValue={content.cinematicBirthdayBear.title}
+                                    value={bearTitle}
+                                    onChange={(e) => setBearTitle(e.target.value)}
                                 />
                             </Field>
                             <div className="mt-3">
                                 <Field label="Subtitle">
                                     <Input
                                         name="cinematicBirthdayBear.subtitle"
-                                        defaultValue={content.cinematicBirthdayBear.subtitle}
+                                        value={bearSubtitle}
+                                        onChange={(e) => setBearSubtitle(e.target.value)}
                                     />
                                 </Field>
                             </div>
                         </div>
                     </div>
 
+                    {/* Scratch Card */}
                     <div
                         className={
                             selected && SCRATCH_CARD_TYPES.includes(selected.type) ? "" : "hidden"
@@ -497,15 +625,6 @@ export default function SectionEditor({
                                         label="Video file"
                                         onValueChange={setVideoSrc}
                                     />
-                                    <div className="mt-3">
-                                        <Field label="Max video width (px)">
-                                            <Input
-                                                type="number"
-                                                name="scratchCard.maxVdoWidth"
-                                                defaultValue={content.scratchCard.maxVdoWidth}
-                                            />
-                                        </Field>
-                                    </div>
                                 </div>
                             )}
 
@@ -527,35 +646,30 @@ export default function SectionEditor({
                                 <Field label="Heading text">
                                     <Input
                                         name="scratchCard.headingText"
-                                        defaultValue={content.scratchCard.headingText}
+                                        value={headingText}
+                                        onChange={(e) => setHeadingText(e.target.value)}
                                         placeholder="Try scratching the card!"
                                     />
                                 </Field>
                                 <Field label="Sub text">
                                     <Input
                                         name="scratchCard.subText"
-                                        defaultValue={content.scratchCard.subText}
+                                        value={subText}
+                                        onChange={(e) => setSubText(e.target.value)}
                                         placeholder="Something is hidden inside..."
                                     />
                                 </Field>
                                 <Field label="Revealed text">
                                     <Input
                                         name="scratchCard.revealedText"
-                                        defaultValue={content.scratchCard.revealedText}
+                                        value={revealedText}
+                                        onChange={(e) => setRevealedText(e.target.value)}
                                         placeholder="There's more to see 💌"
                                     />
                                 </Field>
                             </div>
 
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                                <Field label="Max width (px)">
-                                    <Input
-                                        type="number"
-                                        name="scratchCard.userWidth"
-                                        value={scratchWidth}
-                                        onChange={(e) => setScratchWidth(Number(e.target.value) || 0)}
-                                    />
-                                </Field>
                                 <Field label="Aspect ratio">
                                     <Select
                                         name="scratchCard.aspectRatio"
@@ -574,20 +688,21 @@ export default function SectionEditor({
                                     <Input
                                         type="number"
                                         name="scratchCard.brushRadius"
-                                        defaultValue={content.scratchCard.brushRadius}
+                                        value={brushRadius}
+                                        onChange={(e) => setBrushRadius(e.target.value)}
                                     />
                                 </Field>
                                 <Field label="% to reveal">
                                     <Input
                                         type="number"
                                         name="scratchCard.revealThreshold"
-                                        defaultValue={content.scratchCard.revealThreshold}
+                                        value={revealThreshold}
+                                        onChange={(e) => setRevealThreshold(e.target.value)}
                                     />
                                 </Field>
                             </div>
                             {(() => {
                                 const [aw, ah] = scratchAspectRatio.split(":").map(Number);
-                                const actualHeight = scratchWidth > 0 ? Math.round(scratchWidth * ah / aw) : 0;
                                 const revealType =
                                     selected?.type === "scratchCard"
                                         ? scratchRevealType
@@ -599,8 +714,8 @@ export default function SectionEditor({
                                 return (
                                     <div className="mt-4 space-y-1.5">
                                         <div className="flex items-center justify-between">
-                                            <p className="text-sm font-medium text-rose-700">Size Preview</p>
-                                            <p className="text-xs text-gray-400">{scratchWidth} × {actualHeight} px · {scratchAspectRatio}</p>
+                                            <p className="text-sm font-medium text-rose-700">Content Preview</p>
+                                            <p className="text-xs text-gray-400">{scratchAspectRatio}</p>
                                         </div>
                                         <div
                                             className="relative w-full overflow-hidden rounded-xl border border-rose-100 bg-black"
@@ -656,6 +771,7 @@ export default function SectionEditor({
                         </div>
                     </div>
 
+                    {/* No config */}
                     <div
                         className={
                             selected && NO_CONFIG_TYPES.includes(selected.type) ? "" : "hidden"

@@ -6,11 +6,8 @@ import { mkdir, readdir, writeFile } from "fs/promises";
 import { join } from "path";
 import { getCurrentUser } from "@/lib/session";
 import { getPageBySlug, updatePageContent } from "@/lib/pages";
-import {
-    mergeWithDefaults,
-    SECTION_TYPES,
-    SectionInstance,
-} from "@/components/sections/utils/content-types";
+import { mergeWithDefaults } from "@/components/sections/utils/defaults";
+import { SECTION_TYPES, SectionInstance } from "@/components/sections/utils/content-types";
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
@@ -287,6 +284,7 @@ export async function saveContentAction(
                         imgPath: String(c.imgPath),
                         caption: typeof c.caption === "string" ? c.caption : "",
                         rotateAngle: Number.isFinite(Number(c.rotateAngle)) ? Number(c.rotateAngle) : 0,
+                        aspectRatio: typeof c.aspectRatio === "string" ? c.aspectRatio : "3:4",
                     }));
             }
         } catch {}
@@ -299,6 +297,8 @@ export async function saveContentAction(
         .filter(Boolean);
 
     const correctCode = str(formData, "dateOfBirth.correctCode").trim();
+    const _dc = Number(str(formData, "dateOfBirth.digitCount"));
+    const digitCount = (_dc === 4 || _dc === 8) ? _dc : 6;
 
     const updated = {
         ...existing,
@@ -312,7 +312,6 @@ export async function saveContentAction(
             wishTextAlign: (str(formData, "cake.wishTextAlign") || existing.cake.wishTextAlign || "center") as "left" | "center",
         },
         scratchCard: {
-            userWidth: num(formData, "scratchCard.userWidth", existing.scratchCard.userWidth),
             aspectRatio:
                 str(formData, "scratchCard.aspectRatio") || existing.scratchCard.aspectRatio || "16:9",
             brushRadius: num(formData, "scratchCard.brushRadius", existing.scratchCard.brushRadius),
@@ -321,7 +320,6 @@ export async function saveContentAction(
                 "scratchCard.revealThreshold",
                 existing.scratchCard.revealThreshold
             ),
-            maxVdoWidth: num(formData, "scratchCard.maxVdoWidth", existing.scratchCard.maxVdoWidth),
             revealType: (["youtube", "video", "image"].includes(
                 str(formData, "scratchCard.revealType")
             )
@@ -340,8 +338,10 @@ export async function saveContentAction(
             messageAlign: (str(formData, "typingText.messageAlign") || existing.typingText.messageAlign || "left") as "left" | "center",
         },
         dateOfBirth: {
-            ...existing.dateOfBirth,
-            correctCode: /^\d{6}$/.test(correctCode)
+            digitCount: digitCount as 4 | 6,
+            formatPlaceholder: digitCount === 4 ? ["D", "D", "M", "M"] : digitCount === 8 ? ["D", "D", "M", "M", "Y", "Y", "Y", "Y"] : ["D", "D", "M", "M", "Y", "Y"],
+            emptyDigits: Array(digitCount).fill(""),
+            correctCode: new RegExp(`^\\d{${digitCount}}$`).test(correctCode)
                 ? correctCode
                 : existing.dateOfBirth.correctCode,
         },
@@ -350,10 +350,13 @@ export async function saveContentAction(
             wishes: wishes.length > 0 ? wishes : existing.releaseBalloon.wishes,
         },
         flipPhotoCard: {
+            aspectRatio: str(formData, "flipPhotoCard.aspectRatio") || existing.flipPhotoCard.aspectRatio || "3:4",
             dogImg: str(formData, "flipPhotoCard.dogImg") || existing.flipPhotoCard.dogImg,
             catImg: str(formData, "flipPhotoCard.catImg") || existing.flipPhotoCard.catImg,
             dogEmoji: str(formData, "flipPhotoCard.dogEmoji"),
             catEmoji: str(formData, "flipPhotoCard.catEmoji"),
+            dogLabel: str(formData, "flipPhotoCard.dogLabel") || existing.flipPhotoCard.dogLabel || "Dog",
+            catLabel: str(formData, "flipPhotoCard.catLabel") || existing.flipPhotoCard.catLabel || "Cat",
         },
         slideInIcon: {
             title: str(formData, "slideInIcon.title") || existing.slideInIcon.title,

@@ -5,15 +5,14 @@ import { flipPhotoCardState } from "@/components/sections/utils/hooks";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => void; content: HbdContent }) {
-	const { catImg, dogImg, dogEmoji, catEmoji } = content.flipPhotoCard;
+	const { catImg, dogImg, dogEmoji, catEmoji, dogLabel, catLabel, aspectRatio = "3:4" } = content.flipPhotoCard;
+	const [aw, ah] = aspectRatio.split(":").map(Number);
 	const { flipped, setflipped, imgSelect, setimgSelect } = flipPhotoCardState();
 	useEffect(() => {
 		if (imgSelect === "") return;
 		setflipped(true);
-		nextStep()
+		nextStep();
 	}, [imgSelect, setflipped]);
-
-	const isUrl = (val: string) => val.startsWith("/") || val.startsWith("http");
 
 	return (
 		<section className="relative flex flex-col items-center min-h-screen p-5">
@@ -29,17 +28,12 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 				</div>
 
 				{/* card area */}
-				<div
-					className="mx-auto"
-					style={{
-						perspective: "1400px",
-					}}
-				>
+				<div className="mx-auto" style={{ perspective: "1400px" }}>
 					<div
 						className="relative mx-auto transition-transform duration-700 ease-in-out"
 						style={{
 							width: "min(100%, 340px)",
-							aspectRatio: "320 / 420",
+							aspectRatio: `${aw}/${ah}`,
 							transformStyle: "preserve-3d",
 							transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
 						}}
@@ -51,9 +45,8 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						>
 							<div className="mb-4 text-5xl drop-shadow sm:text-6xl">🎁</div>
 							<p className="mt-3 max-w-55 text-sm leading-relaxed text-white/90 sm:text-base">
-								Choose "Dog 🐶" or "Cat 🐱" below to open the card
+								Choose "{dogLabel || "Dog"}" or "{catLabel || "Cat"}" below to open the card
 							</p>
-
 							{!imgSelect && (
 								<div className="mt-5 rounded-full bg-white/20 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm sm:text-sm">
 									No photo selected yet
@@ -64,26 +57,15 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 						{/* back */}
 						<div
 							className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/70 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.18)]"
-							style={{
-								backfaceVisibility: "hidden",
-								transform: "rotateY(180deg)",
-							}}
+							style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
 						>
 							<div className="relative h-full w-full">
 								{imgSelect ? (
-									isUrl(imgSelect) ? (
-										<img
-											src={imgSelect}
-											alt="photo card"
-											className="h-full w-full object-cover"
-										/>
-									) : (
-										<div className="flex h-full items-center justify-center bg-linear-to-br from-rose-50 to-pink-100">
-											<span className="select-none text-[96px] leading-none drop-shadow-md sm:text-[120px]">
-												{imgSelect}
-											</span>
-										</div>
-									)
+									<img
+										src={imgSelect}
+										alt="photo card"
+										className="h-full w-full object-cover"
+									/>
 								) : (
 									<div className="flex h-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200 text-slate-500">
 										<p className="text-sm sm:text-base">No photo selected</p>
@@ -104,23 +86,23 @@ export default function FlipPhotoCard({ nextStep, content }: { nextStep: () => v
 					<div className="grid grid-cols-2 gap-3">
 						<button
 							type="button"
-							onClick={() => setimgSelect(dogEmoji || dogImg)}
+							onClick={() => setimgSelect(dogImg)}
 							className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-sky-200 bg-linear-to-br from-sky-50 to-cyan-100 px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
 						>
 							<span className="text-2xl transition-transform group-hover:scale-110">
-								🐶
+								{dogEmoji || "🐶"}
 							</span>
-							<span className="font-semibold">Dog</span>
+							<span className="font-semibold">{dogLabel || "Dog"}</span>
 						</button>
 						<button
 							type="button"
-							onClick={() => setimgSelect(catEmoji || catImg)}
+							onClick={() => setimgSelect(catImg)}
 							className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-pink-200 bg-linear-to-br from-pink-50 to-rose-100 px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
 						>
 							<span className="text-2xl transition-transform group-hover:scale-110">
-								🐱
+								{catEmoji || "🐱"}
 							</span>
-							<span className="font-semibold">Cat</span>
+							<span className="font-semibold">{catLabel || "Cat"}</span>
 						</button>
 					</div>
 				</div>

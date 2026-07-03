@@ -133,6 +133,7 @@ export default function BirthGift({
                                     imgPath={img.imgPath}
                                     rotateAngle={img.rotateAngle}
                                     caption={img.caption}
+                                    aspectRatio={img.aspectRatio}
                                 />
                             </div>
                         ))}

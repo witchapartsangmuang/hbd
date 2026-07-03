@@ -15,6 +15,7 @@ export default function ImageUrlField({
     onValueChange,
     rotateAngle = 0,
     compact = false,
+    aspectRatio,
 }: {
     slug: string;
     name?: string;
@@ -23,6 +24,7 @@ export default function ImageUrlField({
     onValueChange?: (url: string) => void;
     rotateAngle?: number;
     compact?: boolean;
+    aspectRatio?: string;
 }) {
     const [value, setValue] = useState(defaultValue);
     const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -60,10 +62,13 @@ export default function ImageUrlField({
                     <div
                         onClick={() => setIsPreviewOpen(true)}
                         className="mt-2 cursor-zoom-in overflow-hidden rounded-xl transition-transform"
-                        style={{ transform: `rotate(${rotateAngle}deg)` }}
+                        style={{
+                            transform: `rotate(${rotateAngle}deg)`,
+                            ...(aspectRatio ? { aspectRatio: aspectRatio.replace(":", "/") } : {}),
+                        }}
                     >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={value} alt="" className="max-h-85.5 w-full object-cover" />
+                        <img src={value} alt="" className="h-full w-full object-cover" />
                     </div>
                 )
             )}

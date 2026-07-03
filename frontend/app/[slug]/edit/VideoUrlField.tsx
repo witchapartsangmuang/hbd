@@ -28,8 +28,9 @@ export default function VideoUrlField({
                 <Input
                     name={name}
                     value={value}
-                    onChange={(e) => { setValue(e.target.value); onValueChange?.(e.target.value); }}
-                    placeholder="/uploads/slug/video.mp4"
+                    readOnly
+                    onChange={() => {}}
+                    className="cursor-default bg-gray-50 text-gray-500"
                 />
                 <Button
                     type="button"

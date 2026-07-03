@@ -83,8 +83,8 @@ export function typingTextState() {
     };
 }
 // DateOfBirth.tsx
-export function dateOfBirthState() {
-    const [digits, setdigits] = useState(["", "", "", "", "", ""]);
+export function dateOfBirthState(count: 4 | 6 | 8 = 6) {
+    const [digits, setdigits] = useState<string[]>(() => Array(count).fill(""));
     const [shake, setshake] = useState(false);
     const [success, setsuccess] = useState(false);
     const [error, seterror] = useState("");

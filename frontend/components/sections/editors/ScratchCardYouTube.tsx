@@ -12,7 +12,7 @@ export default function ScratchCardYoutube({
     nextStep: () => void;
     content: HbdContent;
 }) {
-    const { brushRadius, revealThreshold, userWidth, aspectRatio, headingText, subText, revealedText } = content.scratchCard;
+    const { brushRadius, revealThreshold, aspectRatio, headingText, subText, revealedText } = content.scratchCard;
     const confettiIdRef = useRef(3);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -100,8 +100,7 @@ export default function ScratchCardYoutube({
             const wrapper = containerRef.current;
             if (!wrapper) return;
             const [rw, rh] = (aspectRatio ?? "16:9").split(":").map(Number);
-            const parentWidth = wrapper.clientWidth;
-            const nextWidth = Math.min(window.innerWidth, parentWidth, userWidth);
+            const nextWidth = wrapper.clientWidth;
             const nextHeight = Math.round(nextWidth * (rh / rw));
             setCardSize({ width: nextWidth - 10, height: nextHeight - 10 });
         };

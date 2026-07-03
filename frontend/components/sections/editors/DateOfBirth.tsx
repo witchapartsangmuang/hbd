@@ -11,12 +11,15 @@ export default function DateOfBirth({
     content: HbdContent;
     nextStep: () => void;
 }) {
-    const { formatPlaceholder, correctCode, emptyDigits: empty_digits } = content.dateOfBirth;
+    const { digitCount = 6, formatPlaceholder, correctCode } = content.dateOfBirth as typeof content.dateOfBirth & { digitCount: 4 | 6 | 8 };
+    const emptyArr = useMemo<string[]>(() => Array(digitCount).fill(""), [digitCount]);
     const { digits, setdigits, shake, setshake, success, setsuccess, error, seterror } =
-        dateOfBirthState();
+        dateOfBirthState(digitCount);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
     const joinedCode = useMemo(() => digits.join(""), [digits]);
     const isComplete = useMemo(() => digits.every((d) => d !== ""), [digits]);
+    const last = digitCount - 1;
+
     useEffect(() => {
         if (!isComplete) {
             setsuccess(false);
@@ -32,7 +35,6 @@ export default function DateOfBirth({
             setsuccess(false);
             seterror("Incorrect code, please try again 💗");
             setshake(true);
-
             const timer = setTimeout(() => setshake(false), 450);
             return () => clearTimeout(timer);
         }
@@ -45,21 +47,15 @@ export default function DateOfBirth({
 
     const handleChange = (index: number, value: string) => {
         const onlyNumber = value.replace(/\D/g, "");
-
         const next = [...digits];
-
         if (!onlyNumber) {
             next[index] = "";
             setdigits(next);
             return;
         }
-
         next[index] = onlyNumber.slice(-1);
         setdigits(next);
-
-        if (index < 5) {
-            focusInput(index + 1);
-        }
+        if (index < last) focusInput(index + 1);
     };
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -70,7 +66,6 @@ export default function DateOfBirth({
                 setdigits(next);
                 return;
             }
-
             if (index > 0) {
                 const next = [...digits];
                 next[index - 1] = "";
@@ -78,15 +73,8 @@ export default function DateOfBirth({
                 focusInput(index - 1);
             }
         }
-
-        if (e.key === "ArrowLeft" && index > 0) {
-            focusInput(index - 1);
-        }
-
-        if (e.key === "ArrowRight" && index < 5) {
-            focusInput(index + 1);
-        }
-
+        if (e.key === "ArrowLeft" && index > 0) focusInput(index - 1);
+        if (e.key === "ArrowRight" && index < last) focusInput(index + 1);
         if (e.key === "Enter" && isComplete) {
             if (joinedCode === correctCode) {
                 setsuccess(true);
@@ -103,38 +91,34 @@ export default function DateOfBirth({
 
     const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
         e.preventDefault();
-
-        const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-
+        const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, digitCount);
         if (!pasted) return;
-
-        const next = [...empty_digits];
-        pasted.split("").forEach((char, i) => {
-            next[i] = char;
-        });
-
+        const next = [...emptyArr];
+        pasted.split("").forEach((char, i) => { next[i] = char; });
         setdigits(next);
-
-        const focusIndex = Math.min(pasted.length, 5);
-        focusInput(focusIndex);
+        focusInput(Math.min(pasted.length, last));
     };
 
     const handleReset = () => {
-        setdigits([...empty_digits]);
+        setdigits([...emptyArr]);
         seterror("");
         setsuccess(false);
         setshake(false);
         focusInput(0);
     };
 
+    const formatLabel = digitCount === 4 ? "DDMM" : digitCount === 8 ? "DDMMYYYY" : "DDMMYY";
+    const exampleHint = digitCount === 4 ? "18/12 → 1812" : digitCount === 8 ? "18/12/1999 → 18121999" : "18/12/99 → 181299";
+
     return (
         <div className="mx-auto w-full max-w-md rounded-[28px] border border-rose-100 bg-white/90 p-6 shadow-xl backdrop-blur">
             <div className="mb-5 text-center">
-                <h2 className="text-2xl font-bold text-rose-600">🔐 Enter Birthday Code</h2>
+                <h2 className="text-2xl font-bold text-rose-600">Enter Birthday Code</h2>
                 <p className="mt-2 text-sm text-rose-900/70">
-                    Enter your 6-digit code in the format <span className="font-semibold">DDMMYY</span>
+                    Enter your {digitCount}-digit code in the format{" "}
+                    <span className="font-semibold">{formatLabel}</span>
                 </p>
-                <p className="mt-1 text-xs text-rose-500">Example: 18/12/99 → 181299</p>
+                <p className="mt-1 text-xs text-rose-500">Example: {exampleHint}</p>
             </div>
 
             <div className="mb-3 flex justify-center gap-2">
@@ -154,14 +138,11 @@ export default function DateOfBirth({
                 }`}
             >
                 {digits.map((digit, index) => {
-                    const showDivider = index === 1 || index === 3;
-
+                    const showDivider = index === 1 || (digitCount !== 4 && index === 3);
                     return (
                         <div key={index} className="flex items-center gap-1">
                             <input
-                                ref={(el) => {
-                                    inputRefs.current[index] = el;
-                                }}
+                                ref={(el) => { inputRefs.current[index] = el; }}
                                 type="text"
                                 inputMode="numeric"
                                 autoComplete="one-time-code"
@@ -181,9 +162,7 @@ export default function DateOfBirth({
                                 }`}
                             />
                             {showDivider && (
-                                <span className="select-none text-xl font-bold text-rose-300">
-                                    /
-                                </span>
+                                <span className="select-none text-xl font-bold text-rose-300">/</span>
                             )}
                         </div>
                     );
@@ -196,7 +175,6 @@ export default function DateOfBirth({
                         Correct 🎉 Continue to your birthday surprise
                     </p>
                 )}
-
                 {!success && error && <p className="font-medium text-rose-500">{error}</p>}
             </div>
 
@@ -208,14 +186,13 @@ export default function DateOfBirth({
                 >
                     Clear
                 </button>
-
                 <div className="rounded-full bg-rose-100 px-4 py-2 text-sm text-rose-700">
-                    {joinedCode.length}/6 digits
+                    {joinedCode.length}/{digitCount} digits
                 </div>
             </div>
 
             <p className="mt-4 text-center text-xs text-rose-400">
-                Hint: Use your date of birth as 6 digits
+                Hint: Use your date of birth as {digitCount} digits
             </p>
         </div>
     );
