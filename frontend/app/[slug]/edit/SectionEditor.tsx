@@ -19,6 +19,7 @@ import { Field } from "@/components/Field";
 import { Input } from "@/components/Input";
 import { Textarea } from "@/components/Textarea";
 import { Select } from "@/components/Select";
+import { SearchSelect } from "@/components/SearchSelect";
 import { SortableList } from "@/components/SortableList";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { Eye, EyeSlash, Trash } from "@/icons/icons";
@@ -98,6 +99,11 @@ export default function SectionEditor({
     const [catEmoji, setCatEmoji] = useState(content.flipPhotoCard.catEmoji);
     const [catLabel, setCatLabel] = useState(content.flipPhotoCard.catLabel);
 
+    // polaroidShake
+    const [polaroidAspectRatio, setPolaroidAspectRatio] = useState(
+        content.polaroidShake.aspectRatio ?? "1:1"
+    );
+
     // slideInIcon
     const [slideInTitle, setSlideInTitle] = useState(content.slideInIcon.title);
 
@@ -170,10 +176,7 @@ export default function SectionEditor({
     const usedTypes = new Set(sections.map((s) => s.type));
     const hasScratchCard = SCRATCH_CARD_TYPES.some((t) => usedTypes.has(t));
     const availableTypes = SECTION_TYPES.filter(
-        (t) =>
-            !usedTypes.has(t) &&
-            !LEGACY_TYPES.includes(t) &&
-            !(t === "scratchCard" && hasScratchCard)
+        (t) => !LEGACY_TYPES.includes(t) && !(t === "scratchCard" && hasScratchCard)
     );
 
     const toggleEnabled = (id: string) => {
@@ -832,7 +835,29 @@ export default function SectionEditor({
                                 name="polaroidShake.imgPath"
                                 defaultValue={content.polaroidShake.imgPath}
                                 label="Photo"
+                                aspectRatio={polaroidAspectRatio}
                             />
+                            <input
+                                type="hidden"
+                                name="polaroidShake.aspectRatio"
+                                value={polaroidAspectRatio}
+                            />
+                            <div className="mt-3">
+                                <Field label="Aspect ratio">
+                                    <Select
+                                        name="_polaroidShake.aspectRatio"
+                                        value={polaroidAspectRatio}
+                                        onChange={(e) => setPolaroidAspectRatio(e.target.value)}
+                                        options={[
+                                            { value: "1:1", label: "1:1 — Square" },
+                                            { value: "3:4", label: "3:4 — Portrait" },
+                                            { value: "4:3", label: "4:3 — Landscape" },
+                                            { value: "9:16", label: "9:16 — Tall" },
+                                            { value: "16:9", label: "16:9 — Wide" },
+                                        ]}
+                                    />
+                                </Field>
+                            </div>
                             <div className="mt-3">
                                 <Field label="Caption">
                                     <Input
@@ -1388,16 +1413,15 @@ export default function SectionEditor({
                     />
                 </Field>
                 <Field label="Section Type" required>
-                    <Select
+                    <SearchSelect
                         value={newSectionType}
-                        onChange={(e) => setNewSectionType(e.target.value as SectionType | "")}
-                        options={[
-                            { value: "", label: "-- Select type --" },
-                            ...availableTypes.map((type) => ({
-                                value: type,
-                                label: SECTION_LABELS[type],
-                            })),
-                        ]}
+                        onChange={(value) => setNewSectionType(value as SectionType | "")}
+                        placeholder="-- Select type --"
+                        searchPlaceholder="Search section type..."
+                        options={availableTypes.map((type) => ({
+                            value: type,
+                            label: SECTION_LABELS[type],
+                        }))}
                     />
                 </Field>
             </Modal>

@@ -85,6 +85,7 @@ export const SECTION_TYPES: SectionType[] = [
 ];
 
 export const SECTION_LABELS: Record<SectionType, string> = {
+    // section ที่ฉันปรับแล้ว
     scratchCard: "Scratch Card",
     scratchCardYoutube: "Scratch Card (YouTube)",
     birthGift: "Gift Box",
@@ -94,14 +95,10 @@ export const SECTION_LABELS: Record<SectionType, string> = {
     scratchCardImg: "Scratch Card (Image)",
     typingText: "Typing Text",
     flipPhotoCard: "Flip Photo Card",
+
+    // section ที่ฉันยังไม่ได้ปรับ
     dateOfBirth: "Birthday Code",
     slideInIcon: "Slide-In Icon",
-    popTheBalloon: "Mini Game: Pop Balloon",
-    memoryMatching: "Mini Game: Memory Match",
-    catchTheGift: "Mini Game: Catch the Gift",
-    heartCollector: "Mini Game: Heart Collector",
-    findTheHiddenGift: "Mini Game: Find the Gift",
-    whackAMoleBirthday: "Mini Game: Whack-a-Mole",
     cinematicBirthdayBear: "Cinematic Bear",
     cinematicCat: "Cinematic Cat",
     cinematicDog: "Cinematic Dog",
@@ -122,6 +119,12 @@ export const SECTION_LABELS: Record<SectionType, string> = {
     cinematicRabbit: "Cinematic Rabbit",
     cinematicPanda: "Cinematic Panda",
     fireworksFinale: "Fireworks Finale",
+    popTheBalloon: "Mini Game: Pop Balloon",
+    memoryMatching: "Mini Game: Memory Match",
+    catchTheGift: "Mini Game: Catch the Gift",
+    heartCollector: "Mini Game: Heart Collector",
+    findTheHiddenGift: "Mini Game: Find the Gift",
+    whackAMoleBirthday: "Mini Game: Whack-a-Mole",
 };
 
 export interface SectionInstance {
@@ -227,6 +230,7 @@ export interface HbdContent {
     polaroidShake: {
         imgPath: string;
         caption: string;
+        aspectRatio: string;
     };
     countdownToNextBirthday: {
         birthdayMonth: number;
@@ -404,6 +408,7 @@ export const defaultContent: HbdContent = {
     polaroidShake: {
         imgPath: "/img/2.jpg",
         caption: "Shake to develop this memory ✨",
+        aspectRatio: "1:1",
     },
     countdownToNextBirthday: {
         birthdayMonth: 12,

@@ -499,6 +499,10 @@ export async function saveContentAction(
         polaroidShake: {
             imgPath: str(formData, "polaroidShake.imgPath") || existing.polaroidShake.imgPath,
             caption: str(formData, "polaroidShake.caption") || existing.polaroidShake.caption,
+            aspectRatio:
+                str(formData, "polaroidShake.aspectRatio") ||
+                existing.polaroidShake.aspectRatio ||
+                "1:1",
         },
         countdownToNextBirthday: {
             birthdayMonth: Math.min(

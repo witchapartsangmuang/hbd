@@ -12,7 +12,8 @@ export default function PolaroidShake({
     nextStep: () => void;
     content: HbdContent;
 }) {
-    const { imgPath, caption } = content.polaroidShake;
+    const { imgPath, caption, aspectRatio = "1:1" } = content.polaroidShake;
+    const [aw, ah] = aspectRatio.split(":").map(Number);
     const [shakes, setShakes] = useState(0);
     const [jiggle, setJiggle] = useState(false);
 
@@ -32,7 +33,9 @@ export default function PolaroidShake({
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     Develop the Memory
                 </p>
-                <h2 className="mt-1 text-2xl font-bold text-slate-800 sm:text-3xl">Shake the Polaroid 📸</h2>
+                <h2 className="mt-1 text-2xl font-bold text-slate-800 sm:text-3xl">
+                    Shake the Polaroid 📸
+                </h2>
             </div>
 
             <button
@@ -42,9 +45,13 @@ export default function PolaroidShake({
                 className={`rounded-lg bg-white p-3 pb-12 shadow-2xl transition-transform sm:p-4 sm:pb-14 ${
                     jiggle ? "rotate-2 scale-[1.02]" : "rotate-0"
                 }`}
+                style={{ width: "min(100%, 320px)" }}
                 aria-label="Shake the photo"
             >
-                <div className="relative h-44 w-44 overflow-hidden rounded-sm bg-slate-200 sm:h-56 sm:w-56 md:h-64 md:w-64">
+                <div
+                    className="relative w-full overflow-hidden rounded-sm bg-slate-200"
+                    style={{ aspectRatio: `${aw}/${ah}` }}
+                >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={imgPath}
