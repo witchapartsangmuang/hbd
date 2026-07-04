@@ -1,12 +1,21 @@
 "use client";
 import { ConfettiPiece } from "./type";
-import { confettiColors } from "./data";
 import { Dispatch, RefObject, SetStateAction } from "react";
+
+const DEFAULT_CONFETTI_COLORS = [
+    "#ff5fa2",
+    "#ffcc66",
+    "#7a7aff",
+    "#67d5b5",
+    "#ff8b5c",
+    "#f472b6",
+    "#60a5fa",
+];
 
 export function launchConfetti(
     confettiIdRef: RefObject<number>,
     setConfetti: Dispatch<SetStateAction<ConfettiPiece[]>>,
-    colors: string[] = confettiColors
+    colors: string[] = DEFAULT_CONFETTI_COLORS
 ) {
     const centerX = typeof window !== "undefined" ? window.innerWidth / 2 : 600;
     const pieces: ConfettiPiece[] = Array.from({ length: 120 }).map(() => {

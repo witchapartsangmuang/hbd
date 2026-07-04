@@ -265,12 +265,16 @@ export default function WhackAMoleBirthday({
                 <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
                     <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
                         <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
-                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
+                            {score}
+                        </p>
                     </div>
 
                     <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
                         <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Hits</p>
-                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{hits}</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
+                            {hits}
+                        </p>
                     </div>
 
                     <div className="rounded-2xl bg-sky-100 px-4 py-3 text-center">
@@ -348,12 +352,20 @@ export default function WhackAMoleBirthday({
 
                     <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
                         <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
-                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">Score</p>
-                            <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
+                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
+                                Score
+                            </p>
+                            <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
+                                {score}
+                            </p>
                         </div>
                         <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
-                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">Hits</p>
-                            <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{hits}</p>
+                            <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
+                                Hits
+                            </p>
+                            <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
+                                {hits}
+                            </p>
                         </div>
                         <div className="rounded-2xl bg-sky-50 p-3 sm:p-4">
                             <p className="text-[10px] text-sky-700 sm:text-xs">Misses</p>

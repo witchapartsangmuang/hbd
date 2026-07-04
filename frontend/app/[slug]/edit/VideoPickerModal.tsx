@@ -34,7 +34,10 @@ export default function VideoPickerModal({
         setIsLoading(true);
         listUploadedVideosAction(slug).then((result) => {
             setIsLoading(false);
-            if ("error" in result) { setError(result.error); return; }
+            if ("error" in result) {
+                setError(result.error);
+                return;
+            }
             setVideos(result.videos);
         });
     }, [open, slug]);
@@ -54,7 +57,11 @@ export default function VideoPickerModal({
             xhr.upload.addEventListener("progress", (e) => {
                 if (e.lengthComputable) {
                     setUploads((prev) =>
-                        prev.map((u) => u.id === id ? { ...u, progress: Math.round((e.loaded / e.total) * 100) } : u)
+                        prev.map((u) =>
+                            u.id === id
+                                ? { ...u, progress: Math.round((e.loaded / e.total) * 100) }
+                                : u
+                        )
                     );
                 }
             });
@@ -62,8 +69,12 @@ export default function VideoPickerModal({
             xhr.addEventListener("load", () => {
                 setUploads((prev) => prev.filter((u) => u.id !== id));
                 try {
-                    const result = JSON.parse(xhr.responseText) as { url: string } | { error: string };
-                    if ("error" in result) { setError(result.error); return; }
+                    const result = JSON.parse(xhr.responseText) as
+                        { url: string } | { error: string };
+                    if ("error" in result) {
+                        setError(result.error);
+                        return;
+                    }
                     setVideos((prev) => [{ url: result.url, name: file.name }, ...prev]);
                     setSelected(result.url);
                 } catch {
@@ -88,8 +99,16 @@ export default function VideoPickerModal({
             size="xl"
             footer={
                 <div className="flex w-full justify-end gap-3">
-                    <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
-                    <Button type="button" disabled={!selected} onClick={() => { if (selected) onSelect(selected); }}>
+                    <Button type="button" variant="secondary" onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button
+                        type="button"
+                        disabled={!selected}
+                        onClick={() => {
+                            if (selected) onSelect(selected);
+                        }}
+                    >
                         Select
                     </Button>
                 </div>
@@ -100,12 +119,17 @@ export default function VideoPickerModal({
                     isDragging ? "border-rose-400 bg-rose-50" : "border-gray-200 hover:bg-gray-50"
                 }`}
                 onClick={() => fileRef.current?.click()}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                }}
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={(e) => {
                     e.preventDefault();
                     setIsDragging(false);
-                    const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith("video/"));
+                    const files = Array.from(e.dataTransfer.files).filter((f) =>
+                        f.type.startsWith("video/")
+                    );
                     if (files.length) handleFiles(files);
                 }}
             >
@@ -125,7 +149,9 @@ export default function VideoPickerModal({
                                 </div>
                             </div>
                         ))}
-                        <p className="pt-1 text-center text-xs text-gray-400">Click or drop more files to queue</p>
+                        <p className="pt-1 text-center text-xs text-gray-400">
+                            Click or drop more files to queue
+                        </p>
                     </div>
                 ) : (
                     "Click or drag video files here (mp4, mov, webm)"
@@ -164,7 +190,9 @@ export default function VideoPickerModal({
                     >
                         <span className="text-lg">🎬</span>
                         <span className="flex-1 truncate font-medium">{video.name}</span>
-                        {selected === video.url && <span className="shrink-0 text-xs text-rose-500">✓ Selected</span>}
+                        {selected === video.url && (
+                            <span className="shrink-0 text-xs text-rose-500">✓ Selected</span>
+                        )}
                     </button>
                 ))}
             </div>

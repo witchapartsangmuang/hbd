@@ -5,21 +5,28 @@ import { confettiState, scratchCardState } from "@/components/sections/utils/hoo
 import { launchConfetti } from "@/components/sections/utils/functions";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
-export default function ScratchCardVdo({
+export default function ScratchCardImg({
     nextStep,
     content,
+    sectionId,
 }: {
     nextStep: () => void;
     content: HbdContent;
+    sectionId: string;
 }) {
-    const { brushRadius, revealThreshold, aspectRatio, headingText, subText, revealedText } = content.scratchCard;
-    const confettiIdRef = useRef(3);
+    const {
+        brushRadius = 56,
+        revealThreshold = 50,
+        aspectRatio = "16:9",
+        headingText = "",
+        subText = "",
+        revealedText = "",
+    } = content.scratchCard?.[sectionId] ?? {};
+    const confettiIdRef = useRef(2);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const videoRef = useRef<HTMLVideoElement | null>(null);
     const isDrawingRef = useRef(false);
     const revealedRef = useRef(false);
-
     const { confetti, setConfetti } = confettiState();
     const {
         mounted,
@@ -32,19 +39,15 @@ export default function ScratchCardVdo({
         setisFading,
         cardSize,
         setCardSize,
-        showVideo,
-        setshowVideo,
     } = scratchCardState();
-
     useEffect(() => {
         setmouted(true);
-    }, [setmouted]);
-
+    }, []);
     useEffect(() => {
         if (progress === revealThreshold) {
             launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         }
-    }, [progress, setConfetti]);
+    }, [progress]);
 
     const isMobile = cardSize.width < 720;
     const actualBrushRadius = isMobile ? Math.max(26, brushRadius * 0.6) : brushRadius;
@@ -52,29 +55,25 @@ export default function ScratchCardVdo({
     const initCanvas = (renderWidth: number, renderHeight: number) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
         const dpr = window.devicePixelRatio || 1;
         canvas.width = Math.floor(renderWidth * dpr);
         canvas.height = Math.floor(renderHeight * dpr);
+        console.log("canvas.", canvas.width, canvas.height);
         canvas.style.width = `${renderWidth}px`;
         canvas.style.height = `${renderHeight}px`;
-
+        console.log("canvas.style", canvas.style.width, canvas.style.height);
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
-
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr, dpr);
-
         const gradient = ctx.createLinearGradient(0, 0, renderWidth, renderHeight);
         gradient.addColorStop(0, "#f9a8d4");
         gradient.addColorStop(0.5, "#fb7185");
         gradient.addColorStop(1, "#f472b6");
-
         ctx.globalCompositeOperation = "source-over";
         ctx.clearRect(0, 0, renderWidth, renderHeight);
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, renderWidth, renderHeight);
-
         for (let i = 0; i < 36; i++) {
             const x = Math.random() * renderWidth;
             const y = Math.random() * renderHeight;
@@ -84,28 +83,24 @@ export default function ScratchCardVdo({
             ctx.arc(x, y, size / 2, 0, Math.PI * 2);
             ctx.fill();
         }
-
         ctx.textAlign = "center";
         ctx.font = isMobile ? "700 24px sans-serif" : "700 34px sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.95)";
         ctx.fillText("Scratch Me ✨", renderWidth / 2, renderHeight / 2);
-
+        // ctx.font = isMobile ? "500 13px sans-serif" : "500 16px sans-serif";
+        // ctx.fillStyle = "rgba(255,255,255,0.92)";
+        // ctx.fillText(
+        //     "Drag to reveal birthday surprise",
+        //     renderWidth / 2,
+        //     renderHeight / 2 + (isMobile ? 24 : 28)
+        // );
         setprogress(0);
         setisRevealed(false);
-        setisFading(false);
-        setshowVideo(false);
         revealedRef.current = false;
-
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
-            videoRef.current.muted = false;
-        }
     };
 
     useEffect(() => {
         if (typeof window === "undefined") return;
-
         const updateSize = () => {
             const wrapper = containerRef.current;
             if (!wrapper) return;
@@ -114,16 +109,12 @@ export default function ScratchCardVdo({
             const nextHeight = Math.round(nextWidth * (rh / rw));
             setCardSize({ width: nextWidth, height: nextHeight });
         };
-
         updateSize();
-
         const observer = new ResizeObserver(() => {
             updateSize();
         });
-
         if (containerRef.current) observer.observe(containerRef.current);
         window.addEventListener("resize", updateSize);
-
         return () => {
             observer.disconnect();
             window.removeEventListener("resize", updateSize);
@@ -140,9 +131,7 @@ export default function ScratchCardVdo({
     ) => {
         const canvas = canvasRef.current;
         if (!canvas) return null;
-
         const rect = canvas.getBoundingClientRect();
-
         if ("touches" in e) {
             const touch = e.touches[0];
             if (!touch) return null;
@@ -151,83 +140,53 @@ export default function ScratchCardVdo({
                 y: touch.clientY - rect.top,
             };
         }
-
         return {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top,
         };
     };
 
-    const revealSuccess = () => {
-        if (revealedRef.current) return;
-        revealedRef.current = true;
-        setisRevealed(true);
-        setisFading(true);
-        setTimeout(() => {
-            const c = canvasRef.current;
-            if (!c) return;
-            const clearCtx = c.getContext("2d");
-            if (!clearCtx) return;
-
-            clearCtx.clearRect(0, 0, c.width, c.height);
-        }, 120);
-        setTimeout(async () => {
-            setshowVideo(true);
-            try {
-                const video = videoRef.current;
-                if (video) {
-                    video.muted = false;
-                    video.currentTime = 0;
-                    await video.play();
-                }
-            } catch (error) {
-                console.error("Video play failed:", error);
-            }
-        }, 1000);
-        nextStep();
-    };
-
     const scratchAt = (x: number, y: number) => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
-
         ctx.globalCompositeOperation = "destination-out";
-
         ctx.beginPath();
         ctx.arc(x, y, actualBrushRadius, 0, Math.PI * 2);
         ctx.fill();
-
         ctx.beginPath();
         ctx.arc(x, y, actualBrushRadius * 0.6, 0, Math.PI * 2);
         ctx.fill();
-
         calculateProgress();
     };
 
     const calculateProgress = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
         if (!ctx) return;
-
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const pixels = imageData.data;
         let transparentCount = 0;
         const totalPixels = pixels.length / 4;
-
         for (let i = 3; i < pixels.length; i += 4) {
             if (pixels[i] < 20) transparentCount++;
         }
-
         const percent = Math.round((transparentCount / totalPixels) * 100);
         setprogress(percent);
-
-        if (percent >= revealThreshold) {
-            revealSuccess();
+        if (percent >= revealThreshold && !revealedRef.current) {
+            revealedRef.current = true;
+            setisRevealed(true);
+            setisFading(true);
+            setTimeout(() => {
+                const c = canvasRef.current;
+                if (!c) return;
+                const clearCtx = c.getContext("2d");
+                if (!clearCtx) return;
+                clearCtx.clearRect(0, 0, c.width, c.height);
+            }, 1000);
+            nextStep();
         }
     };
 
@@ -268,6 +227,7 @@ export default function ScratchCardVdo({
     };
 
     return (
+        // min-h-screen
         <section className="relative flex flex-col items-center p-5">
             <p className="mt-6 text-3xl font-bold text-(--theme-primary-dark)">{headingText}</p>
             <p className="mt-3 text-center text-[#3a2433]/80">{subText}</p>
@@ -302,43 +262,26 @@ export default function ScratchCardVdo({
                             className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-(--theme-border) bg-linear-to-br from-(--theme-soft) via-(--theme-softer) to-white"
                             style={{ width: cardSize.width, height: cardSize.height }}
                         >
-                            {!showVideo && (
-                                <>
-                                    <canvas
-                                        ref={canvasRef}
-                                        className={`absolute z-10 transition-opacity duration-1000 touch-none ${
-                                            isRevealed ? "pointer-events-none" : "cursor-crosshair"
-                                        }`}
-                                        style={{
-                                            opacity: isFading ? 0 : 1,
-                                        }}
-                                        onMouseDown={handleMouseDown}
-                                        onMouseMove={handleMouseMove}
-                                        onMouseUp={handleMouseUp}
-                                        onMouseLeave={handleMouseUp}
-                                        onTouchStart={handleTouchStart}
-                                        onTouchMove={handleTouchMove}
-                                        onTouchEnd={handleTouchEnd}
-                                    />
-                                    <div
-                                        className="absolute z-5 transition-opacity duration-1000 bg-[radial-gradient(circle_at_top,#fff1f7,#ffe4ef_55%,#ffd5e6)]"
-                                        style={{
-                                            width: cardSize.width,
-                                            height: cardSize.height,
-                                            opacity: isFading ? 0 : 1,
-                                        }}
-                                    />
-                                </>
-                            )}
-                            <video
-                                ref={videoRef}
-                                controls={showVideo}
-                                playsInline
-                                preload="auto"
-                                className="absolute inset-0 w-full h-full object-contain"
-                            >
-                                <source src={content.scratchCard.videoSrc ?? "/video/nm-tt.mp4"} type="video/mp4" />
-                            </video>
+                            <canvas
+                                ref={canvasRef}
+                                className={`absolute z-10 transition-opacity duration-500 touch-none ${
+                                    isRevealed ? "pointer-events-none" : "cursor-crosshair"
+                                }`}
+                                style={{
+                                    opacity: isFading ? 0 : 1,
+                                }}
+                                onMouseDown={handleMouseDown}
+                                onMouseMove={handleMouseMove}
+                                onMouseUp={handleMouseUp}
+                                onMouseLeave={handleMouseUp}
+                                onTouchStart={handleTouchStart}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
+                            />
+                            <img
+                                className="object-cover w-full h-full"
+                                src={content.scratchCard?.[sectionId]?.imageSrc ?? "/img/5.png"}
+                            />
                         </div>
                     </div>
                 )}

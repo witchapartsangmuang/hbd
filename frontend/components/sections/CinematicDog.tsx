@@ -31,7 +31,9 @@ export default function CinematicDog({ nextStep }: { nextStep: () => void; conte
             className="relative mx-auto my-24 flex min-h-[350px] max-w-5xl items-center justify-between overflow-hidden rounded-3xl bg-yellow-50 p-10"
         >
             <div className="max-w-lg">
-                <h2 className="text-3xl font-bold text-slate-900">A little dog has come for you 🐶</h2>
+                <h2 className="text-3xl font-bold text-slate-900">
+                    A little dog has come for you 🐶
+                </h2>
                 <p className="mt-3 text-slate-600">This dog is carrying a surprise sign!</p>
             </div>
 

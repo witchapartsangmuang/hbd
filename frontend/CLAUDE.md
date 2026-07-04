@@ -28,22 +28,44 @@ npm run format  # prettier --write over app/, components/, lib/
 ## The section system (read this before adding a section)
 
 Every page is `content.sections: SectionInstance[]` — an ordered, enable/disable-able list of
-`{ id, type, enabled, label? }`. Adding a **new section type** means touching five places in sync;
-missing one leaves the type half-wired:
+`{ id, type, enabled, label? }`. Each section type has two independent halves that live in
+parallel directories:
+
+- **`components/sections/<Name>.tsx`** — the player-facing display component, rendered on the
+  public `/[slug]` page. Props are always `{ nextStep: () => void; content: HbdContent }`. Call
+  `nextStep()` when the interaction is done to unlock the next section.
+- **`components/sections/editors/<Name>.tsx`** — the admin-facing config panel, rendered inside
+  `app/[slug]/edit/SectionEditor.tsx`. Props are always `{ content: HbdContent; slug: string;
+  hidden: boolean }` (`SectionEditorProps` from `components/sections/editors/_shared.ts`). Every
+  editor panel is **always mounted** in the DOM — `hidden` just toggles a CSS class — because the
+  whole edit page is one `<form>` and every section's fields must be present in `FormData` at
+  submit time regardless of which panel the admin currently has open (unvisited sections keep
+  their saved values via the `|| existing.<field>` fallback in `actions.ts`).
+
+Adding a **new section type** means touching four places in sync; missing one leaves the type
+half-wired:
 
 1. **`components/sections/utils/content-types.ts`** — add the type to the `SectionType` union,
-   `SECTION_TYPES` array, `SECTION_LABELS` record, add its content shape to the `HbdContent`
-   interface, seed it in `defaultContent`, and merge it in `mergeWithDefaults`.
-2. **`components/sections/editors/<Name>.tsx`** — the actual component. Props are always
-   `{ nextStep: () => void; content: HbdContent }`. Call `nextStep()` when the interaction is done
-   to unlock the next section.
-3. **`components/sections/_sections.tsx`** — register `{ label, component }` in
-   `SECTION_REGISTRY` under the new `SectionType` key.
-4. **`app/[slug]/edit/SectionEditor.tsx`** — add a config panel (conditional `<div>` keyed on
-   `selected?.type === "..."`) with the editable fields, or add the type to `NO_CONFIG_TYPES` if it
-   has nothing to configure.
-5. **`app/[slug]/edit/actions.ts`** (`saveContentAction`) — read the new form field(s) out of
-   `formData` and merge them into `updated`, falling back to `existing.<field>` when absent.
+   `SECTION_TYPES` array, `SECTION_LABELS` record, and add its (optional) content shape to the
+   `HbdContent` interface. There is no default-content table anymore — every field access must
+   tolerate the section's bucket being entirely absent (a brand-new page's `content` starts as
+   `{}`), so read fields as `content.<section>?.<field> ?? <fallback>` everywhere they're used.
+2. **`components/sections/<Name>.tsx`** — the display component, registered in
+   `components/sections/_sections.tsx`'s `SECTION_REGISTRY` under the new `SectionType` key.
+3. **`components/sections/editors/<Name>.tsx`** — the config panel, exporting a default
+   `<Name>Editor` function component. Own your section's local `useState` here (initialized from
+   `content.<section>?.<field> ?? <fallback>`) and render the `name="section.field"` form inputs.
+   Register it in `components/sections/_section_editors.tsx`'s `SECTION_EDITOR_REGISTRY` — once
+   registered, `SectionEditor.tsx` renders and toggles it automatically, no changes needed there.
+   If the section has nothing to configure, add its type to `NO_CONFIG_TYPES` in
+   `SectionEditor.tsx` instead of creating a file. The scratch-card family (`scratchCard`,
+   `scratchCardYoutube`, `scratchCardVdo`, `scratchCardImg`) is a special case: one shared
+   `components/sections/editors/ScratchCard.tsx` covers all four, driven by a `selectedType` prop,
+   because they share a settings panel — it's wired directly in `SectionEditor.tsx`, not through
+   the registry.
+4. **`app/[slug]/edit/actions.ts`** (`saveContentAction`) — read the new form field(s) out of
+   `formData` and merge them into `updated`, falling back to `existing.<section>?.<field> ??
+   <fallback>` when absent (`existing` is just `page.content`, not a merged/defaulted object).
 
 Field-encoding conventions already in use, follow them instead of building new list-editing UI:
 

@@ -49,8 +49,8 @@ export default function ImageUrlField({
                     Select Image
                 </Button>
             </div>
-            {value && (
-                compact ? (
+            {value &&
+                (compact ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={value}
@@ -70,8 +70,7 @@ export default function ImageUrlField({
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={value} alt="" className="h-full w-full object-cover" />
                     </div>
-                )
-            )}
+                ))}
             <ImagePickerModal
                 slug={slug}
                 open={isPickerOpen}

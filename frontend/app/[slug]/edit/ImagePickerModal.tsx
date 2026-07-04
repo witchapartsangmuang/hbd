@@ -34,7 +34,10 @@ export default function ImagePickerModal({
         setIsLoading(true);
         listUploadedImagesAction(slug).then((result) => {
             setIsLoading(false);
-            if ("error" in result) { setError(result.error); return; }
+            if ("error" in result) {
+                setError(result.error);
+                return;
+            }
             setImages(result.images);
         });
     }, [open, slug]);
@@ -54,7 +57,11 @@ export default function ImagePickerModal({
             xhr.upload.addEventListener("progress", (e) => {
                 if (e.lengthComputable) {
                     setUploads((prev) =>
-                        prev.map((u) => u.id === id ? { ...u, progress: Math.round((e.loaded / e.total) * 100) } : u)
+                        prev.map((u) =>
+                            u.id === id
+                                ? { ...u, progress: Math.round((e.loaded / e.total) * 100) }
+                                : u
+                        )
                     );
                 }
             });
@@ -62,8 +69,12 @@ export default function ImagePickerModal({
             xhr.addEventListener("load", () => {
                 setUploads((prev) => prev.filter((u) => u.id !== id));
                 try {
-                    const result = JSON.parse(xhr.responseText) as { url: string } | { error: string };
-                    if ("error" in result) { setError(result.error); return; }
+                    const result = JSON.parse(xhr.responseText) as
+                        { url: string } | { error: string };
+                    if ("error" in result) {
+                        setError(result.error);
+                        return;
+                    }
                     setImages((prev) => [{ url: result.url, name: file.name }, ...prev]);
                     setSelected(result.url);
                 } catch {
@@ -88,8 +99,16 @@ export default function ImagePickerModal({
             size="xl"
             footer={
                 <div className="flex w-full justify-end gap-3">
-                    <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
-                    <Button type="button" disabled={!selected} onClick={() => { if (selected) onSelect(selected); }}>
+                    <Button type="button" variant="secondary" onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button
+                        type="button"
+                        disabled={!selected}
+                        onClick={() => {
+                            if (selected) onSelect(selected);
+                        }}
+                    >
                         Select
                     </Button>
                 </div>
@@ -100,12 +119,17 @@ export default function ImagePickerModal({
                     isDragging ? "border-rose-400 bg-rose-50" : "border-gray-200 hover:bg-gray-50"
                 }`}
                 onClick={() => fileRef.current?.click()}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                }}
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={(e) => {
                     e.preventDefault();
                     setIsDragging(false);
-                    const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith("image/"));
+                    const files = Array.from(e.dataTransfer.files).filter((f) =>
+                        f.type.startsWith("image/")
+                    );
                     if (files.length) handleFiles(files);
                 }}
             >
@@ -125,7 +149,9 @@ export default function ImagePickerModal({
                                 </div>
                             </div>
                         ))}
-                        <p className="pt-1 text-center text-xs text-gray-400">Click or drop more files to queue</p>
+                        <p className="pt-1 text-center text-xs text-gray-400">
+                            Click or drop more files to queue
+                        </p>
                     </div>
                 ) : (
                     "Click or drag image files here"
@@ -151,7 +177,9 @@ export default function ImagePickerModal({
                     <p className="col-span-4 py-6 text-center text-sm text-gray-400">Loading...</p>
                 )}
                 {!isLoading && images.length === 0 && (
-                    <p className="col-span-4 py-6 text-center text-sm text-gray-400">No uploaded files yet</p>
+                    <p className="col-span-4 py-6 text-center text-sm text-gray-400">
+                        No uploaded files yet
+                    </p>
                 )}
                 {images.map((image) => (
                     <button
@@ -163,7 +191,11 @@ export default function ImagePickerModal({
                         }`}
                     >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={image.url} alt={image.name} className="h-full w-full object-cover" />
+                        <img
+                            src={image.url}
+                            alt={image.name}
+                            className="h-full w-full object-cover"
+                        />
                         <span className="absolute inset-x-0 bottom-0 truncate bg-black/50 px-1.5 py-1 text-[10px] text-white">
                             {image.name}
                         </span>

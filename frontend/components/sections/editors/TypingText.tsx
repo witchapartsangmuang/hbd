@@ -1,60 +1,56 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { typingTextState } from "@/components/sections/utils/hooks";
-import { HbdContent } from "@/components/sections/utils/content-types";
 
-export default function TypingText({
-    nextStep,
+import { useState } from "react";
+import { Field } from "@/components/Field";
+import { Textarea } from "@/components/Textarea";
+import { SegmentedControl } from "@/components/SegmentedControl";
+import { SectionEditorProps, panelClass } from "./_shared";
+
+export default function TypingTextEditor({
     content,
-}: {
-    nextStep: () => void;
-    content: HbdContent;
-}) {
-    const { message: typewriterMessage, messageAlign = "left" } = content.typingText;
-    const { typedText, settypedText, typeStarted, settypeStarted } = typingTextState();
-    const messageRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        if (!typeStarted) return;
-        let i = 0;
-        nextStep();
-        const interval = setInterval(() => {
-            i += 1;
-            settypedText(typewriterMessage.slice(0, i));
-            if (i >= typewriterMessage.length) {
-                clearInterval(interval);
-            }
-        }, 35);
-        return () => clearInterval(interval);
-    }, [typeStarted]);
-
-    useEffect(() => {
-        if (!messageRef.current) return;
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        settypeStarted(true);
-                    }
-                });
-            },
-            { threshold: 0.35 }
-        );
-        observer.observe(messageRef.current);
-        return () => observer.disconnect();
-    }, []);
+    slug,
+    hidden,
+    sectionId,
+}: SectionEditorProps) {
+    const [typingMessage, setTypingMessage] = useState(
+        content.typingText?.[sectionId]?.message ?? ""
+    );
+    const [messageAlign, setMessageAlign] = useState<"left" | "center">(
+        content.typingText?.[sectionId]?.messageAlign ?? "left"
+    );
 
     return (
-        <section className="relative flex flex-col items-center p-5">
-            <h2 className="text-center text-3xl font-bold text-(--theme-primary-dark)">💌 A Special Message</h2>
-            <div className="mt-8 w-full rounded-3xl border border-white/60 bg-white/70 p-7 shadow-xl backdrop-blur">
-                <div
-                    ref={messageRef}
-                    className={`min-h-35 whitespace-pre-line text-lg leading-8 text-[#3a2433] ${messageAlign === "center" ? "text-center" : "text-left"}`}
-                >
-                    <span className="typewriter-cursor">{typedText}</span>
+        <div className={hidden ? "hidden" : ""}>
+            <div className={panelClass}>
+                <h2 className="mb-4 text-lg font-semibold text-rose-700">Typing Text</h2>
+                <Field label="Message (newlines supported)">
+                    <Textarea
+                        rows={4}
+                        name={`typingText.${sectionId}.message`}
+                        value={typingMessage}
+                        onChange={(e) => setTypingMessage(e.target.value)}
+                        resize
+                    />
+                </Field>
+                <div className="mt-3">
+                    <Field label="Text alignment">
+                        <SegmentedControl
+                            options={[
+                                { value: "left", label: "Left" },
+                                { value: "center", label: "Center" },
+                            ]}
+                            value={messageAlign}
+                            onChange={(v) => setMessageAlign(v as "left" | "center")}
+                            fullWidth
+                        />
+                        <input
+                            type="hidden"
+                            name={`typingText.${sectionId}.messageAlign`}
+                            value={messageAlign}
+                        />
+                    </Field>
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

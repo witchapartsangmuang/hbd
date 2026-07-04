@@ -8,11 +8,20 @@ import { HbdContent } from "@/components/sections/utils/content-types";
 export default function ScratchCardYoutube({
     nextStep,
     content,
+    sectionId,
 }: {
     nextStep: () => void;
     content: HbdContent;
+    sectionId: string;
 }) {
-    const { brushRadius, revealThreshold, aspectRatio, headingText, subText, revealedText } = content.scratchCard;
+    const {
+        brushRadius = 56,
+        revealThreshold = 50,
+        aspectRatio = "16:9",
+        headingText = "",
+        subText = "",
+        revealedText = "",
+    } = content.scratchCard?.[sectionId] ?? {};
     const confettiIdRef = useRef(3);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -297,7 +306,7 @@ export default function ScratchCardYoutube({
                                 )}
                                 <iframe
                                     className="absolute h-full w-full"
-                                    src={`${content.scratchCard.youtubeUrl ?? "https://www.youtube.com/embed/S43vWT9waGQ"}?autoplay=${showVideo ? "1" : "0"}&rel=0`}
+                                    src={`${content.scratchCard?.[sectionId]?.youtubeUrl ?? "https://www.youtube.com/embed/S43vWT9waGQ"}?autoplay=${showVideo ? "1" : "0"}&rel=0`}
                                     title="Birthday Video"
                                     allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                                     allowFullScreen

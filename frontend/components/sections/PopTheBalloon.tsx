@@ -130,7 +130,9 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
 
                         <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
                             <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
-                                <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                                <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">
+                                    Score
+                                </p>
                                 <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                                     {score}
                                 </p>

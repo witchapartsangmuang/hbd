@@ -1,145 +1,166 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { confettiState, birthGiftState } from "@/components/sections/utils/hooks";
-import { launchConfetti } from "@/components/sections/utils/functions";
-import ImgCard from "@/components/ImgCard";
-import { HbdContent } from "@/components/sections/utils/content-types";
-export default function BirthGift({
-    nextStep,
-    content,
-}: {
-    nextStep: () => void;
-    content: HbdContent;
-}) {
-    const { surpriseText: giftSurpriseText, imgCards: imgCard } = content.birthGift;
-    const {
-        isOpenGift,
-        setisOpenGift,
-        isPressing,
-        setisPressing,
-        isShaking,
-        setisShaking,
-        isOpenDisplayImgArea,
-        setisOpenDisplayImgArea,
-        showSurpriseText,
-        setshowSurpriseText,
-    } = birthGiftState();
-    const { confetti, setConfetti } = confettiState();
-    const confettiIdRef = useRef(1);
-    useEffect(() => {
-        if (!isOpenGift) return;
-        const timer = setTimeout(() => setshowSurpriseText(true), 500);
-        return () => clearTimeout(timer);
-    }, [isOpenGift]);
 
-    const handleMouseDown = () => {
-        if (isOpenGift) return;
-        setisPressing(true);
-    };
+import { useState } from "react";
+import { ImgCardItem } from "@/components/sections/utils/content-types";
+import { SectionEditorProps, panelClass } from "./_shared";
+import ImageUrlField from "@/app/[slug]/edit/ImageUrlField";
+import { Button } from "@/components/Button";
+import { Field } from "@/components/Field";
+import { Input } from "@/components/Input";
+import { Select } from "@/components/Select";
+import { SortableList } from "@/components/SortableList";
+import { Trash } from "@/icons/icons";
 
-    const handleMouseUp = () => {
-        if (isOpenGift || !isPressing) return;
-        setisOpenDisplayImgArea(true);
-        setisPressing(false);
-        setisShaking(true);
-        window.setTimeout(() => {
-            setisShaking(false);
-            setisOpenGift(true);
-            launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
-        }, 420);
-    };
+type ImgCardState = ImgCardItem & { id: string };
 
-    const handleMouseLeave = () => {
-        if (isOpenGift) return;
-        setisPressing(false);
-    };
+const blankCard = (): ImgCardItem => ({
+    imgPath: "",
+    caption: "",
+    rotateAngle: 0,
+    aspectRatio: "3:4",
+});
+
+export default function BirthGiftEditor({ content, slug, hidden, sectionId }: SectionEditorProps) {
+    const [surpriseText, setSurpriseText] = useState(
+        content.birthGift?.[sectionId]?.surpriseText ?? ""
+    );
+
+    const initialCards = content.birthGift?.[sectionId]?.imgCards ?? [];
+    const [imgCards, setImgCards] = useState<ImgCardState[]>(
+        (initialCards.length > 0 ? initialCards : [blankCard()]).map((c, i) => ({
+            ...c,
+            id: String(i),
+        }))
+    );
+
+    const addImgCard = () =>
+        setImgCards((prev) => [...prev, { id: crypto.randomUUID(), ...blankCard() }]);
+
+    const removeImgCard = (id: string) => setImgCards((prev) => prev.filter((c) => c.id !== id));
+
+    const updateImgCard = (id: string, patch: Partial<ImgCardItem>) =>
+        setImgCards((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)));
 
     return (
-        <>
-            <section className="relative flex flex-col items-center min-h-screen p-5">
-                <p className="mt-6 text-4xl font-bold text-(--theme-primary-dark)">Happy Birthday 🎂</p>
-                <p className="mt-3 text-center text-[#3a2433]/80">Try opening the gift box</p>
-                <div className="w-full z-1000 h-1">
-                    {confetti.map((piece) => (
-                        <span
-                            key={piece.id}
-                            className="confetti-piece pointer-events-none absolute z-9999 block rounded-sm"
-                            style={
-                                {
-                                    left: `${piece.left}px`,
-                                    width: `${piece.width}px`,
-                                    height: `${piece.height}px`,
-                                    backgroundColor: piece.color,
-                                    animationDuration: `${piece.duration}ms`,
-                                    ["--tx" as string]: `${piece.x}px`,
-                                    ["--ty" as string]: `${piece.y}px`,
-                                    ["--rot" as string]: `${piece.rotate}deg`,
-                                } as React.CSSProperties
-                            }
-                        />
-                    ))}
-                </div>
-                <button
-                    type="button"
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseLeave}
-                    onClick={nextStep}
-                    className="group relative mt-8 h-55 w-55 cursor-pointer transition hover:scale-105"
-                >
-                    <div
-                        className={`relative h-55 w-55 origin-center 
-                            ${isPressing ? "scale-95" : "scale-100"}
-                            ${isShaking ? "box-shake" : ""} 
-                            transition-transform duration-200`}
+        <div className={hidden ? "hidden" : ""}>
+            <div className={panelClass}>
+                <h2 className="mb-4 text-lg font-semibold text-rose-700">Gift Box</h2>
+                <Field label="Surprise text">
+                    <Input
+                        name={`birthGift.${sectionId}.surpriseText`}
+                        value={surpriseText}
+                        onChange={(e) => setSurpriseText(e.target.value)}
+                    />
+                </Field>
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <SortableList
+                        items={imgCards}
+                        onReorder={setImgCards}
+                        getItemId={(card) => card.id}
+                        grid
                     >
-                        <span
-                            className={`absolute -left-2 top-7.5 z-20 h-11.5 w-59 rounded-xl bg-linear-to-br from-(--theme-border) to-(--theme-primary-light) shadow-xl ${
-                                isOpenGift ? "lid-open" : ""
-                            }`}
-                            style={{ transformOrigin: "50% 80%" }}
-                        />
-                        <span className="absolute bottom-0 left-0 h-37.5 w-55 rounded-xl bg-linear-to-br from-(--theme-primary-light) to-(--theme-primary) shadow-xl" />
-                        <span className="absolute left-24 top-0 z-30 h-55 w-7 rounded-lg bg-amber-300" />
-                        <span className="absolute left-0 top-11.5 z-30 h-6 w-55 rounded-lg bg-amber-300" />
-                        <span className="absolute left-17 top-0 z-40 h-13 w-21">
-                            <span className="absolute left-0 top-1 h-10 w-10 rotate-45 rounded-[50%_50%_50%_0] border-10 border-amber-300" />
-                            <span className="absolute right-0 top-1 h-10 w-10 scale-x-[-1] rotate-45 rounded-[50%_50%_50%_0] border-10 border-amber-300" />
-                        </span>
-                    </div>
-                </button>
-                <div
-                    className={`mt-6 text-lg font-medium text-(--theme-primary) transition-all duration-700 ease-out ${
-                        showSurpriseText ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"
-                    }`}
-                >
-                    {giftSurpriseText}
-                </div>
-                {isOpenDisplayImgArea && (
-                    <div className="grid grid-cols-12">
-                        {imgCard.map((img, i) => (
-                            <div
-                                key={`${img.imgPath}-${i}`}
-                                className={`p-5 col-span-12 md:col-span-6 lg:col-span-3 transition-all duration-500 ease-out ${
-                                    isOpenGift
-                                        ? "translate-y-0 scale-100 opacity-100"
-                                        : "-translate-y-60 scale-75 opacity-0 pointer-events-none"
-                                }`}
-                                style={{
-                                    transitionDelay: `${i * 1000}ms`,
-                                }}
-                            >
-                                <ImgCard
-                                    imgPath={img.imgPath}
-                                    rotateAngle={img.rotateAngle}
-                                    caption={img.caption}
-                                    aspectRatio={img.aspectRatio}
+                        {(card, i, dragHandle) => (
+                            <div className="flex flex-col gap-3 rounded-xl border border-rose-100 p-3">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-1">
+                                        {dragHandle}
+                                        <span className="text-sm font-medium text-rose-700">
+                                            Photo {i + 1}
+                                        </span>
+                                    </div>
+                                    {imgCards.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => removeImgCard(card.id)}
+                                        >
+                                            <Trash />
+                                        </Button>
+                                    )}
+                                </div>
+                                <ImageUrlField
+                                    key={`${card.id}-${card.aspectRatio}-${card.rotateAngle}`}
+                                    slug={slug}
+                                    defaultValue={card.imgPath}
+                                    onValueChange={(url) =>
+                                        updateImgCard(card.id, { imgPath: url })
+                                    }
+                                    rotateAngle={card.rotateAngle}
+                                    aspectRatio={card.aspectRatio ?? "3:4"}
                                 />
+                                <Field label="Caption">
+                                    <Input
+                                        value={card.caption}
+                                        onChange={(e) =>
+                                            updateImgCard(card.id, { caption: e.target.value })
+                                        }
+                                    />
+                                </Field>
+                                <div>
+                                    <div className="mb-1.5 flex items-center justify-between">
+                                        <span className="text-sm text-gray-600">Tilt angle</span>
+                                        <span className="text-sm font-semibold tabular-nums text-rose-600">
+                                            {card.rotateAngle > 0 ? "+" : ""}
+                                            {card.rotateAngle}°
+                                        </span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="-10"
+                                        max="10"
+                                        step="1"
+                                        value={card.rotateAngle}
+                                        onChange={(e) =>
+                                            updateImgCard(card.id, {
+                                                rotateAngle: Number(e.target.value),
+                                            })
+                                        }
+                                        className="w-full accent-rose-500"
+                                    />
+                                    <div className="flex justify-between text-[10px] text-gray-400">
+                                        <span>-10°</span>
+                                        <span>0°</span>
+                                        <span>+10°</span>
+                                    </div>
+                                </div>
+                                <div className="mt-3">
+                                    <Field label="Aspect ratio">
+                                        <Select
+                                            value={card.aspectRatio ?? "3:4"}
+                                            onChange={(e) =>
+                                                updateImgCard(card.id, {
+                                                    aspectRatio: e.target.value,
+                                                })
+                                            }
+                                            options={[
+                                                { value: "1:1", label: "1:1 — Square" },
+                                                { value: "3:4", label: "3:4 — Portrait" },
+                                                { value: "4:3", label: "4:3 — Classic" },
+                                                { value: "9:16", label: "9:16 — Tall" },
+                                                { value: "16:9", label: "16:9 — Landscape" },
+                                            ]}
+                                        />
+                                    </Field>
+                                </div>
                             </div>
-                        ))}
-                    </div>
-                )}
-            </section>
-        </>
+                        )}
+                    </SortableList>
+                </div>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={addImgCard}
+                    className="mt-3 w-full"
+                >
+                    + Add Photo
+                </Button>
+            </div>
+            <input
+                type="hidden"
+                name={`birthGift.${sectionId}.imgCards`}
+                value={JSON.stringify(imgCards)}
+            />
+        </div>
     );
 }

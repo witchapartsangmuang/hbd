@@ -7,9 +7,9 @@ import { join } from "path";
 import { getCurrentUser } from "@/lib/session";
 import { getPageBySlug, updatePageContent } from "@/lib/pages";
 import {
-    mergeWithDefaults,
     SECTION_TYPES,
     SectionInstance,
+    SectionType,
 } from "@/components/sections/utils/content-types";
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
@@ -224,7 +224,6 @@ function parseSections(formData: FormData, fallback: SectionInstance[]): Section
         const parsed = JSON.parse(raw);
         if (!Array.isArray(parsed)) return fallback;
 
-        const seenTypes = new Set<string>();
         const valid: SectionInstance[] = [];
 
         for (const item of parsed) {
@@ -233,10 +232,8 @@ function parseSections(formData: FormData, fallback: SectionInstance[]): Section
                 typeof item.id === "string" &&
                 typeof item.type === "string" &&
                 typeof item.enabled === "boolean" &&
-                (SECTION_TYPES as string[]).includes(item.type) &&
-                !seenTypes.has(item.type)
+                (SECTION_TYPES as string[]).includes(item.type)
             ) {
-                seenTypes.add(item.type);
                 valid.push({
                     id: item.id,
                     type: item.type,
@@ -252,6 +249,24 @@ function parseSections(formData: FormData, fallback: SectionInstance[]): Section
     } catch {
         return fallback;
     }
+}
+
+/**
+ * Runs `parse` once per SectionInstance of the given `type`, keyed by instance id, so each
+ * duplicate section of the same type gets its own independently-saved content bucket.
+ */
+function perInstance<T>(
+    sections: SectionInstance[],
+    type: SectionType,
+    existingMap: Record<string, T> | undefined,
+    parse: (prefix: string, existing: T | undefined) => T
+): Record<string, T> {
+    const result: Record<string, T> = {};
+    for (const section of sections) {
+        if (section.type !== type) continue;
+        result[section.id] = parse(`${type}.${section.id}.`, existingMap?.[section.id]);
+    }
+    return result;
 }
 
 export async function saveContentAction(
@@ -273,48 +288,13 @@ export async function saveContentAction(
         return { error: "Forbidden", savedAt: null };
     }
 
-    const existing = mergeWithDefaults(page.content);
+    const existing = page.content;
+    const sections = parseSections(formData, existing.sections ?? []);
 
     const themeBaseColorRaw = str(formData, "theme.baseColor").trim();
     const themeBaseColor = /^#[0-9a-fA-F]{6}$/.test(themeBaseColorRaw)
         ? themeBaseColorRaw
-        : existing.theme.baseColor;
-
-    const imgCardsRaw = str(formData, "imgCards");
-    let imgCards = existing.birthGift.imgCards;
-    if (imgCardsRaw) {
-        try {
-            const parsed = JSON.parse(imgCardsRaw);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-                imgCards = parsed
-                    .filter((c) => c && typeof c.imgPath === "string")
-                    .map((c) => ({
-                        imgPath: String(c.imgPath),
-                        caption: typeof c.caption === "string" ? c.caption : "",
-                        rotateAngle: Number.isFinite(Number(c.rotateAngle))
-                            ? Number(c.rotateAngle)
-                            : 0,
-                        aspectRatio: typeof c.aspectRatio === "string" ? c.aspectRatio : "3:4",
-                    }));
-            }
-        } catch {}
-    }
-
-    const wishesRaw = str(formData, "releaseBalloon.wishes");
-    const wishes = wishesRaw
-        .split("\n")
-        .map((w) => w.trim())
-        .filter(Boolean);
-
-    const correctCode = str(formData, "dateOfBirth.correctCode").trim();
-    const _dc = Number(str(formData, "dateOfBirth.digitCount"));
-    const digitCount = _dc === 4 || _dc === 8 ? _dc : 6;
-
-    const prizesRaw = str(formData, "spinTheWheel.prizes");
-    const prizes = prizesRaw
-        .split("\n")
-        .map((p) => p.trim())
-        .filter(Boolean);
+        : (existing.theme?.baseColor ?? "#f43f5e");
 
     function parseJsonArray<T>(raw: string, isValid: (item: unknown) => item is T): T[] | null {
         if (!raw) return null;
@@ -363,214 +343,283 @@ export async function saveContentAction(
         return typeof i.name === "string" && typeof i.message === "string";
     }
 
-    const quizQuestions = parseJsonArray(
-        str(formData, "quizAboutYou.questionsJson"),
-        isQuizQuestion
-    );
-    const memoryTimelineItems = parseJsonArray(
-        str(formData, "memoryTimeline.itemsJson"),
-        isMemoryTimelineItem
-    );
-    const guestbookWishes = parseJsonArray(
-        str(formData, "guestbookWall.wishesJson"),
-        isGuestbookEntry
-    );
-
     const updated = {
         ...existing,
         theme: {
             baseColor: themeBaseColor,
         },
-        birthGift: {
-            surpriseText:
-                str(formData, "birthGift.surpriseText") || existing.birthGift.surpriseText,
-            imgCards,
-        },
-        cake: {
-            wishText: str(formData, "cake.wishText") || existing.cake.wishText,
-            wishTextAlign: (str(formData, "cake.wishTextAlign") ||
-                existing.cake.wishTextAlign ||
+        birthGift: perInstance(sections, "birthGift", existing.birthGift, (prefix, ex) => {
+            const imgCardsRaw = str(formData, `${prefix}imgCards`);
+            let imgCards = ex?.imgCards ?? [];
+            if (imgCardsRaw) {
+                try {
+                    const parsed = JSON.parse(imgCardsRaw);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        imgCards = parsed
+                            .filter((c) => c && typeof c.imgPath === "string")
+                            .map((c) => ({
+                                imgPath: String(c.imgPath),
+                                caption: typeof c.caption === "string" ? c.caption : "",
+                                rotateAngle: Number.isFinite(Number(c.rotateAngle))
+                                    ? Number(c.rotateAngle)
+                                    : 0,
+                                aspectRatio:
+                                    typeof c.aspectRatio === "string" ? c.aspectRatio : "3:4",
+                            }));
+                    }
+                } catch {}
+            }
+            return {
+                surpriseText: str(formData, `${prefix}surpriseText`) || (ex?.surpriseText ?? ""),
+                imgCards,
+            };
+        }),
+        cake: perInstance(sections, "cake", existing.cake, (prefix, ex) => ({
+            wishText: str(formData, `${prefix}wishText`) || (ex?.wishText ?? ""),
+            wishTextAlign: (str(formData, `${prefix}wishTextAlign`) ||
+                ex?.wishTextAlign ||
                 "center") as "left" | "center",
-        },
-        scratchCard: {
-            aspectRatio:
-                str(formData, "scratchCard.aspectRatio") ||
-                existing.scratchCard.aspectRatio ||
-                "16:9",
-            brushRadius: num(formData, "scratchCard.brushRadius", existing.scratchCard.brushRadius),
-            revealThreshold: num(
-                formData,
-                "scratchCard.revealThreshold",
-                existing.scratchCard.revealThreshold
-            ),
+        })),
+        scratchCard: perInstance(sections, "scratchCard", existing.scratchCard, (prefix, ex) => ({
+            aspectRatio: str(formData, `${prefix}aspectRatio`) || ex?.aspectRatio || "16:9",
+            brushRadius: num(formData, `${prefix}brushRadius`, ex?.brushRadius ?? 56),
+            revealThreshold: num(formData, `${prefix}revealThreshold`, ex?.revealThreshold ?? 50),
             revealType: (["youtube", "video", "image"].includes(
-                str(formData, "scratchCard.revealType")
+                str(formData, `${prefix}revealType`)
             )
-                ? str(formData, "scratchCard.revealType")
-                : existing.scratchCard.revealType) as "youtube" | "video" | "image",
-            youtubeUrl: str(formData, "scratchCard.youtubeUrl") || existing.scratchCard.youtubeUrl,
-            videoSrc: str(formData, "scratchCard.videoSrc") || existing.scratchCard.videoSrc,
-            imageSrc: str(formData, "scratchCard.imageSrc") || existing.scratchCard.imageSrc,
-            headingText:
-                str(formData, "scratchCard.headingText") || existing.scratchCard.headingText,
-            subText: str(formData, "scratchCard.subText") || existing.scratchCard.subText,
-            revealedText:
-                str(formData, "scratchCard.revealedText") || existing.scratchCard.revealedText,
-        },
-        typingText: {
-            message: str(formData, "typingText.message") || existing.typingText.message,
-            messageAlign: (str(formData, "typingText.messageAlign") ||
-                existing.typingText.messageAlign ||
+                ? str(formData, `${prefix}revealType`)
+                : (ex?.revealType ?? "youtube")) as "youtube" | "video" | "image",
+            youtubeUrl: str(formData, `${prefix}youtubeUrl`) || (ex?.youtubeUrl ?? ""),
+            videoSrc: str(formData, `${prefix}videoSrc`) || (ex?.videoSrc ?? ""),
+            imageSrc: str(formData, `${prefix}imageSrc`) || (ex?.imageSrc ?? ""),
+            headingText: str(formData, `${prefix}headingText`) || (ex?.headingText ?? ""),
+            subText: str(formData, `${prefix}subText`) || (ex?.subText ?? ""),
+            revealedText: str(formData, `${prefix}revealedText`) || (ex?.revealedText ?? ""),
+        })),
+        typingText: perInstance(sections, "typingText", existing.typingText, (prefix, ex) => ({
+            message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+            messageAlign: (str(formData, `${prefix}messageAlign`) ||
+                ex?.messageAlign ||
                 "left") as "left" | "center",
-        },
-        dateOfBirth: {
-            digitCount: digitCount as 4 | 6,
-            formatPlaceholder:
-                digitCount === 4
-                    ? ["D", "D", "M", "M"]
-                    : digitCount === 8
-                      ? ["D", "D", "M", "M", "Y", "Y", "Y", "Y"]
-                      : ["D", "D", "M", "M", "Y", "Y"],
-            emptyDigits: Array(digitCount).fill(""),
-            correctCode: new RegExp(`^\\d{${digitCount}}$`).test(correctCode)
-                ? correctCode
-                : existing.dateOfBirth.correctCode,
-        },
-        releaseBalloon: {
-            ...existing.releaseBalloon,
-            wishes: wishes.length > 0 ? wishes : existing.releaseBalloon.wishes,
-        },
-        flipPhotoCard: {
-            aspectRatio:
-                str(formData, "flipPhotoCard.aspectRatio") ||
-                existing.flipPhotoCard.aspectRatio ||
-                "3:4",
-            dogImg: str(formData, "flipPhotoCard.dogImg") || existing.flipPhotoCard.dogImg,
-            catImg: str(formData, "flipPhotoCard.catImg") || existing.flipPhotoCard.catImg,
-            dogEmoji: str(formData, "flipPhotoCard.dogEmoji"),
-            catEmoji: str(formData, "flipPhotoCard.catEmoji"),
-            dogLabel:
-                str(formData, "flipPhotoCard.dogLabel") || existing.flipPhotoCard.dogLabel || "Dog",
-            catLabel:
-                str(formData, "flipPhotoCard.catLabel") || existing.flipPhotoCard.catLabel || "Cat",
-        },
-        slideInIcon: {
-            title: str(formData, "slideInIcon.title") || existing.slideInIcon.title,
-        },
-        cinematicBirthdayBear: {
-            title:
-                str(formData, "cinematicBirthdayBear.title") ||
-                existing.cinematicBirthdayBear.title,
-            subtitle:
-                str(formData, "cinematicBirthdayBear.subtitle") ||
-                existing.cinematicBirthdayBear.subtitle,
-        },
-        spinTheWheel: {
-            prizes: prizes.length > 0 ? prizes : existing.spinTheWheel.prizes,
-        },
-        jigsawPhotoPuzzle: {
-            imagePath:
-                str(formData, "jigsawPhotoPuzzle.imagePath") ||
-                existing.jigsawPhotoPuzzle.imagePath,
-            gridSize: Math.min(
-                5,
-                Math.max(
-                    2,
-                    num(formData, "jigsawPhotoPuzzle.gridSize", existing.jigsawPhotoPuzzle.gridSize)
-                )
-            ),
-        },
-        quizAboutYou: {
-            questions: quizQuestions ?? existing.quizAboutYou.questions,
-        },
-        candleBlow: {
-            candleCount: num(formData, "candleBlow.candleCount", existing.candleBlow.candleCount),
-            message: str(formData, "candleBlow.message") || existing.candleBlow.message,
-        },
-        giftBoxUnwrap: {
-            imgPath: str(formData, "giftBoxUnwrap.imgPath") || existing.giftBoxUnwrap.imgPath,
-            message: str(formData, "giftBoxUnwrap.message") || existing.giftBoxUnwrap.message,
-        },
-        envelopeOpen: {
-            senderName:
-                str(formData, "envelopeOpen.senderName") || existing.envelopeOpen.senderName,
-            message: str(formData, "envelopeOpen.message") || existing.envelopeOpen.message,
-        },
-        polaroidShake: {
-            imgPath: str(formData, "polaroidShake.imgPath") || existing.polaroidShake.imgPath,
-            caption: str(formData, "polaroidShake.caption") || existing.polaroidShake.caption,
-            aspectRatio:
-                str(formData, "polaroidShake.aspectRatio") ||
-                existing.polaroidShake.aspectRatio ||
-                "1:1",
-        },
-        countdownToNextBirthday: {
-            birthdayMonth: Math.min(
-                12,
-                Math.max(
-                    1,
-                    num(
-                        formData,
-                        "countdownToNextBirthday.birthdayMonth",
-                        existing.countdownToNextBirthday.birthdayMonth
-                    )
-                )
-            ),
-            birthdayDay: Math.min(
-                31,
-                Math.max(
-                    1,
-                    num(
-                        formData,
-                        "countdownToNextBirthday.birthdayDay",
-                        existing.countdownToNextBirthday.birthdayDay
-                    )
-                )
-            ),
-            message:
-                str(formData, "countdownToNextBirthday.message") ||
-                existing.countdownToNextBirthday.message,
-        },
-        memoryTimeline: {
-            items: memoryTimelineItems ?? existing.memoryTimeline.items,
-        },
-        voiceMessage: {
-            audioSrc: str(formData, "voiceMessage.audioSrc") || existing.voiceMessage.audioSrc,
-            message: str(formData, "voiceMessage.message") || existing.voiceMessage.message,
-        },
-        zodiacReveal: {
-            customMessage:
-                str(formData, "zodiacReveal.customMessage") || existing.zodiacReveal.customMessage,
-        },
-        guestbookWall: {
-            wishes: guestbookWishes ?? existing.guestbookWall.wishes,
-        },
-        digitalSignature: {
-            promptText:
-                str(formData, "digitalSignature.promptText") ||
-                existing.digitalSignature.promptText,
-        },
-        backgroundMusicPlayer: {
-            audioSrc:
-                str(formData, "backgroundMusicPlayer.audioSrc") ||
-                existing.backgroundMusicPlayer.audioSrc,
-            label:
-                str(formData, "backgroundMusicPlayer.label") ||
-                existing.backgroundMusicPlayer.label,
-        },
-        cinematicRabbit: {
-            title: str(formData, "cinematicRabbit.title") || existing.cinematicRabbit.title,
-            subtitle:
-                str(formData, "cinematicRabbit.subtitle") || existing.cinematicRabbit.subtitle,
-        },
-        cinematicPanda: {
-            title: str(formData, "cinematicPanda.title") || existing.cinematicPanda.title,
-            subtitle: str(formData, "cinematicPanda.subtitle") || existing.cinematicPanda.subtitle,
-        },
-        fireworksFinale: {
-            message: str(formData, "fireworksFinale.message") || existing.fireworksFinale.message,
-        },
-        sections: parseSections(formData, existing.sections),
+        })),
+        dateOfBirth: perInstance(sections, "dateOfBirth", existing.dateOfBirth, (prefix, ex) => {
+            const correctCode = str(formData, `${prefix}correctCode`).trim();
+            const _dc = Number(str(formData, `${prefix}digitCount`));
+            const digitCount = _dc === 4 || _dc === 8 ? _dc : 6;
+            return {
+                digitCount: digitCount as 4 | 6 | 8,
+                formatPlaceholder:
+                    digitCount === 4
+                        ? ["D", "D", "M", "M"]
+                        : digitCount === 8
+                          ? ["D", "D", "M", "M", "Y", "Y", "Y", "Y"]
+                          : ["D", "D", "M", "M", "Y", "Y"],
+                emptyDigits: Array(digitCount).fill(""),
+                correctCode: new RegExp(`^\\d{${digitCount}}$`).test(correctCode)
+                    ? correctCode
+                    : (ex?.correctCode ?? ""),
+            };
+        }),
+        releaseBalloon: perInstance(
+            sections,
+            "releaseBalloon",
+            existing.releaseBalloon,
+            (prefix, ex) => {
+                const wishes = str(formData, `${prefix}wishes`)
+                    .split("\n")
+                    .map((w) => w.trim())
+                    .filter(Boolean);
+                return {
+                    wishes: wishes.length > 0 ? wishes : (ex?.wishes ?? []),
+                    balloonGradients: ex?.balloonGradients ?? [],
+                };
+            }
+        ),
+        flipPhotoCard: perInstance(
+            sections,
+            "flipPhotoCard",
+            existing.flipPhotoCard,
+            (prefix, ex) => ({
+                aspectRatio: str(formData, `${prefix}aspectRatio`) || ex?.aspectRatio || "3:4",
+                dogImg: str(formData, `${prefix}dogImg`) || (ex?.dogImg ?? ""),
+                catImg: str(formData, `${prefix}catImg`) || (ex?.catImg ?? ""),
+                dogEmoji: str(formData, `${prefix}dogEmoji`),
+                catEmoji: str(formData, `${prefix}catEmoji`),
+                dogLabel: str(formData, `${prefix}dogLabel`) || (ex?.dogLabel ?? ""),
+                catLabel: str(formData, `${prefix}catLabel`) || (ex?.catLabel ?? ""),
+            })
+        ),
+        slideInIcon: perInstance(sections, "slideInIcon", existing.slideInIcon, (prefix, ex) => ({
+            title: str(formData, `${prefix}title`) || (ex?.title ?? ""),
+        })),
+        cinematicBirthdayBear: perInstance(
+            sections,
+            "cinematicBirthdayBear",
+            existing.cinematicBirthdayBear,
+            (prefix, ex) => ({
+                title: str(formData, `${prefix}title`) || (ex?.title ?? ""),
+                subtitle: str(formData, `${prefix}subtitle`) || (ex?.subtitle ?? ""),
+            })
+        ),
+        spinTheWheel: perInstance(sections, "spinTheWheel", existing.spinTheWheel, (prefix, ex) => {
+            const prizes = str(formData, `${prefix}prizes`)
+                .split("\n")
+                .map((p) => p.trim())
+                .filter(Boolean);
+            return { prizes: prizes.length > 0 ? prizes : (ex?.prizes ?? []) };
+        }),
+        jigsawPhotoPuzzle: perInstance(
+            sections,
+            "jigsawPhotoPuzzle",
+            existing.jigsawPhotoPuzzle,
+            (prefix, ex) => ({
+                imagePath: str(formData, `${prefix}imagePath`) || (ex?.imagePath ?? ""),
+                gridSize: Math.min(
+                    5,
+                    Math.max(2, num(formData, `${prefix}gridSize`, ex?.gridSize ?? 3))
+                ),
+            })
+        ),
+        quizAboutYou: perInstance(
+            sections,
+            "quizAboutYou",
+            existing.quizAboutYou,
+            (prefix, ex) => ({
+                questions:
+                    parseJsonArray(str(formData, `${prefix}questionsJson`), isQuizQuestion) ??
+                    ex?.questions ??
+                    [],
+            })
+        ),
+        candleBlow: perInstance(sections, "candleBlow", existing.candleBlow, (prefix, ex) => ({
+            candleCount: num(formData, `${prefix}candleCount`, ex?.candleCount ?? 3),
+            message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+        })),
+        giftBoxUnwrap: perInstance(
+            sections,
+            "giftBoxUnwrap",
+            existing.giftBoxUnwrap,
+            (prefix, ex) => ({
+                imgPath: str(formData, `${prefix}imgPath`) || (ex?.imgPath ?? ""),
+                message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+            })
+        ),
+        envelopeOpen: perInstance(
+            sections,
+            "envelopeOpen",
+            existing.envelopeOpen,
+            (prefix, ex) => ({
+                senderName: str(formData, `${prefix}senderName`) || (ex?.senderName ?? ""),
+                message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+            })
+        ),
+        polaroidShake: perInstance(
+            sections,
+            "polaroidShake",
+            existing.polaroidShake,
+            (prefix, ex) => ({
+                imgPath: str(formData, `${prefix}imgPath`) || (ex?.imgPath ?? ""),
+                caption: str(formData, `${prefix}caption`) || (ex?.caption ?? ""),
+                aspectRatio: str(formData, `${prefix}aspectRatio`) || ex?.aspectRatio || "1:1",
+                eyebrow: str(formData, `${prefix}eyebrow`) || (ex?.eyebrow ?? ""),
+                heading: str(formData, `${prefix}heading`) || (ex?.heading ?? ""),
+            })
+        ),
+        countdownToNextBirthday: perInstance(
+            sections,
+            "countdownToNextBirthday",
+            existing.countdownToNextBirthday,
+            (prefix, ex) => ({
+                birthdayMonth: Math.min(
+                    12,
+                    Math.max(1, num(formData, `${prefix}birthdayMonth`, ex?.birthdayMonth ?? 12))
+                ),
+                birthdayDay: Math.min(
+                    31,
+                    Math.max(1, num(formData, `${prefix}birthdayDay`, ex?.birthdayDay ?? 18))
+                ),
+                message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+            })
+        ),
+        memoryTimeline: perInstance(
+            sections,
+            "memoryTimeline",
+            existing.memoryTimeline,
+            (prefix, ex) => ({
+                items:
+                    parseJsonArray(str(formData, `${prefix}itemsJson`), isMemoryTimelineItem) ??
+                    ex?.items ??
+                    [],
+            })
+        ),
+        voiceMessage: perInstance(sections, "voiceMessage", existing.voiceMessage, (prefix, ex) => ({
+            audioSrc: str(formData, `${prefix}audioSrc`) || (ex?.audioSrc ?? ""),
+            message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+        })),
+        zodiacReveal: perInstance(
+            sections,
+            "zodiacReveal",
+            existing.zodiacReveal,
+            (prefix, ex) => ({
+                customMessage: str(formData, `${prefix}customMessage`) || (ex?.customMessage ?? ""),
+            })
+        ),
+        guestbookWall: perInstance(
+            sections,
+            "guestbookWall",
+            existing.guestbookWall,
+            (prefix, ex) => ({
+                wishes:
+                    parseJsonArray(str(formData, `${prefix}wishesJson`), isGuestbookEntry) ??
+                    ex?.wishes ??
+                    [],
+            })
+        ),
+        digitalSignature: perInstance(
+            sections,
+            "digitalSignature",
+            existing.digitalSignature,
+            (prefix, ex) => ({
+                promptText: str(formData, `${prefix}promptText`) || (ex?.promptText ?? ""),
+            })
+        ),
+        backgroundMusicPlayer: perInstance(
+            sections,
+            "backgroundMusicPlayer",
+            existing.backgroundMusicPlayer,
+            (prefix, ex) => ({
+                audioSrc: str(formData, `${prefix}audioSrc`) || (ex?.audioSrc ?? ""),
+                label: str(formData, `${prefix}label`) || (ex?.label ?? ""),
+            })
+        ),
+        cinematicRabbit: perInstance(
+            sections,
+            "cinematicRabbit",
+            existing.cinematicRabbit,
+            (prefix, ex) => ({
+                title: str(formData, `${prefix}title`) || (ex?.title ?? ""),
+                subtitle: str(formData, `${prefix}subtitle`) || (ex?.subtitle ?? ""),
+            })
+        ),
+        cinematicPanda: perInstance(
+            sections,
+            "cinematicPanda",
+            existing.cinematicPanda,
+            (prefix, ex) => ({
+                title: str(formData, `${prefix}title`) || (ex?.title ?? ""),
+                subtitle: str(formData, `${prefix}subtitle`) || (ex?.subtitle ?? ""),
+            })
+        ),
+        fireworksFinale: perInstance(
+            sections,
+            "fireworksFinale",
+            existing.fireworksFinale,
+            (prefix, ex) => ({
+                message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
+            })
+        ),
+        confettiColors: existing.confettiColors,
+        sections,
     };
 
     await updatePageContent(page.id, updated);

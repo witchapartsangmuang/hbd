@@ -187,7 +187,9 @@ export default function FindTheHiddenGift({
 
                     <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
                         <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Found</p>
-                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{foundCount}</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
+                            {foundCount}
+                        </p>
                     </div>
 
                     <div className="rounded-2xl bg-sky-100 px-4 py-3 text-center">

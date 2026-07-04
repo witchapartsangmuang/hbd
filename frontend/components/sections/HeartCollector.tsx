@@ -284,11 +284,15 @@ export default function HeartCollector({
                 <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center">
                     <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
                         <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Score</p>
-                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">{score}</p>
+                        <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
+                            {score}
+                        </p>
                     </div>
 
                     <div className="rounded-2xl bg-(--theme-soft) px-4 py-3 text-center">
-                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">Collected</p>
+                        <p className="text-[11px] text-(--theme-primary-dark) sm:text-xs">
+                            Collected
+                        </p>
                         <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                             {collectedCount}
                         </p>
@@ -329,7 +333,9 @@ export default function HeartCollector({
                     />
                 </div>
 
-                <p className="mt-3 min-h-6 text-sm font-medium text-(--theme-primary-dark)">{message}</p>
+                <p className="mt-3 min-h-6 text-sm font-medium text-(--theme-primary-dark)">
+                    {message}
+                </p>
 
                 {isUnlocked && !isGameOver && (
                     <div className="mt-3 inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
@@ -412,7 +418,9 @@ export default function HeartCollector({
 
                             <div className="mt-5 grid grid-cols-2 gap-3">
                                 <div className="rounded-2xl bg-(--theme-softer) p-3 sm:p-4">
-                                    <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">Score</p>
+                                    <p className="text-[10px] text-(--theme-primary-dark) sm:text-xs">
+                                        Score
+                                    </p>
                                     <p className="text-xl font-bold text-(--theme-primary-dark) sm:text-2xl">
                                         {score}
                                     </p>

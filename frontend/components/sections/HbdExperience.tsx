@@ -1,17 +1,16 @@
 "use client";
 import { useMemo, useState } from "react";
-import { HbdContent } from "../utils/content-types";
+import { HbdContent } from "./utils/content-types";
 import { SECTION_REGISTRY } from "@/components/sections/_sections";
 import { buildThemeTokens, themeTokensToCssVars } from "@/components/sections/utils/theme";
 
 export default function HbdExperience({ content }: { content: HbdContent }) {
-    const activeSections = useMemo(
-        () => content.sections.filter((s) => s.enabled),
-        [content.sections]
-    );
+    const sections = content.sections ?? [];
+    const baseColor = content.theme?.baseColor ?? "#f43f5e";
+    const activeSections = useMemo(() => sections.filter((s) => s.enabled), [sections]);
     const themeStyle = useMemo(
-        () => themeTokensToCssVars(buildThemeTokens(content.theme.baseColor)),
-        [content.theme.baseColor]
+        () => themeTokensToCssVars(buildThemeTokens(baseColor)),
+        [baseColor]
     );
     const [unlockedCount, setUnlockedCount] = useState(1);
     const sparkles = useMemo(
@@ -48,6 +47,7 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
                         >
                             <Component
                                 content={content}
+                                sectionId={section.id}
                                 nextStep={() => setUnlockedCount((c) => Math.max(c, i + 2))}
                             />
                         </div>
