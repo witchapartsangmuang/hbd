@@ -28,7 +28,7 @@ export function SegmentedControl({ options, value, onChange, disabled, fullWidth
                         "h-7 rounded-md px-2.5 text-xs font-medium transition-colors",
                         fullWidth ? "flex-1" : "",
                         opt.value === value
-                            ? "bg-primary text-on-primary shadow-sm"
+                            ? "bg-(--theme-primary) text-(--theme-on-primary) shadow-sm"
                             : "text-gray-500 hover:text-gray-700",
                         disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                     )}

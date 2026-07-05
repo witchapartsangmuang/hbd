@@ -13,7 +13,7 @@ export default function QuizAboutYouEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
                     How Well Do You Know Me
                 </h2>
                 <Field label="Questions (JSON)">
@@ -28,7 +28,7 @@ export default function QuizAboutYouEditor({
                         resize
                     />
                 </Field>
-                <p className="mt-2 text-xs text-rose-900/50">
+                <p className="mt-2 text-xs text-(--theme-primary-dark)/50">
                     Array of {"{ question, options[], correctIndex }"}
                 </p>
             </div>

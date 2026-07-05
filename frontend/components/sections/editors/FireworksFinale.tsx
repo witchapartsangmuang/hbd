@@ -13,7 +13,7 @@ export default function FireworksFinaleEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Fireworks Finale</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Fireworks Finale</h2>
                 <Field label="Closing message">
                     <Input
                         name={`fireworksFinale.${sectionId}.message`}

@@ -7,7 +7,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const VARIANT: Record<NonNullable<ButtonProps["variant"]>, string> = {
-    primary: "bg-primary text-on-primary hover:bg-primary-dark disabled:opacity-50",
+    primary: "bg-(--theme-primary) text-(--theme-on-primary) hover:bg-(--theme-primary-dark) disabled:opacity-50",
     secondary: "border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50",
     danger: "bg-red-500 text-white hover:bg-red-600 disabled:opacity-50",
     ghost: "text-gray-600 hover:bg-gray-100 disabled:opacity-50",

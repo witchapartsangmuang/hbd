@@ -3,6 +3,16 @@ import { useEffect, useRef } from "react";
 import { releaseBalloonState } from "@/components/sections/utils/hooks";
 import { BalloonItem } from "@/components/sections/utils/type";
 import { HbdContent } from "@/components/sections/utils/content-types";
+
+const DEFAULT_BALLOON_GRADIENTS = [
+    "from-pink-400 to-rose-500",
+    "from-sky-400 to-blue-500",
+    "from-amber-300 to-orange-500",
+    "from-violet-400 to-purple-500",
+    "from-emerald-400 to-teal-500",
+    "from-fuchsia-400 to-pink-500",
+];
+
 export default function ReleaseBalloon({
     nextStep,
     content,
@@ -12,21 +22,24 @@ export default function ReleaseBalloon({
     content: HbdContent;
     sectionId: string;
 }) {
-    const { wishes = [], balloonGradients = [] } = content.releaseBalloon?.[sectionId] ?? {};
+    const {
+        wishes = [],
+        balloonGradients: configuredGradients = [],
+        balloonCount = 5,
+    } = content.releaseBalloon?.[sectionId] ?? {};
+    const balloonGradients =
+        configuredGradients.length > 0 ? configuredGradients : DEFAULT_BALLOON_GRADIENTS;
     const { balloons, setballoons, release, setrelease } = releaseBalloonState();
     const balloonIdRef = useRef(1);
     const balloonZoneRef = useRef<HTMLDivElement | null>(null);
     const handleStartBalloons = () => {
         const zoneWidth = balloonZoneRef.current?.clientWidth ?? 900;
-        const newItems: BalloonItem[] = Array.from({ length: 10 }).map((_, i) => ({
+        const newItems: BalloonItem[] = Array.from({ length: balloonCount }).map((_, i) => ({
             id: balloonIdRef.current++,
             text: wishes.length > 0 ? wishes[i % wishes.length] : "",
             left: Math.max(0, Math.random() * (zoneWidth - 100)),
             duration: 6 + Math.random() * 4,
-            styleIndex:
-                balloonGradients.length > 0
-                    ? Math.floor(Math.random() * balloonGradients.length)
-                    : 0,
+            styleIndex: Math.floor(Math.random() * balloonGradients.length),
         }));
         setballoons((prev) => [...prev, ...newItems]);
         window.setTimeout(() => {

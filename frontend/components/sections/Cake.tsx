@@ -32,7 +32,7 @@ export default function Cake({
                 <p className="mt-3 text-center text-[#3a2433]/80">
                     Make a wish, then blow out the candles
                 </p>
-                <div className="w-full z-1000 h-1">
+                <div className="w-full overflow-hidden z-1000 h-1">
                     {confetti.map((piece) => (
                         <span
                             key={piece.id}

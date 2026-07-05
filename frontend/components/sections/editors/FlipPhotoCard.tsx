@@ -24,7 +24,7 @@ export default function FlipPhotoCardEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Flip Photo Card</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Flip Photo Card</h2>
                 <input
                     type="hidden"
                     name={`flipPhotoCard.${sectionId}.aspectRatio`}
@@ -47,8 +47,8 @@ export default function FlipPhotoCardEditor({
                     </Field>
                 </div>
                 <div className="flex flex-col gap-4 sm:flex-row">
-                    <div className="flex-1 rounded-xl border border-rose-100 p-3">
-                        <p className="mb-2 text-sm font-medium text-rose-700">ปุ่มซ้าย</p>
+                    <div className="flex-1 rounded-xl border border-(--theme-border) p-3">
+                        <p className="mb-2 text-sm font-medium text-(--theme-primary-dark)">ปุ่มซ้าย</p>
                         <Field label="Emoji บนปุ่ม">
                             <Input
                                 name={`flipPhotoCard.${sectionId}.dogEmoji`}
@@ -76,8 +76,8 @@ export default function FlipPhotoCardEditor({
                             />
                         </div>
                     </div>
-                    <div className="flex-1 rounded-xl border border-rose-100 p-3">
-                        <p className="mb-2 text-sm font-medium text-rose-700">ปุ่มขวา</p>
+                    <div className="flex-1 rounded-xl border border-(--theme-border) p-3">
+                        <p className="mb-2 text-sm font-medium text-(--theme-primary-dark)">ปุ่มขวา</p>
                         <Field label="Emoji บนปุ่ม">
                             <Input
                                 name={`flipPhotoCard.${sectionId}.catEmoji`}

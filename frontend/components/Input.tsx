@@ -25,7 +25,7 @@ export function Input({ className = "", error, ...props }: InputProps) {
                           ].join(" ")
                         : [
                               "h-10 px-3",
-                              "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white",
+                              "focus:outline-none focus:ring-2 focus:ring-(--theme-primary) focus:border-transparent bg-white",
                               error ? "border-red-400" : "border-gray-200",
                           ].join(" "),
                     className,

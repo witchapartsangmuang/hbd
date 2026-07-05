@@ -21,7 +21,7 @@ export default function CinematicBirthdayBearEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Birthday Bear Scene</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Birthday Bear Scene</h2>
                 <Field label="Title">
                     <Input
                         name={`cinematicBirthdayBear.${sectionId}.title`}

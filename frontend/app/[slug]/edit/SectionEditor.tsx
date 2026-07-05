@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Toast } from "@/components/Toast";
 import {
     SECTION_TYPES,
@@ -9,7 +9,11 @@ import {
     SectionType,
     HbdContent,
 } from "@/components/sections/utils/content-types";
-import { THEME_PRESETS } from "@/components/sections/utils/theme";
+import {
+    THEME_PRESETS,
+    buildThemeTokens,
+    themeTokensToCssVars,
+} from "@/components/sections/utils/theme";
 import { SECTION_EDITOR_REGISTRY } from "@/components/sections/_section_editors";
 import ScratchCardEditor, { SCRATCH_CARD_TYPES } from "@/components/sections/editors/ScratchCard";
 import { panelClass } from "@/components/sections/editors/_shared";
@@ -49,6 +53,20 @@ export default function SectionEditor({
 }) {
     const [sections, setSections] = useState<SectionInstance[]>(content.sections ?? []);
     const [themeBaseColor, setThemeBaseColor] = useState(content.theme?.baseColor ?? "#f43f5e");
+    const themeTokens = useMemo(() => buildThemeTokens(themeBaseColor), [themeBaseColor]);
+    const themeStyle = useMemo(() => themeTokensToCssVars(themeTokens), [themeTokens]);
+    const themeGradient = useMemo(
+        () =>
+            `linear-gradient(to bottom right, ${themeTokens.softer}, ${themeTokens.soft}, ${themeTokens.border})`,
+        [themeTokens]
+    );
+
+    useEffect(() => {
+        document.body.style.backgroundImage = themeGradient;
+        return () => {
+            document.body.style.backgroundImage = "";
+        };
+    }, [themeGradient]);
     const [selectedId, setSelectedId] = useState<string | null>(content.sections?.[0]?.id ?? null);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [newSectionName, setNewSectionName] = useState("");
@@ -107,11 +125,11 @@ export default function SectionEditor({
     };
 
     return (
-        <div>
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-rose-100 bg-white/90 px-5 py-3 shadow-lg">
-                <h1 className="text-lg font-semibold text-rose-700">
-                    <span className="text-rose-400">[{slug}]</span>{" "}
-                    <span className="text-rose-300">/</span>{" "}
+        <div style={themeStyle}>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-(--theme-border) bg-white/90 px-5 py-3 shadow-lg">
+                <h1 className="text-lg font-semibold text-(--theme-primary-dark)">
+                    <span className="text-(--theme-primary-light)">[{slug}]</span>{" "}
+                    <span className="text-(--theme-primary-light)/50">/</span>{" "}
                     {selected
                         ? selected.label || SECTION_LABELS[selected.type]
                         : "Select a section"}
@@ -140,8 +158,8 @@ export default function SectionEditor({
                 />
             )}
 
-            <div className="mb-4 rounded-[20px] border border-rose-100 bg-white/90 px-5 py-4 shadow-lg">
-                <p className="mb-3 text-sm font-semibold text-rose-700">Page theme</p>
+            <div className="mb-4 rounded-[20px] border border-(--theme-border) bg-white/90 px-5 py-4 shadow-lg">
+                <p className="mb-3 text-sm font-semibold text-(--theme-primary-dark)">Page theme</p>
                 <div className="flex flex-wrap items-center gap-3">
                     {THEME_PRESETS.map((preset) => (
                         <button
@@ -151,7 +169,7 @@ export default function SectionEditor({
                             title={preset.label}
                             className={`h-9 w-9 rounded-full border-2 transition ${
                                 themeBaseColor.toLowerCase() === preset.baseColor.toLowerCase()
-                                    ? "border-rose-500 scale-110"
+                                    ? "border-(--theme-primary) scale-110"
                                     : "border-white shadow ring-1 ring-gray-200"
                             }`}
                             style={{ backgroundColor: preset.baseColor }}
@@ -161,8 +179,9 @@ export default function SectionEditor({
                         <input
                             type="color"
                             value={themeBaseColor}
+                            // style={{ backgroundColor: themeBaseColor }}
                             onChange={(e) => setThemeBaseColor(e.target.value)}
-                            className="h-9 w-9 cursor-pointer rounded-full border border-gray-200 bg-transparent p-0"
+                            className="color-swatch-round h-9 w-9 cursor-pointer border border-gray-200 bg-transparent p-0"
                             title="Custom color"
                         />
                         <span className="text-xs text-gray-500">Custom</span>
@@ -210,10 +229,10 @@ export default function SectionEditor({
                         }
                     >
                         <div className={panelClass}>
-                            <h2 className="mb-2 text-lg font-semibold text-rose-700">
+                            <h2 className="mb-2 text-lg font-semibold text-(--theme-primary-dark)">
                                 {selected ? selected.label || SECTION_LABELS[selected.type] : ""}
                             </h2>
-                            <p className="text-sm text-rose-900/60">
+                            <p className="text-sm text-(--theme-primary-dark)/60">
                                 This section has no additional settings
                             </p>
                         </div>
@@ -221,7 +240,7 @@ export default function SectionEditor({
 
                     {!selected && (
                         <div className={panelClass}>
-                            <p className="text-sm text-rose-900/60">
+                            <p className="text-sm text-(--theme-primary-dark)/60">
                                 Select a section from the list to edit
                             </p>
                         </div>
@@ -229,10 +248,10 @@ export default function SectionEditor({
                 </div>
 
                 <div className="shrink-0 lg:w-72">
-                    <div className="rounded-3xl border border-rose-100 bg-white/90 p-4 shadow-xl">
+                    <div className="rounded-3xl border border-(--theme-border) bg-white/90 p-4 shadow-xl">
                         <div className="flex flex-col gap-1">
                             {sections.length === 0 && (
-                                <p className="px-1 py-2 text-sm text-rose-400">No sections yet</p>
+                                <p className="px-1 py-2 text-sm text-(--theme-primary-light)">No sections yet</p>
                             )}
                             <SortableList items={sections} onReorder={setSections}>
                                 {(section, _index, dragHandle) => (
@@ -240,12 +259,12 @@ export default function SectionEditor({
                                         onClick={() => setSelectedId(section.id)}
                                         className={`flex cursor-pointer items-center gap-1 rounded-xl border px-2 py-2 transition ${
                                             selectedId === section.id
-                                                ? "border-rose-400 bg-rose-50"
-                                                : "border-transparent hover:bg-rose-50/60"
+                                                ? "border-(--theme-primary-light) bg-(--theme-soft)"
+                                                : "border-transparent hover:bg-(--theme-softer)"
                                         } ${!section.enabled ? "opacity-40" : ""}`}
                                     >
                                         {dragHandle}
-                                        <span className="flex-1 truncate text-sm font-medium text-rose-800">
+                                        <span className="flex-1 truncate text-sm font-medium text-(--theme-primary-dark)">
                                             {section.label || SECTION_LABELS[section.type]}
                                         </span>
                                         <Button
@@ -277,7 +296,7 @@ export default function SectionEditor({
                             </SortableList>
                         </div>
 
-                        <div className="mt-3 border-t border-rose-100 pt-3">
+                        <div className="mt-3 border-t border-(--theme-border) pt-3">
                             <Button type="button" onClick={openAddModal} className="w-full">
                                 + Add Section
                             </Button>

@@ -13,7 +13,7 @@ export default function CandleBlowEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Blow the Candle</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Blow the Candle</h2>
                 <Field label="Number of candles">
                     <Input
                         type="number"

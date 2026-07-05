@@ -3,6 +3,22 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Default (rose) page-theme tokens. HbdExperience/SectionEditor override
+     these on an ancestor element per-page via inline style; components must
+     reference them as bg-(--theme-primary) etc. rather than Tailwind's
+     built-in theme-color utilities (bg-primary), since Tailwind inlines
+     named theme colors to a literal value at build time and would not pick
+     up a runtime override. */
+  --theme-primary: #f43f5e;
+  --theme-primary-dark: #e80d33;
+  --theme-primary-light: #f76f86;
+  --theme-gradient-from: #f43f5e;
+  --theme-gradient-to: #f5529a;
+  --theme-soft: #feecef;
+  --theme-softer: #fef5f7;
+  --theme-border: #fdd5dc;
+  --theme-on-primary: #3a2433;
 }
 
 @theme inline {
@@ -91,6 +107,29 @@ body {
 }
 
 
+
+input[type="color"].color-swatch-round {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 0;
+}
+
+input[type="color"].color-swatch-round::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+input[type="color"].color-swatch-round::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+input[type="color"].color-swatch-round::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
 
 .typewriter-cursor::after {
   content: "";

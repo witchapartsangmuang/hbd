@@ -55,7 +55,7 @@ export default function ScratchCardEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Scratch Card Settings</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Scratch Card Settings</h2>
 
                 {selectedType === "scratchCard" && (
                     <div className="mb-5">
@@ -185,11 +185,11 @@ export default function ScratchCardEditor({
                 </div>
                 <div className="mt-4 space-y-1.5">
                     <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-rose-700">Content Preview</p>
+                        <p className="text-sm font-medium text-(--theme-primary-dark)">Content Preview</p>
                         <p className="text-xs text-gray-400">{scratchAspectRatio}</p>
                     </div>
                     <div
-                        className="relative w-full overflow-hidden rounded-xl border border-rose-100 bg-black"
+                        className="relative w-full overflow-hidden rounded-xl border border-(--theme-border) bg-black"
                         style={{ aspectRatio: `${aw}/${ah}` }}
                     >
                         {revealType === "youtube" &&
@@ -201,7 +201,7 @@ export default function ScratchCardEditor({
                                     allowFullScreen
                                 />
                             ) : (
-                                <div className="absolute inset-0 flex items-center justify-center bg-pink-50 text-sm text-rose-300">
+                                <div className="absolute inset-0 flex items-center justify-center bg-(--theme-softer) text-sm text-(--theme-primary-light)">
                                     No URL set
                                 </div>
                             ))}
@@ -215,7 +215,7 @@ export default function ScratchCardEditor({
                                     preload="metadata"
                                 />
                             ) : (
-                                <div className="absolute inset-0 flex items-center justify-center bg-pink-50 text-sm text-rose-300">
+                                <div className="absolute inset-0 flex items-center justify-center bg-(--theme-softer) text-sm text-(--theme-primary-light)">
                                     No video selected
                                 </div>
                             ))}
@@ -228,7 +228,7 @@ export default function ScratchCardEditor({
                                     className="absolute inset-0 h-full w-full object-cover"
                                 />
                             ) : (
-                                <div className="absolute inset-0 flex items-center justify-center bg-pink-50 text-sm text-rose-300">
+                                <div className="absolute inset-0 flex items-center justify-center bg-(--theme-softer) text-sm text-(--theme-primary-light)">
                                     No image selected
                                 </div>
                             ))}

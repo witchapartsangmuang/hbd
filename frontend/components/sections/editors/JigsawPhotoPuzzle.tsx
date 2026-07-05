@@ -14,7 +14,7 @@ export default function JigsawPhotoPuzzleEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Jigsaw Puzzle</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Jigsaw Puzzle</h2>
                 <ImageUrlField
                     slug={slug}
                     name={`jigsawPhotoPuzzle.${sectionId}.imagePath`}

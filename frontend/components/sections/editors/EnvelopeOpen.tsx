@@ -14,7 +14,7 @@ export default function EnvelopeOpenEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Open the Envelope</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Open the Envelope</h2>
                 <Field label="Sender name">
                     <Input
                         name={`envelopeOpen.${sectionId}.senderName`}

@@ -44,3 +44,4 @@ export function launchConfetti(
         setConfetti((prev) => prev.filter((item) => !pieces.some((piece) => piece.id === item.id)));
     }, maxDuration + 100);
 }
+

@@ -13,7 +13,7 @@ export default function CountdownToNextBirthdayEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
                     Countdown to Next Birthday
                 </h2>
                 <div className="grid grid-cols-2 gap-4">

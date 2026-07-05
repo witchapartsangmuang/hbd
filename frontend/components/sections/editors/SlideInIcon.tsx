@@ -18,7 +18,7 @@ export default function SlideInIconEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Slide-In Icon</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Slide-In Icon</h2>
                 <Field label="Title">
                     <Input
                         name={`slideInIcon.${sectionId}.title`}

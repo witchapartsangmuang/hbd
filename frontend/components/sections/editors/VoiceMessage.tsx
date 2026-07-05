@@ -13,7 +13,7 @@ export default function VoiceMessageEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Voice Message</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Voice Message</h2>
                 <Field label="Audio URL">
                     <Input
                         name={`voiceMessage.${sectionId}.audioSrc`}

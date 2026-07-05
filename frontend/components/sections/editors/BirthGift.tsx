@@ -44,7 +44,7 @@ export default function BirthGiftEditor({ content, slug, hidden, sectionId }: Se
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Gift Box</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Gift Box</h2>
                 <Field label="Surprise text">
                     <Input
                         name={`birthGift.${sectionId}.surpriseText`}
@@ -60,11 +60,11 @@ export default function BirthGiftEditor({ content, slug, hidden, sectionId }: Se
                         grid
                     >
                         {(card, i, dragHandle) => (
-                            <div className="flex flex-col gap-3 rounded-xl border border-rose-100 p-3">
+                            <div className="flex flex-col gap-3 rounded-xl border border-(--theme-border) p-3">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1">
                                         {dragHandle}
-                                        <span className="text-sm font-medium text-rose-700">
+                                        <span className="text-sm font-medium text-(--theme-primary-dark)">
                                             Photo {i + 1}
                                         </span>
                                     </div>
@@ -100,7 +100,7 @@ export default function BirthGiftEditor({ content, slug, hidden, sectionId }: Se
                                 <div>
                                     <div className="mb-1.5 flex items-center justify-between">
                                         <span className="text-sm text-gray-600">Tilt angle</span>
-                                        <span className="text-sm font-semibold tabular-nums text-rose-600">
+                                        <span className="text-sm font-semibold tabular-nums text-(--theme-primary)">
                                             {card.rotateAngle > 0 ? "+" : ""}
                                             {card.rotateAngle}°
                                         </span>
@@ -116,7 +116,7 @@ export default function BirthGiftEditor({ content, slug, hidden, sectionId }: Se
                                                 rotateAngle: Number(e.target.value),
                                             })
                                         }
-                                        className="w-full accent-rose-500"
+                                        className="w-full accent-(--theme-primary)"
                                     />
                                     <div className="flex justify-between text-[10px] text-gray-400">
                                         <span>-10°</span>

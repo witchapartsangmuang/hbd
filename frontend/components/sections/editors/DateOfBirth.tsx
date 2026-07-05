@@ -22,7 +22,7 @@ export default function DateOfBirthEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Birthday Code</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Birthday Code</h2>
                 <input
                     type="hidden"
                     name={`dateOfBirth.${sectionId}.digitCount`}

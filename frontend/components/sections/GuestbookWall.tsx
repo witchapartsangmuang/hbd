@@ -33,7 +33,7 @@ export default function GuestbookWall({
                         className="w-[45%] min-w-36 rounded-xl bg-amber-100 p-3 shadow-lg sm:w-48 sm:p-4"
                         style={{ transform: `rotate(${ROTATIONS[i % ROTATIONS.length]}deg)` }}
                     >
-                        <p className="text-sm leading-5 text-slate-700">
+                        <p className="whitespace-pre-line text-sm leading-5 text-slate-700">
                             &ldquo;{entry.message}&rdquo;
                         </p>
                         <p className="mt-2 text-right text-xs font-semibold text-(--theme-primary)">

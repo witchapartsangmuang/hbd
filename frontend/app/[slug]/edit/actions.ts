@@ -14,6 +14,7 @@ import {
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
+const MAX_AUDIO_BYTES = 50 * 1024 * 1024;
 const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 export async function uploadImageAction(
@@ -202,6 +203,93 @@ export async function listUploadedVideosAction(
             .sort((a, b) => b.localeCompare(a))
             .map((f) => ({ url: `/uploads/${slug}/${f}`, name: f }));
         return { videos };
+    } catch {
+        return { error: "Failed to load file list" };
+    }
+}
+
+export async function uploadAudioAction(
+    slug: string,
+    formData: FormData
+): Promise<{ url: string } | { error: string }> {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) return { error: "Unauthorized" };
+
+    const page = await getPageBySlug(slug);
+    if (!page) return { error: "Not found" };
+
+    if (!currentUser.isAdmin && page.user_id !== currentUser.userId) return { error: "Forbidden" };
+
+    const file = formData.get("file");
+    if (!(file instanceof File) || file.size === 0) return { error: "No file provided" };
+    if (!file.type.startsWith("audio/")) return { error: "File must be an audio file" };
+    if (file.size > MAX_AUDIO_BYTES) return { error: "File exceeds 50 MB" };
+
+    if (USE_BLOB) {
+        try {
+            const blob = await put(`uploads/${slug}/${file.name}`, file, {
+                access: "public",
+                addRandomSuffix: true,
+            });
+            return { url: blob.url };
+        } catch {
+            return { error: "Upload failed, please try again" };
+        }
+    }
+
+    try {
+        const ext = file.name.split(".").pop() ?? "bin";
+        const base = file.name
+            .replace(/\.[^.]+$/, "")
+            .replace(/[^a-zA-Z0-9._-]/g, "_")
+            .slice(0, 60);
+        const filename = `${Date.now()}-${base}.${ext}`;
+        const uploadDir = join(process.cwd(), "public", "uploads", slug);
+        await mkdir(uploadDir, { recursive: true });
+        await writeFile(join(uploadDir, filename), Buffer.from(await file.arrayBuffer()));
+        return { url: `/uploads/${slug}/${filename}` };
+    } catch {
+        return { error: "Upload failed, please try again" };
+    }
+}
+
+export async function listUploadedAudioAction(
+    slug: string
+): Promise<{ audios: { url: string; name: string }[] } | { error: string }> {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) return { error: "Unauthorized" };
+
+    const page = await getPageBySlug(slug);
+    if (!page) return { error: "Not found" };
+
+    if (!currentUser.isAdmin && page.user_id !== currentUser.userId) return { error: "Forbidden" };
+
+    const AUDIO_EXT = /\.(mp3|wav|ogg|m4a|aac|flac)$/i;
+
+    if (USE_BLOB) {
+        try {
+            const { blobs } = await list({ prefix: `uploads/${slug}/` });
+            const audios = blobs
+                .filter((b) => AUDIO_EXT.test(b.pathname))
+                .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime())
+                .map((blob) => ({
+                    url: blob.url,
+                    name: blob.pathname.split("/").pop() ?? blob.pathname,
+                }));
+            return { audios };
+        } catch {
+            return { error: "Failed to load file list" };
+        }
+    }
+
+    try {
+        const uploadDir = join(process.cwd(), "public", "uploads", slug);
+        const files = await readdir(uploadDir).catch(() => [] as string[]);
+        const audios = files
+            .filter((f) => AUDIO_EXT.test(f))
+            .sort((a, b) => b.localeCompare(a))
+            .map((f) => ({ url: `/uploads/${slug}/${f}`, name: f }));
+        return { audios };
     } catch {
         return { error: "Failed to load file list" };
     }
@@ -429,9 +517,15 @@ export async function saveContentAction(
                     .split("\n")
                     .map((w) => w.trim())
                     .filter(Boolean);
+                const balloonCount = num(
+                    formData,
+                    `${prefix}balloonCount`,
+                    ex?.balloonCount ?? 5
+                );
                 return {
                     wishes: wishes.length > 0 ? wishes : (ex?.wishes ?? []),
                     balloonGradients: ex?.balloonGradients ?? [],
+                    balloonCount: Math.min(10, Math.max(1, balloonCount)),
                 };
             }
         ),
@@ -495,15 +589,29 @@ export async function saveContentAction(
             candleCount: num(formData, `${prefix}candleCount`, ex?.candleCount ?? 3),
             message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
         })),
-        giftBoxUnwrap: perInstance(
-            sections,
-            "giftBoxUnwrap",
-            existing.giftBoxUnwrap,
-            (prefix, ex) => ({
-                imgPath: str(formData, `${prefix}imgPath`) || (ex?.imgPath ?? ""),
+        giftBoxUnwrap: perInstance(sections, "giftBoxUnwrap", existing.giftBoxUnwrap, (prefix, ex) => {
+            const imagesRaw = str(formData, `${prefix}images`);
+            let images = ex?.images ?? [];
+            if (imagesRaw) {
+                try {
+                    const parsed = JSON.parse(imagesRaw);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        images = parsed
+                            .filter((c) => c && typeof c.imgPath === "string")
+                            .map((c) => ({
+                                imgPath: String(c.imgPath),
+                                caption: typeof c.caption === "string" ? c.caption : "",
+                                aspectRatio:
+                                    typeof c.aspectRatio === "string" ? c.aspectRatio : "3:4",
+                            }));
+                    }
+                } catch {}
+            }
+            return {
+                images,
                 message: str(formData, `${prefix}message`) || (ex?.message ?? ""),
-            })
-        ),
+            };
+        }),
         envelopeOpen: perInstance(
             sections,
             "envelopeOpen",
@@ -521,8 +629,8 @@ export async function saveContentAction(
                 imgPath: str(formData, `${prefix}imgPath`) || (ex?.imgPath ?? ""),
                 caption: str(formData, `${prefix}caption`) || (ex?.caption ?? ""),
                 aspectRatio: str(formData, `${prefix}aspectRatio`) || ex?.aspectRatio || "1:1",
-                eyebrow: str(formData, `${prefix}eyebrow`) || (ex?.eyebrow ?? ""),
-                heading: str(formData, `${prefix}heading`) || (ex?.heading ?? ""),
+                eyebrow: str(formData, `${prefix}eyebrow`),
+                heading: str(formData, `${prefix}heading`),
             })
         ),
         countdownToNextBirthday: perInstance(
@@ -568,12 +676,22 @@ export async function saveContentAction(
             sections,
             "guestbookWall",
             existing.guestbookWall,
-            (prefix, ex) => ({
-                wishes:
-                    parseJsonArray(str(formData, `${prefix}wishesJson`), isGuestbookEntry) ??
-                    ex?.wishes ??
-                    [],
-            })
+            (prefix, ex) => {
+                // The editor always submits a valid JSON array (built via an
+                // Add/Remove list UI, not free-typed), so an intentionally
+                // emptied list should save as empty rather than falling back
+                // to the old value like parseJsonArray does for other panels.
+                let wishes = ex?.wishes ?? [];
+                try {
+                    const parsed = JSON.parse(str(formData, `${prefix}wishesJson`));
+                    if (Array.isArray(parsed)) {
+                        wishes = parsed.filter(isGuestbookEntry);
+                    }
+                } catch {
+                    // keep existing on malformed JSON
+                }
+                return { wishes };
+            }
         ),
         digitalSignature: perInstance(
             sections,
@@ -581,6 +699,9 @@ export async function saveContentAction(
             existing.digitalSignature,
             (prefix, ex) => ({
                 promptText: str(formData, `${prefix}promptText`) || (ex?.promptText ?? ""),
+                eyebrow:
+                    str(formData, `${prefix}eyebrow`) || (ex?.eyebrow ?? "Seal It With Love"),
+                heading: str(formData, `${prefix}heading`) || (ex?.heading ?? "Sign the Card ✍️"),
             })
         ),
         backgroundMusicPlayer: perInstance(
@@ -589,7 +710,14 @@ export async function saveContentAction(
             existing.backgroundMusicPlayer,
             (prefix, ex) => ({
                 audioSrc: str(formData, `${prefix}audioSrc`) || (ex?.audioSrc ?? ""),
-                label: str(formData, `${prefix}label`) || (ex?.label ?? ""),
+                songName: str(formData, `${prefix}songName`) || (ex?.songName ?? ""),
+                singerName: str(formData, `${prefix}singerName`) || (ex?.singerName ?? ""),
+                coverImagePath:
+                    str(formData, `${prefix}coverImagePath`) || (ex?.coverImagePath ?? ""),
+                startAtSeconds: Math.max(
+                    0,
+                    num(formData, `${prefix}startAtSeconds`, ex?.startAtSeconds ?? 0)
+                ),
             })
         ),
         cinematicRabbit: perInstance(

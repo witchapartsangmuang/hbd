@@ -12,7 +12,11 @@ export default function DigitalSignature({
     content: HbdContent;
     sectionId: string;
 }) {
-    const { promptText = "" } = content.digitalSignature?.[sectionId] ?? {};
+    const {
+        promptText = "",
+        eyebrow = "Seal It With Love",
+        heading = "Sign the Card ✍️",
+    } = content.digitalSignature?.[sectionId] ?? {};
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const drawingRef = useRef(false);
     const [hasSigned, setHasSigned] = useState(false);
@@ -42,12 +46,15 @@ export default function DigitalSignature({
 
     const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
         if (!drawingRef.current) return;
+        const canvas = canvasRef.current;
         const ctx = getContext();
         const { x, y } = getPoint(e);
-        if (!ctx) return;
+        if (!ctx || !canvas) return;
         ctx.lineWidth = 2.5;
         ctx.lineCap = "round";
-        ctx.strokeStyle = "#be123c";
+        ctx.strokeStyle =
+            getComputedStyle(canvas).getPropertyValue("--theme-primary-dark").trim() ||
+            "#be123c";
         ctx.lineTo(x, y);
         ctx.stroke();
         if (!hasSigned) setHasSigned(true);
@@ -68,11 +75,9 @@ export default function DigitalSignature({
         <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-white p-4 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
-                    Seal It With Love
+                    {eyebrow}
                 </p>
-                <h2 className="mt-1 text-2xl font-bold text-slate-800 sm:text-3xl">
-                    Sign the Card ✍️
-                </h2>
+                <h2 className="mt-1 text-2xl font-bold text-slate-800 sm:text-3xl">{heading}</h2>
                 <p className="mt-2 max-w-sm text-sm text-slate-600">{promptText}</p>
             </div>
 

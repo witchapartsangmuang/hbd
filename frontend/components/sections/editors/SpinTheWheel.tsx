@@ -13,7 +13,7 @@ export default function SpinTheWheelEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Spin the Wheel</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Spin the Wheel</h2>
                 <Field label="Prizes (one per line)">
                     <Textarea
                         rows={6}

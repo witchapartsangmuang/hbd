@@ -29,48 +29,45 @@ export default function EnvelopeOpen({
             <div className="relative w-full max-w-sm">
                 <button
                     type="button"
-                    onClick={() => setOpened(true)}
+                    onClick={() => {
+                        setOpened(true);
+                        nextStep();
+                    }}
                     disabled={opened}
                     className="relative block h-48 w-full overflow-visible"
                     aria-label="Open envelope"
                 >
                     <div
-                        className={`absolute inset-x-0 top-6 z-20 mx-auto w-[92%] rounded-xl bg-white p-5 text-left shadow-xl transition-all duration-700 ${
-                            opened ? "-translate-y-24 opacity-100" : "translate-y-0 opacity-0"
+                        className={`absolute inset-x-0 top-6 z-30 mx-auto w-[92%] rounded-xl bg-white p-5 text-left shadow-xl transition-all duration-700 ${
+                            opened ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                         }`}
                     >
                         <p className="text-xs font-semibold uppercase tracking-wide text-(--theme-primary-light)">
                             {senderName}
                         </p>
-                        <p className="mt-2 text-sm leading-6 text-slate-700">{message}</p>
+                        <p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-700">
+                            {message}
+                        </p>
                     </div>
 
-                    <div className="absolute inset-0 z-10 rounded-xl bg-(--theme-border) shadow-2xl" />
                     <div
-                        className="absolute inset-x-0 top-0 z-30 h-1/2 origin-top rounded-t-xl bg-(--theme-primary-light) shadow-md transition-transform duration-700"
-                        style={{
-                            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                            transform: opened ? "rotateX(180deg)" : "rotateX(0deg)",
-                            transformStyle: "preserve-3d",
-                        }}
-                    />
-                    {!opened && (
-                        <span className="absolute bottom-4 left-1/2 z-30 -translate-x-1/2 rounded-full bg-white/90 px-4 py-1.5 text-xs font-semibold text-(--theme-primary-dark) shadow">
-                            Tap to open
-                        </span>
-                    )}
+                        className={`absolute inset-0 transition-all duration-500 ${
+                            opened ? "-translate-y-4 scale-95 opacity-0" : "translate-y-0 scale-100 opacity-100"
+                        }`}
+                    >
+                        <div className="absolute inset-0 z-10 rounded-xl bg-(--theme-border) shadow-2xl" />
+                        <div
+                            className="absolute inset-x-0 top-0 z-20 h-1/2 rounded-t-xl bg-(--theme-primary-light) shadow-md"
+                            style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
+                        />
+                        {!opened && (
+                            <span className="absolute bottom-4 left-1/2 z-30 -translate-x-1/2 rounded-full bg-white/90 px-4 py-1.5 text-xs font-semibold text-(--theme-primary-dark) shadow">
+                                Tap to open
+                            </span>
+                        )}
+                    </div>
                 </button>
             </div>
-
-            {opened && (
-                <button
-                    type="button"
-                    onClick={nextStep}
-                    className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-                >
-                    Next ▶
-                </button>
-            )}
         </section>
     );
 }

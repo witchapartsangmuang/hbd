@@ -13,14 +13,14 @@ export default function ZodiacRevealEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Zodiac Reveal</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Zodiac Reveal</h2>
                 <Field label="Intro message">
                     <Input
                         name={`zodiacReveal.${sectionId}.customMessage`}
                         defaultValue={content.zodiacReveal?.[sectionId]?.customMessage ?? ""}
                     />
                 </Field>
-                <p className="mt-2 text-xs text-rose-900/50">
+                <p className="mt-2 text-xs text-(--theme-primary-dark)/50">
                     Zodiac sign is calculated from the Birthday Code section&apos;s date
                 </p>
             </div>

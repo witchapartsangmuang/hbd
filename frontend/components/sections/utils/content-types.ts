@@ -5,6 +5,12 @@ export interface ImgCardItem {
     aspectRatio: string;
 }
 
+export interface GiftBoxImageItem {
+    imgPath: string;
+    caption: string;
+    aspectRatio: string;
+}
+
 export type SectionType =
     | "scratchCard"
     | "scratchCardYoutube"
@@ -88,37 +94,41 @@ export const SECTION_LABELS: Record<SectionType, string> = {
     // section ที่ฉันปรับแล้ว
     scratchCard: "Scratch Card",
     scratchCardYoutube: "Scratch Card (YouTube)",
+    scratchCardVdo: "Scratch Card (Video)",
+    scratchCardImg: "Scratch Card (Image)",
     birthGift: "Gift Box",
     cake: "Birthday Cake",
-    scratchCardVdo: "Scratch Card (Video)",
     releaseBalloon: "Release Balloon",
-    scratchCardImg: "Scratch Card (Image)",
     typingText: "Typing Text",
     flipPhotoCard: "Flip Photo Card",
+    polaroidShake: "Shake the Polaroid",
+    digitalSignature: "Sign the Card",
+    guestbookWall: "Guestbook Wall",
+    backgroundMusicPlayer: "Background Music",
+    giftBoxUnwrap: "Unwrap the Gift Box",
 
     // section ที่ฉันยังไม่ได้ปรับ
     dateOfBirth: "Birthday Code",
-    slideInIcon: "Slide-In Icon",
-    cinematicBirthdayBear: "Cinematic Bear",
-    cinematicCat: "Cinematic Cat",
-    cinematicDog: "Cinematic Dog",
-    spinTheWheel: "Mini Game: Spin the Wheel",
-    jigsawPhotoPuzzle: "Mini Game: Jigsaw Puzzle",
-    quizAboutYou: "Mini Game: How Well Do You Know Me",
+
+    // ไม่เอา
     candleBlow: "Blow the Candle",
-    giftBoxUnwrap: "Unwrap the Gift Box",
+    fireworksFinale: "Fireworks Finale",
+    zodiacReveal: "Zodiac Reveal",
+    // แก้ Open the Envelope
     envelopeOpen: "Open the Envelope",
-    polaroidShake: "Shake the Polaroid",
     countdownToNextBirthday: "Countdown to Next Birthday",
     memoryTimeline: "Memory Timeline",
     voiceMessage: "Voice Message",
-    zodiacReveal: "Zodiac Reveal",
-    guestbookWall: "Guestbook Wall",
-    digitalSignature: "Sign the Card",
-    backgroundMusicPlayer: "Background Music",
+
     cinematicRabbit: "Cinematic Rabbit",
     cinematicPanda: "Cinematic Panda",
-    fireworksFinale: "Fireworks Finale",
+    cinematicBirthdayBear: "Cinematic Bear",
+    cinematicCat: "Cinematic Cat",
+    cinematicDog: "Cinematic Dog",
+    slideInIcon: "Slide-In Icon",
+    spinTheWheel: "Mini Game: Spin the Wheel",
+    jigsawPhotoPuzzle: "Mini Game: Jigsaw Puzzle",
+    quizAboutYou: "Mini Game: How Well Do You Know Me",
     popTheBalloon: "Mini Game: Pop Balloon",
     memoryMatching: "Mini Game: Memory Match",
     catchTheGift: "Mini Game: Catch the Gift",
@@ -205,6 +215,7 @@ export interface HbdContent {
         {
             wishes: string[];
             balloonGradients: string[];
+            balloonCount?: number;
         }
     >;
     flipPhotoCard?: Record<
@@ -261,7 +272,7 @@ export interface HbdContent {
     giftBoxUnwrap?: Record<
         string,
         {
-            imgPath: string;
+            images: GiftBoxImageItem[];
             message: string;
         }
     >;
@@ -319,13 +330,18 @@ export interface HbdContent {
         string,
         {
             promptText: string;
+            eyebrow?: string;
+            heading?: string;
         }
     >;
     backgroundMusicPlayer?: Record<
         string,
         {
             audioSrc: string;
-            label: string;
+            songName: string;
+            singerName: string;
+            coverImagePath: string;
+            startAtSeconds?: number;
         }
     >;
     cinematicRabbit?: Record<

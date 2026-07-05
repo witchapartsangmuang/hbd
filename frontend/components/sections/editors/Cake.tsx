@@ -15,7 +15,7 @@ export default function CakeEditor({ content, slug, hidden, sectionId }: Section
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-rose-700">Cake</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Cake</h2>
                 <Field label="Wish text (Supports multiple lines)">
                     <Textarea
                         name={`cake.${sectionId}.wishText`}

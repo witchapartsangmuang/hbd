@@ -56,7 +56,7 @@ export function SearchSelect({
                 onClick={() => setOpen((v) => !v)}
                 className={[
                     "w-full h-10 px-3 rounded-lg border text-sm text-left flex items-center justify-between bg-white",
-                    "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                    "focus:outline-none focus:ring-2 focus:ring-(--theme-primary) focus:border-transparent",
                     error ? "border-red-400" : "border-gray-200",
                     !selected ? "text-gray-400" : "text-gray-900",
                 ].join(" ")}
@@ -85,7 +85,7 @@ export function SearchSelect({
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder={searchPlaceholder}
-                            className="w-full h-8 px-3 text-sm rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                            className="w-full h-8 px-3 text-sm rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-(--theme-primary)/30"
                         />
                     </div>
                     <ul className="max-h-52 overflow-y-auto py-1" role="listbox">
@@ -103,7 +103,7 @@ export function SearchSelect({
                                 className={[
                                     "flex flex-col px-3 py-2 cursor-pointer text-sm transition-colors",
                                     o.value === value
-                                        ? "bg-blue-50 text-blue-700"
+                                        ? "bg-(--theme-primary)/10 text-(--theme-primary)"
                                         : "text-gray-700 hover:bg-gray-50",
                                 ].join(" ")}
                             >
