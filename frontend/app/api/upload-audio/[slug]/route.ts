@@ -33,6 +33,7 @@ export async function POST(
         return NextResponse.json({ error: "File exceeds 50 MB" }, { status: 400 });
 
     try {
+        console.log("upload-audio: USE_BLOB =", USE_BLOB);
         if (USE_BLOB) {
             const blob = await put(`uploads/${slug}/${file.name}`, file, {
                 access: "public",
@@ -51,7 +52,8 @@ export async function POST(
         await mkdir(uploadDir, { recursive: true });
         await writeFile(join(uploadDir, filename), Buffer.from(await file.arrayBuffer()));
         return NextResponse.json({ url: `/uploads/${slug}/${filename}` });
-    } catch {
+    } catch (err) {
+        console.error("upload-audio failed", err);
         return NextResponse.json({ error: "Upload failed, please try again" }, { status: 500 });
     }
 }
