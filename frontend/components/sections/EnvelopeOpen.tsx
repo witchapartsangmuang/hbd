@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function EnvelopeOpen({
@@ -52,7 +53,9 @@ export default function EnvelopeOpen({
 
                     <div
                         className={`absolute inset-0 transition-all duration-500 ${
-                            opened ? "-translate-y-4 scale-95 opacity-0" : "translate-y-0 scale-100 opacity-100"
+                            opened
+                                ? "-translate-y-4 scale-95 opacity-0"
+                                : "translate-y-0 scale-100 opacity-100"
                         }`}
                     >
                         <div className="absolute inset-0 z-10 rounded-xl bg-(--theme-border) shadow-2xl" />
@@ -68,6 +71,7 @@ export default function EnvelopeOpen({
                     </div>
                 </button>
             </div>
+            {opened && <ScrollDownButton />}
         </section>
     );
 }

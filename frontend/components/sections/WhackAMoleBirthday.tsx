@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type HoleItem = {
@@ -187,6 +188,7 @@ export default function WhackAMoleBirthday({
     useEffect(() => {
         startGame();
         return () => clearAll();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -307,7 +309,7 @@ export default function WhackAMoleBirthday({
                 <p className="min-h-6 text-sm font-medium text-(--theme-primary-dark)">{message}</p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,#ffe4ef_0%,#fff3f8_45%,#fffdfd_100%)] p-3 shadow-2xl sm:gap-4 sm:rounded-[28px] sm:p-5">
+            <div className="grid grid-cols-3 gap-2 rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,var(--theme-soft)_0%,var(--theme-softer)_45%,#fffdfd_100%)] p-3 shadow-2xl sm:gap-4 sm:rounded-[28px] sm:p-5">
                 {holes.map((hole) => (
                     <button
                         key={hole.id}
@@ -391,13 +393,10 @@ export default function WhackAMoleBirthday({
                         >
                             Play Again
                         </button>
-                        <button
-                            type="button"
-                            onClick={nextStep}
+                        <NextStepButton
+                            nextStep={nextStep}
                             className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-                        >
-                            Next ▶
-                        </button>
+                        />
                     </div>
                 </div>
             )}

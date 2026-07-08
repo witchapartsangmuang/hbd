@@ -6,12 +6,7 @@ import { Textarea } from "@/components/Textarea";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SectionEditorProps, panelClass } from "./_shared";
 
-export default function TypingTextEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function TypingTextEditor({ content, hidden, sectionId }: SectionEditorProps) {
     const [typingMessage, setTypingMessage] = useState(
         content.typingText?.[sectionId]?.message ?? ""
     );
@@ -22,7 +17,9 @@ export default function TypingTextEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Typing Text</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Typing Text
+                </h2>
                 <Field label="Message (newlines supported)">
                     <Textarea
                         rows={4}

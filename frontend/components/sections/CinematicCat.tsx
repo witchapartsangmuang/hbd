@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function CinematicCat({ nextStep }: { nextStep: () => void; content: HbdContent }) {
@@ -70,13 +71,11 @@ export default function CinematicCat({ nextStep }: { nextStep: () => void; conte
             </div>
 
             {show && (
-                <button
-                    type="button"
-                    onClick={nextStep}
+                <NextStepButton
+                    nextStep={nextStep}
                     className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
-                >
-                    Next ▶
-                </button>
+                    arrowClassName="absolute bottom-4 right-4"
+                />
             )}
         </section>
     );

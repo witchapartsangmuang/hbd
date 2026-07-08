@@ -9,12 +9,7 @@ import { GuestbookEntry } from "@/components/sections/utils/content-types";
 import { SectionEditorProps, panelClass } from "./_shared";
 import { Trash } from "@/icons/icons";
 
-export default function GuestbookWallEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function GuestbookWallEditor({ content, hidden, sectionId }: SectionEditorProps) {
     const [entries, setEntries] = useState<GuestbookEntry[]>(
         content.guestbookWall?.[sectionId]?.wishes ?? []
     );

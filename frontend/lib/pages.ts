@@ -8,6 +8,9 @@ export interface PageRow {
     content: HbdContent;
     created_at: Date;
     updated_at: Date;
+    view_count: number;
+    first_viewed_at: Date | null;
+    last_viewed_at: Date | null;
 }
 
 export async function getPageBySlug(slug: string): Promise<PageRow | null> {
@@ -38,6 +41,17 @@ export async function createPageForUser(
         [slug, userId, JSON.stringify(content)]
     );
     return rows[0];
+}
+
+export async function recordPageView(pageId: number): Promise<void> {
+    await query(
+        `UPDATE pages
+         SET view_count = view_count + 1,
+             first_viewed_at = COALESCE(first_viewed_at, now()),
+             last_viewed_at = now()
+         WHERE id = $1`,
+        [pageId]
+    );
 }
 
 export async function updatePageContent(pageId: number, content: HbdContent): Promise<void> {

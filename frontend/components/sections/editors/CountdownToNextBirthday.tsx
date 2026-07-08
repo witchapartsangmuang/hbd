@@ -6,7 +6,6 @@ import { panelClass, SectionEditorProps } from "./_shared";
 
 export default function CountdownToNextBirthdayEditor({
     content,
-    slug,
     hidden,
     sectionId,
 }: SectionEditorProps) {
@@ -44,7 +43,9 @@ export default function CountdownToNextBirthdayEditor({
                     <Field label="Message">
                         <Input
                             name={`countdownToNextBirthday.${sectionId}.message`}
-                            defaultValue={content.countdownToNextBirthday?.[sectionId]?.message ?? ""}
+                            defaultValue={
+                                content.countdownToNextBirthday?.[sectionId]?.message ?? ""
+                            }
                         />
                     </Field>
                 </div>

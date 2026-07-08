@@ -1,11 +1,14 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 const SLICE_COLORS = [
-    "#fb7185",
-    "#f472b6",
+    // CSS variables resolve fine here — the colors land in a conic-gradient
+    // applied via the style attribute, not on a canvas.
+    "var(--theme-primary)",
+    "var(--theme-primary-light)",
     "#fbbf24",
     "#34d399",
     "#60a5fa",
@@ -60,7 +63,7 @@ export default function SpinTheWheel({
     };
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-amber-50 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     Birthday Mini Game
@@ -114,13 +117,11 @@ export default function SpinTheWheel({
                 <div className="w-full max-w-sm rounded-3xl bg-white p-5 text-center shadow-xl sm:p-6">
                     <p className="text-sm text-(--theme-primary)">You landed on</p>
                     <p className="mt-1 text-2xl font-bold text-slate-800">{result}</p>
-                    <button
-                        type="button"
-                        onClick={nextStep}
+                    <NextStepButton
+                        nextStep={nextStep}
                         className="mt-5 rounded-full bg-slate-900 px-6 py-2.5 font-semibold text-white transition active:scale-95"
-                    >
-                        Next ▶
-                    </button>
+                        arrowClassName="mx-auto mt-5"
+                    />
                 </div>
             )}
         </section>

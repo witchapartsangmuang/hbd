@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function SlideInIcon({
@@ -40,7 +41,7 @@ export default function SlideInIcon({
     return (
         <section
             ref={containerRef}
-            className="relative mx-auto my-24 flex min-h-[280px] max-w-4xl items-center justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white p-10 shadow-sm"
+            className="relative mx-auto my-24 flex min-h-[280px] max-w-4xl items-center justify-between overflow-hidden rounded-3xl border border-(--theme-border) bg-linear-to-br from-(--theme-softer) via-(--theme-softer) to-white p-10 shadow-sm"
         >
             <div className="max-w-xl">
                 <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-(--theme-primary-dark)">
@@ -91,13 +92,11 @@ export default function SlideInIcon({
             </div>
 
             {isVisible && (
-                <button
-                    type="button"
-                    onClick={nextStep}
+                <NextStepButton
+                    nextStep={nextStep}
                     className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
-                >
-                    Next ▶
-                </button>
+                    arrowClassName="absolute bottom-4 right-4"
+                />
             )}
         </section>
     );

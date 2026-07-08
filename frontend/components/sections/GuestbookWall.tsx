@@ -1,5 +1,6 @@
 "use client";
 
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 const ROTATIONS = [-3, 2, -1, 3, -2, 1];
@@ -16,7 +17,7 @@ export default function GuestbookWall({
     const { wishes = [] } = content.guestbookWall?.[sectionId] ?? {};
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-yellow-50 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     From The People Who Love You
@@ -43,13 +44,10 @@ export default function GuestbookWall({
                 ))}
             </div>
 
-            <button
-                type="button"
-                onClick={nextStep}
+            <NextStepButton
+                nextStep={nextStep}
                 className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-            >
-                Next ▶
-            </button>
+            />
         </section>
     );
 }

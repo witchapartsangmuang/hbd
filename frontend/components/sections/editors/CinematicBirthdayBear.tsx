@@ -7,7 +7,6 @@ import { SectionEditorProps, panelClass } from "./_shared";
 
 export default function CinematicBirthdayBearEditor({
     content,
-    slug,
     hidden,
     sectionId,
 }: SectionEditorProps) {
@@ -21,7 +20,9 @@ export default function CinematicBirthdayBearEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Birthday Bear Scene</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Birthday Bear Scene
+                </h2>
                 <Field label="Title">
                     <Input
                         name={`cinematicBirthdayBear.${sectionId}.title`}

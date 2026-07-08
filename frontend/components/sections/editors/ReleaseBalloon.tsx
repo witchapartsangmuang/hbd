@@ -6,12 +6,7 @@ import { Input } from "@/components/Input";
 import { Textarea } from "@/components/Textarea";
 import { SectionEditorProps, panelClass } from "./_shared";
 
-export default function ReleaseBalloonEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function ReleaseBalloonEditor({ content, hidden, sectionId }: SectionEditorProps) {
     const [balloonWishes, setBalloonWishes] = useState(
         (content.releaseBalloon?.[sectionId]?.wishes ?? []).join("\n")
     );
@@ -22,7 +17,9 @@ export default function ReleaseBalloonEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Balloon Wishes</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Balloon Wishes
+                </h2>
                 <Field label="Wishes (one per line)">
                     <Textarea
                         rows={6}
@@ -40,9 +37,7 @@ export default function ReleaseBalloonEditor({
                         name={`releaseBalloon.${sectionId}.balloonCount`}
                         value={balloonCount}
                         onChange={(e) =>
-                            setBalloonCount(
-                                Math.min(10, Math.max(1, Number(e.target.value) || 1))
-                            )
+                            setBalloonCount(Math.min(10, Math.max(1, Number(e.target.value) || 1)))
                         }
                     />
                 </Field>

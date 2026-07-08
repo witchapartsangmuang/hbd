@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type BalloonItem = {
@@ -85,6 +86,7 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
     useEffect(() => {
         startGame();
         return () => clearAllTimers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const popBalloon = (id: number) => {
@@ -112,7 +114,7 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
     };
 
     return (
-        <main className="min-h-[100dvh] overflow-hidden bg-linear-to-b from-(--theme-soft) via-(--theme-softer) to-sky-100">
+        <main className="min-h-[100dvh] overflow-hidden bg-linear-to-b from-(--theme-soft) via-(--theme-softer) to-(--theme-soft)">
             <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-6">
                 <header className="mb-3 rounded-[24px] border border-white/60 bg-white/75 p-4 shadow-lg backdrop-blur sm:mb-4 sm:rounded-3xl sm:p-5">
                     <div className="flex flex-col gap-4">
@@ -229,12 +231,10 @@ export default function PopTheBalloon({ nextStep }: { nextStep: () => void; cont
                                     >
                                         Play Again
                                     </button>
-                                    <button
-                                        onClick={nextStep}
+                                    <NextStepButton
+                                        nextStep={nextStep}
                                         className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-                                    >
-                                        Next ▶
-                                    </button>
+                                    />
                                 </div>
                             </div>
                         </div>

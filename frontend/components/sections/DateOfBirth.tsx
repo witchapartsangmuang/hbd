@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { dateOfBirthState } from "@/components/sections/utils/hooks";
+import { useEffect, useMemo, useRef, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function DateOfBirth({
@@ -19,8 +19,10 @@ export default function DateOfBirth({
         correctCode = "",
     } = content.dateOfBirth?.[sectionId] ?? {};
     const emptyArr = useMemo<string[]>(() => Array(digitCount).fill(""), [digitCount]);
-    const { digits, setdigits, shake, setshake, success, setsuccess, error, seterror } =
-        dateOfBirthState(digitCount);
+    const [digits, setdigits] = useState<string[]>(() => Array(digitCount).fill(""));
+    const [shake, setshake] = useState(false);
+    const [success, setsuccess] = useState(false);
+    const [error, seterror] = useState("");
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
     const joinedCode = useMemo(() => digits.join(""), [digits]);
     const isComplete = useMemo(() => digits.every((d) => d !== ""), [digits]);
@@ -44,6 +46,7 @@ export default function DateOfBirth({
             const timer = setTimeout(() => setshake(false), 450);
             return () => clearTimeout(timer);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [joinedCode, isComplete, correctCode]);
 
     const focusInput = (index: number) => {
@@ -213,6 +216,12 @@ export default function DateOfBirth({
             <p className="mt-4 text-center text-xs text-(--theme-primary-light)">
                 Hint: Use your date of birth as {digitCount} digits
             </p>
+
+            {success && (
+                <div className="mt-5 flex justify-center">
+                    <ScrollDownButton />
+                </div>
+            )}
         </div>
     );
 }

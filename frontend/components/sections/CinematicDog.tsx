@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function CinematicDog({ nextStep }: { nextStep: () => void; content: HbdContent }) {
@@ -28,7 +29,7 @@ export default function CinematicDog({ nextStep }: { nextStep: () => void; conte
     return (
         <section
             ref={ref}
-            className="relative mx-auto my-24 flex min-h-[350px] max-w-5xl items-center justify-between overflow-hidden rounded-3xl bg-yellow-50 p-10"
+            className="relative mx-auto my-24 flex min-h-[350px] max-w-5xl items-center justify-between overflow-hidden rounded-3xl bg-(--theme-softer) p-10"
         >
             <div className="max-w-lg">
                 <h2 className="text-3xl font-bold text-slate-900">
@@ -70,13 +71,11 @@ export default function CinematicDog({ nextStep }: { nextStep: () => void; conte
             </div>
 
             {show && (
-                <button
-                    type="button"
-                    onClick={nextStep}
+                <NextStepButton
+                    nextStep={nextStep}
                     className="absolute bottom-4 right-4 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
-                >
-                    Next ▶
-                </button>
+                    arrowClassName="absolute bottom-4 right-4"
+                />
             )}
         </section>
     );

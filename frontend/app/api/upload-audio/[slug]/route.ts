@@ -8,10 +8,7 @@ import { getPageBySlug } from "@/lib/pages";
 const MAX_AUDIO_BYTES = 50 * 1024 * 1024;
 const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: Promise<{ slug: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
     const currentUser = await getCurrentUser();

@@ -4,16 +4,13 @@ import { Field } from "@/components/Field";
 import { Input } from "@/components/Input";
 import { panelClass, SectionEditorProps } from "./_shared";
 
-export default function CandleBlowEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function CandleBlowEditor({ content, hidden, sectionId }: SectionEditorProps) {
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Blow the Candle</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Blow the Candle
+                </h2>
                 <Field label="Number of candles">
                     <Input
                         type="number"

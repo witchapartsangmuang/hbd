@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function CinematicBirthdayBear({
@@ -246,7 +247,7 @@ export default function CinematicBirthdayBear({
                 </>
             )}
 
-            <div className="relative z-10 grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative z-10 grid w-full grid-cols-1 items-center gap-10">
                 <div className="max-w-2xl">
                     <p
                         className={`text-sm font-semibold uppercase tracking-[0.25em] text-(--theme-primary) ${
@@ -443,13 +444,11 @@ export default function CinematicBirthdayBear({
             </div>
 
             {isVisible && (
-                <button
-                    type="button"
-                    onClick={nextStep}
+                <NextStepButton
+                    nextStep={nextStep}
                     className="absolute bottom-6 right-6 z-40 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-5 py-2 text-sm font-medium text-white shadow-lg transition hover:-translate-y-0.5"
-                >
-                    Next ▶
-                </button>
+                    arrowClassName="absolute bottom-6 right-6 z-40"
+                />
             )}
         </section>
     );

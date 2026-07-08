@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function CandleBlow({
@@ -39,7 +40,7 @@ export default function CandleBlow({
     const litCandles = Math.max(0, candleCount - Math.floor((progress / 100) * candleCount));
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-amber-50 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     Birthday Moment
@@ -81,6 +82,15 @@ export default function CandleBlow({
                     onMouseLeave={stopBlowing}
                     onTouchStart={startBlowing}
                     onTouchEnd={stopBlowing}
+                    onKeyDown={(e) => {
+                        if (e.repeat || (e.key !== "Enter" && e.key !== " ")) return;
+                        e.preventDefault();
+                        startBlowing();
+                    }}
+                    onKeyUp={(e) => {
+                        if (e.key !== "Enter" && e.key !== " ") return;
+                        stopBlowing();
+                    }}
                     className="select-none rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-8 py-3 font-semibold text-white shadow-lg transition active:scale-95"
                 >
                     Press &amp; hold to blow 💨
@@ -89,13 +99,11 @@ export default function CandleBlow({
                 <div className="w-full max-w-sm rounded-3xl bg-white p-5 text-center shadow-xl sm:p-6">
                     <div className="mb-2 text-4xl">✨</div>
                     <p className="text-lg font-bold text-slate-800">Wish made!</p>
-                    <button
-                        type="button"
-                        onClick={nextStep}
+                    <NextStepButton
+                        nextStep={nextStep}
                         className="mt-4 rounded-full bg-slate-900 px-6 py-2.5 font-semibold text-white transition active:scale-95"
-                    >
-                        Next ▶
-                    </button>
+                        arrowClassName="mx-auto mt-4"
+                    />
                 </div>
             )}
         </section>

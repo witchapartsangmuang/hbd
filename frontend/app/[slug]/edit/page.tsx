@@ -28,9 +28,23 @@ export default async function EditPage({ params }: { params: Promise<{ slug: str
         }
     }
 
+    const lastViewedLabel = page.last_viewed_at
+        ? new Date(page.last_viewed_at).toLocaleString("en-GB", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+          })
+        : null;
+
     return (
         <section className="mx-auto min-h-screen max-w-5xl p-6">
-            <EditContentForm slug={slug} content={page.content} />
+            <p className="mb-3 text-sm text-gray-600">
+                👀 Viewed {page.view_count ?? 0} {(page.view_count ?? 0) === 1 ? "time" : "times"}
+                {lastViewedLabel && ` · last viewed ${lastViewedLabel}`}
+            </p>
+            <EditContentForm slug={slug} content={page.content} isAdmin={currentUser.isAdmin} />
         </section>
     );
 }

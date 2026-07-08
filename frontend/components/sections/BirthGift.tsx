@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { confettiState, birthGiftState } from "@/components/sections/utils/hooks";
+import { useEffect, useRef, useState } from "react";
 import { launchConfetti } from "@/components/sections/utils/functions";
+import { ConfettiPiece } from "@/components/sections/utils/type";
 import ImgCard from "@/components/ImgCard";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 export default function BirthGift({
     nextStep,
@@ -15,25 +16,18 @@ export default function BirthGift({
 }) {
     const { surpriseText: giftSurpriseText = "", imgCards: imgCard = [] } =
         content.birthGift?.[sectionId] ?? {};
-    const {
-        isOpenGift,
-        setisOpenGift,
-        isPressing,
-        setisPressing,
-        isShaking,
-        setisShaking,
-        isOpenDisplayImgArea,
-        setisOpenDisplayImgArea,
-        showSurpriseText,
-        setshowSurpriseText,
-    } = birthGiftState();
-    const { confetti, setConfetti } = confettiState();
+    const [isOpenGift, setisOpenGift] = useState(false);
+    const [isPressing, setisPressing] = useState(false);
+    const [isShaking, setisShaking] = useState(false);
+    const [isOpenDisplayImgArea, setisOpenDisplayImgArea] = useState(false);
+    const [showSurpriseText, setshowSurpriseText] = useState(false);
+    const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
     const confettiIdRef = useRef(1);
     useEffect(() => {
         if (!isOpenGift) return;
         const timer = setTimeout(() => setshowSurpriseText(true), 500);
         return () => clearTimeout(timer);
-    }, [isOpenGift]);
+    }, [isOpenGift, setshowSurpriseText]);
 
     const handleMouseDown = () => {
         if (isOpenGift) return;
@@ -125,7 +119,7 @@ export default function BirthGift({
                         {imgCard.map((img, i) => (
                             <div
                                 key={`${img.imgPath}-${i}`}
-                                className={`p-5 col-span-12 md:col-span-6 lg:col-span-3 transition-all duration-500 ease-out ${
+                                className={`p-5 col-span-12 md:col-span-6 transition-all duration-500 ease-out ${
                                     isOpenGift
                                         ? "translate-y-0 scale-100 opacity-100"
                                         : "-translate-y-60 scale-75 opacity-0 pointer-events-none"
@@ -144,6 +138,7 @@ export default function BirthGift({
                         ))}
                     </div>
                 )}
+                {isOpenGift && <ScrollDownButton className="mt-8 mb-4" />}
             </section>
         </>
     );

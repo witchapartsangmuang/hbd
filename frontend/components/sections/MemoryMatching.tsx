@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type CardItem = {
@@ -81,6 +82,7 @@ export default function MemoryMatching({
             setIsFinished(true);
             nextStep();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allMatched, cards]);
 
     const handleCardClick = (id: number) => {
@@ -187,7 +189,7 @@ export default function MemoryMatching({
                 </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                 {cards.map((card) => {
                     const showFront = card.isFlipped || card.isMatched;
 
@@ -243,6 +245,10 @@ export default function MemoryMatching({
                     >
                         Play Again
                     </button>
+
+                    <div className="mt-5 flex justify-center">
+                        <ScrollDownButton />
+                    </div>
                 </div>
             )}
         </section>

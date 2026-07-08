@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type GiftItem = {
@@ -200,6 +201,7 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
     useEffect(() => {
         startGame();
         return () => clearAll();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -319,7 +321,7 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                     onMouseMove={handleMouseMove}
                     onTouchMove={handleTouchMove}
                     onTouchStart={handleTouchStart}
-                    className={`relative w-full overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,#ffe4ef_0%,#fff5fa_55%,#fffdfd_100%)] shadow-2xl touch-none ${
+                    className={`relative w-full overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,var(--theme-soft)_0%,var(--theme-softer)_55%,#fffdfd_100%)] shadow-2xl touch-none ${
                         flash === "catch"
                             ? "ring-4 ring-emerald-200"
                             : flash === "miss"
@@ -438,13 +440,10 @@ export default function CatchTheGift({ nextStep }: { nextStep: () => void; conte
                                     >
                                         Play Again
                                     </button>
-                                    <button
-                                        type="button"
-                                        onClick={nextStep}
+                                    <NextStepButton
+                                        nextStep={nextStep}
                                         className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-                                    >
-                                        Next ▶
-                                    </button>
+                                    />
                                 </div>
                             </div>
                         </div>

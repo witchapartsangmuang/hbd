@@ -6,7 +6,7 @@ import { Textarea } from "@/components/Textarea";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SectionEditorProps, panelClass } from "./_shared";
 
-export default function CakeEditor({ content, slug, hidden, sectionId }: SectionEditorProps) {
+export default function CakeEditor({ content, hidden, sectionId }: SectionEditorProps) {
     const [cakeWishText, setCakeWishText] = useState(content.cake?.[sectionId]?.wishText ?? "");
     const [cakeWishTextAlign, setCakeWishTextAlign] = useState<"left" | "center">(
         content.cake?.[sectionId]?.wishTextAlign ?? "center"

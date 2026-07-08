@@ -20,7 +20,9 @@ export default function PolaroidShakeEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Shake the Polaroid</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Shake the Polaroid
+                </h2>
                 <Field label="Eyebrow">
                     <Input
                         name={`polaroidShake.${sectionId}.eyebrow`}

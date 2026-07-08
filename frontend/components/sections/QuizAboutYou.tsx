@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function QuizAboutYou({
@@ -22,15 +23,12 @@ export default function QuizAboutYou({
 
     if (!current) {
         return (
-            <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-linear-to-b from-violet-50 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-6 sm:p-6">
+            <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-6 sm:p-6">
                 <p className="text-sm text-slate-500">No quiz questions configured yet.</p>
-                <button
-                    type="button"
-                    onClick={nextStep}
+                <NextStepButton
+                    nextStep={nextStep}
                     className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white transition active:scale-95"
-                >
-                    Next ▶
-                </button>
+                />
             </section>
         );
     }
@@ -52,7 +50,7 @@ export default function QuizAboutYou({
     };
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-linear-to-b from-violet-50 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-6 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-4 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-6 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     Birthday Mini Game
@@ -102,13 +100,11 @@ export default function QuizAboutYou({
                     <p className="mt-1 text-sm text-slate-500">
                         {score === questions.length ? "You really know me!" : "Thanks for playing!"}
                     </p>
-                    <button
-                        type="button"
-                        onClick={nextStep}
+                    <NextStepButton
+                        nextStep={nextStep}
                         className="mt-5 rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white transition active:scale-95"
-                    >
-                        Next ▶
-                    </button>
+                        arrowClassName="mx-auto mt-5"
+                    />
                 </div>
             )}
         </section>

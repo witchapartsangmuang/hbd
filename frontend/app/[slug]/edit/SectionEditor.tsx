@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { Toast } from "@/components/Toast";
 import {
     SECTION_TYPES,
@@ -23,7 +24,8 @@ import { Field } from "@/components/Field";
 import { Input } from "@/components/Input";
 import { SearchSelect } from "@/components/SearchSelect";
 import { SortableList } from "@/components/SortableList";
-import { Eye, EyeSlash, Trash } from "@/icons/icons";
+import ImageUrlField from "./ImageUrlField";
+import { ChevronLeft, Eye, EyeSlash, Trash } from "@/icons/icons";
 
 const NO_CONFIG_TYPES: SectionType[] = [
     "popTheBalloon",
@@ -44,12 +46,14 @@ export default function SectionEditor({
     error,
     savedAt,
     isPending,
+    isAdmin,
 }: {
     slug: string;
     content: HbdContent;
     error: string | null;
     savedAt: number | null;
     isPending: boolean;
+    isAdmin: boolean;
 }) {
     const [sections, setSections] = useState<SectionInstance[]>(content.sections ?? []);
     const [themeBaseColor, setThemeBaseColor] = useState(content.theme?.baseColor ?? "#f43f5e");
@@ -127,7 +131,16 @@ export default function SectionEditor({
     return (
         <div style={themeStyle}>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-(--theme-border) bg-white/90 px-5 py-3 shadow-lg">
-                <h1 className="text-lg font-semibold text-(--theme-primary-dark)">
+                <h1 className="flex items-center gap-2 text-lg font-semibold text-(--theme-primary-dark)">
+                    {isAdmin && (
+                        <Link
+                            href="/admin"
+                            aria-label="Back to admin"
+                            className="flex size-8 shrink-0 items-center justify-center rounded-xl border border-gray-200 text-gray-600 transition-colors hover:bg-gray-50"
+                        >
+                            <ChevronLeft className="size-4" />
+                        </Link>
+                    )}
                     <span className="text-(--theme-primary-light)">[{slug}]</span>{" "}
                     <span className="text-(--theme-primary-light)/50">/</span>{" "}
                     {selected
@@ -188,6 +201,43 @@ export default function SectionEditor({
                     </div>
                 </div>
                 <input type="hidden" name="theme.baseColor" value={themeBaseColor} />
+            </div>
+
+            <div className="mb-4 rounded-[20px] border border-(--theme-border) bg-white/90 px-5 py-4 shadow-lg">
+                <p className="mb-1 text-sm font-semibold text-(--theme-primary-dark)">
+                    Share preview
+                </p>
+                <p className="mb-3 text-xs text-(--theme-primary-dark)/60">
+                    Title, description, and image shown when the page link is shared in chat or
+                    social apps
+                </p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                    <div className="flex flex-1 flex-col gap-3">
+                        <Field label="Title">
+                            <Input
+                                name="share.title"
+                                defaultValue={content.share?.title ?? ""}
+                                placeholder="Happy Birthday 🎂"
+                            />
+                        </Field>
+                        <Field label="Description">
+                            <Input
+                                name="share.description"
+                                defaultValue={content.share?.description ?? ""}
+                                placeholder="A birthday surprise made just for you — tap to open 🎁"
+                            />
+                        </Field>
+                    </div>
+                    <div className="sm:w-72">
+                        <ImageUrlField
+                            slug={slug}
+                            name="share.imagePath"
+                            defaultValue={content.share?.imagePath ?? ""}
+                            label="Preview image"
+                            compact
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="flex flex-col gap-6 lg:flex-row">
@@ -251,7 +301,9 @@ export default function SectionEditor({
                     <div className="rounded-3xl border border-(--theme-border) bg-white/90 p-4 shadow-xl">
                         <div className="flex flex-col gap-1">
                             {sections.length === 0 && (
-                                <p className="px-1 py-2 text-sm text-(--theme-primary-light)">No sections yet</p>
+                                <p className="px-1 py-2 text-sm text-(--theme-primary-light)">
+                                    No sections yet
+                                </p>
                             )}
                             <SortableList items={sections} onReorder={setSections}>
                                 {(section, _index, dragHandle) => (

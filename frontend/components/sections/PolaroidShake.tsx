@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 import { launchConfetti } from "@/components/sections/utils/functions";
-import { confettiState } from "@/components/sections/utils/hooks";
+import { ConfettiPiece } from "@/components/sections/utils/type";
 
 const SHAKES_NEEDED = 12;
 const NEXT_STEP_DELAY_MS = 1200;
@@ -28,7 +29,7 @@ export default function PolaroidShake({
     const [shakes, setShakes] = useState(0);
     const [jiggle, setJiggle] = useState(false);
     const confettiIdRef = useRef(1);
-    const { confetti, setConfetti } = confettiState();
+    const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
 
     const progress = Math.min(1, shakes / SHAKES_NEEDED);
     const developed = progress >= 1;
@@ -51,7 +52,7 @@ export default function PolaroidShake({
     }, [developed]);
 
     return (
-        <section className="relative flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-slate-100 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
+        <section className="relative flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="pointer-events-none w-full overflow-hidden h-1">
                 {confetti.map((piece) => (
                     <span
@@ -113,6 +114,7 @@ export default function PolaroidShake({
                     {developed ? caption : "Click for shaking..."}
                 </p>
             </button>
+            {developed && <ScrollDownButton />}
         </section>
     );
 }

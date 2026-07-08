@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 const ZODIAC_SIGNS: {
@@ -132,7 +133,7 @@ export default function ZodiacReveal({
     }, [correctCode]);
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-indigo-100 via-violet-50 to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-500">
                     Written in the Stars
@@ -149,13 +150,10 @@ export default function ZodiacReveal({
                 <p className="text-sm text-slate-600">{zodiac.blurb}</p>
             </div>
 
-            <button
-                type="button"
-                onClick={nextStep}
+            <NextStepButton
+                nextStep={nextStep}
                 className="rounded-full bg-linear-to-r from-violet-500 to-(--theme-primary) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-            >
-                Next ▶
-            </button>
+            />
         </section>
     );
 }

@@ -7,7 +7,15 @@ import SectionEditor from "./SectionEditor";
 
 const initialState = { error: null as string | null, savedAt: null as number | null };
 
-export default function EditContentForm({ slug, content }: { slug: string; content: HbdContent }) {
+export default function EditContentForm({
+    slug,
+    content,
+    isAdmin,
+}: {
+    slug: string;
+    content: HbdContent;
+    isAdmin: boolean;
+}) {
     const [state, formAction, isPending] = useActionState(
         saveContentAction.bind(null, slug),
         initialState
@@ -21,6 +29,7 @@ export default function EditContentForm({ slug, content }: { slug: string; conte
                 error={state.error}
                 savedAt={state.savedAt}
                 isPending={isPending}
+                isAdmin={isAdmin}
             />
         </form>
     );

@@ -4,16 +4,13 @@ import { Field } from "@/components/Field";
 import { Input } from "@/components/Input";
 import { SectionEditorProps, panelClass } from "./_shared";
 
-export default function VoiceMessageEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function VoiceMessageEditor({ content, hidden, sectionId }: SectionEditorProps) {
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Voice Message</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Voice Message
+                </h2>
                 <Field label="Audio URL">
                     <Input
                         name={`voiceMessage.${sectionId}.audioSrc`}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 import { ChevronLeft, ChevronRight } from "@/icons/icons";
 
@@ -23,7 +24,7 @@ export default function GiftBoxUnwrap({
     const [aw, ah] = (current?.aspectRatio ?? "1:1").split(":").map(Number);
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-amber-50 p-4 sm:gap-8 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     Birthday Surprise
@@ -112,6 +113,7 @@ export default function GiftBoxUnwrap({
                     </p>
                 </div>
             )}
+            {unwrapped && <ScrollDownButton />}
         </section>
     );
 }

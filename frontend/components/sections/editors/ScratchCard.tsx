@@ -55,7 +55,9 @@ export default function ScratchCardEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Scratch Card Settings</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Scratch Card Settings
+                </h2>
 
                 {selectedType === "scratchCard" && (
                     <div className="mb-5">
@@ -185,7 +187,9 @@ export default function ScratchCardEditor({
                 </div>
                 <div className="mt-4 space-y-1.5">
                     <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-(--theme-primary-dark)">Content Preview</p>
+                        <p className="text-sm font-medium text-(--theme-primary-dark)">
+                            Content Preview
+                        </p>
                         <p className="text-xs text-gray-400">{scratchAspectRatio}</p>
                     </div>
                     <div

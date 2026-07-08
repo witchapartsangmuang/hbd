@@ -3,12 +3,14 @@ import { ConfettiPiece } from "./type";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
 const DEFAULT_CONFETTI_COLORS = [
-    "#ff5fa2",
+    // Confetti pieces are styled spans, so CSS variables resolve to the
+    // page theme; the fixed accents keep the burst multicolored.
+    "var(--theme-primary)",
     "#ffcc66",
     "#7a7aff",
     "#67d5b5",
     "#ff8b5c",
-    "#f472b6",
+    "var(--theme-gradient-to)",
     "#60a5fa",
 ];
 
@@ -44,4 +46,3 @@ export function launchConfetti(
         setConfetti((prev) => prev.filter((item) => !pieces.some((piece) => piece.id === item.id)));
     }, maxDuration + 100);
 }
-

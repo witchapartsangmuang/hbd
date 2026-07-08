@@ -5,9 +5,11 @@ import { SECTION_REGISTRY } from "@/components/sections/_sections";
 import { buildThemeTokens, themeTokensToCssVars } from "@/components/sections/utils/theme";
 
 export default function HbdExperience({ content }: { content: HbdContent }) {
-    const sections = content.sections ?? [];
     const baseColor = content.theme?.baseColor ?? "#f43f5e";
-    const activeSections = useMemo(() => sections.filter((s) => s.enabled), [sections]);
+    const activeSections = useMemo(
+        () => (content.sections ?? []).filter((s) => s.enabled),
+        [content.sections]
+    );
     const themeTokens = useMemo(() => buildThemeTokens(baseColor), [baseColor]);
     const themeStyle = useMemo(() => themeTokensToCssVars(themeTokens), [themeTokens]);
     const gradient = useMemo(
@@ -46,8 +48,10 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
                     {item.emoji}
                 </div>
             ))} */}
+            {/* Capped at tablet width so desktop gets the same layout as tablet;
+                body carries the identical gradient, so the sides blend seamlessly. */}
             <div
-                className="grid grid-cols-12"
+                className="mx-auto grid w-full max-w-3xl grid-cols-12"
                 style={{ ...themeStyle, backgroundImage: gradient }}
             >
                 {activeSections.map((section, i) => {
@@ -57,13 +61,19 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
                     return (
                         <div
                             key={section.id}
+                            data-section-wrapper
                             className={`col-span-12 min-h-screen ${visible ? "block" : "hidden"}`}
                         >
-                            <Component
-                                content={content}
-                                sectionId={section.id}
-                                nextStep={() => setUnlockedCount((c) => Math.max(c, i + 2))}
-                            />
+                            {/* Mount only once unlocked — sections start timers, games, and
+                                animation loops on mount, so mounting while still hidden would
+                                run them before the visitor ever reaches the section. */}
+                            {visible && (
+                                <Component
+                                    content={content}
+                                    sectionId={section.id}
+                                    nextStep={() => setUnlockedCount((c) => Math.max(c, i + 2))}
+                                />
+                            )}
                         </div>
                     );
                 })}

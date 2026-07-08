@@ -4,16 +4,13 @@ import { Field } from "@/components/Field";
 import { Input } from "@/components/Input";
 import { SectionEditorProps, panelClass } from "./_shared";
 
-export default function DigitalSignatureEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function DigitalSignatureEditor({ content, hidden, sectionId }: SectionEditorProps) {
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Sign the Card</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Sign the Card
+                </h2>
                 <div className="flex flex-col gap-4">
                     <Field label="Eyebrow">
                         <Input
@@ -28,8 +25,7 @@ export default function DigitalSignatureEditor({
                         <Input
                             name={`digitalSignature.${sectionId}.heading`}
                             defaultValue={
-                                content.digitalSignature?.[sectionId]?.heading ??
-                                "Sign the Card ✍️"
+                                content.digitalSignature?.[sectionId]?.heading ?? "Sign the Card ✍️"
                             }
                         />
                     </Field>

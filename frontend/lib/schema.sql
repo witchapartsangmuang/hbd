@@ -20,3 +20,8 @@ CREATE TABLE IF NOT EXISTS pages (
 -- one page per (non-admin) user, ownership checks stay unambiguous
 CREATE UNIQUE INDEX IF NOT EXISTS pages_user_id_idx ON pages(user_id);
 CREATE INDEX IF NOT EXISTS pages_slug_idx ON pages(slug);
+
+-- visitor view stats; owner/admin visits are not counted
+ALTER TABLE pages ADD COLUMN IF NOT EXISTS view_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE pages ADD COLUMN IF NOT EXISTS first_viewed_at TIMESTAMPTZ;
+ALTER TABLE pages ADD COLUMN IF NOT EXISTS last_viewed_at TIMESTAMPTZ;

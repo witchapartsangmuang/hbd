@@ -30,9 +30,7 @@ export function Toast({ message, variant = "success", duration = 3000, onDismiss
             className={[
                 "fixed bottom-6 right-6 z-[9999] flex items-center gap-3 rounded-2xl px-5 py-3.5 shadow-xl",
                 "text-sm font-semibold transition-all duration-300",
-                variant === "success"
-                    ? "bg-emerald-500 text-white"
-                    : "bg-rose-500 text-white",
+                variant === "success" ? "bg-emerald-500 text-white" : "bg-rose-500 text-white",
                 visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
             ].join(" ")}
         >

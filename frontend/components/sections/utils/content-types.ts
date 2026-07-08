@@ -165,6 +165,11 @@ export interface HbdContent {
     theme?: {
         baseColor: string;
     };
+    share?: {
+        title: string;
+        description: string;
+        imagePath: string;
+    };
     birthGift?: Record<
         string,
         {

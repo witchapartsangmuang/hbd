@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function CinematicPanda({
@@ -35,7 +36,7 @@ export default function CinematicPanda({
     return (
         <section
             ref={containerRef}
-            className="relative flex min-h-screen flex-col items-center justify-center gap-4 overflow-hidden bg-linear-to-br from-slate-50 via-(--theme-softer) to-white px-4 py-10 text-center sm:gap-6 sm:px-6 sm:py-16"
+            className="relative flex min-h-screen flex-col items-center justify-center gap-4 overflow-hidden bg-linear-to-br from-(--theme-softer) via-(--theme-softer) to-white px-4 py-10 text-center sm:gap-6 sm:px-6 sm:py-16"
         >
             <style jsx>{`
                 @keyframes roll-in {
@@ -99,13 +100,11 @@ export default function CinematicPanda({
             </div>
 
             {isVisible && (
-                <button
-                    type="button"
-                    onClick={nextStep}
+                <NextStepButton
+                    nextStep={nextStep}
                     className="mt-4 rounded-full bg-linear-to-r from-slate-700 to-(--theme-primary) px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition active:scale-95"
-                >
-                    Next ▶
-                </button>
+                    arrowClassName="mt-4"
+                />
             )}
         </section>
     );

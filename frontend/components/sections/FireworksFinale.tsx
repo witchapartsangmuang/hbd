@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type Particle = {
@@ -12,7 +13,8 @@ type Particle = {
     life: number;
 };
 
-const COLORS = ["#ff5fa2", "#ffcc66", "#7a7aff", "#67d5b5", "#ff8b5c", "#f472b6", "#60a5fa"];
+const FALLBACK_ACCENTS = ["#ff5fa2", "#f472b6"];
+const FIXED_COLORS = ["#ffcc66", "#7a7aff", "#67d5b5", "#ff8b5c", "#60a5fa"];
 
 export default function FireworksFinale({
     nextStep,
@@ -41,10 +43,21 @@ export default function FireworksFinale({
         resize();
         window.addEventListener("resize", resize);
 
+        // Canvas fills need resolved colors, so read the theme CSS variables
+        // off the element; the fixed accents keep the bursts multicolored.
+        const styles = getComputedStyle(canvas);
+        const themeVar = (name: string, fallback: string) =>
+            styles.getPropertyValue(name).trim() || fallback;
+        const colors = [
+            themeVar("--theme-primary", FALLBACK_ACCENTS[0]),
+            themeVar("--theme-gradient-to", FALLBACK_ACCENTS[1]),
+            ...FIXED_COLORS,
+        ];
+
         const spawnBurst = () => {
             const x = Math.random() * canvas.width;
             const y = Math.random() * canvas.height * 0.6 + canvas.height * 0.1;
-            const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+            const color = colors[Math.floor(Math.random() * colors.length)];
             const count = 32;
             for (let i = 0; i < count; i++) {
                 const angle = (Math.PI * 2 * i) / count;
@@ -123,13 +136,12 @@ export default function FireworksFinale({
                     >
                         {copied ? "Link copied! 🔗" : "Share this page 🔗"}
                     </button>
-                    <button
-                        type="button"
-                        onClick={nextStep}
+                    <NextStepButton
+                        nextStep={nextStep}
                         className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition active:scale-95"
                     >
                         🎉 Finish
-                    </button>
+                    </NextStepButton>
                 </div>
             </div>
         </section>

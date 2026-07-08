@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { flipPhotoCardState } from "@/components/sections/utils/hooks";
+import { useEffect, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 const isUrl = (value: string) =>
@@ -26,11 +26,13 @@ export default function FlipPhotoCard({
         aspectRatio = "3:4",
     } = content.flipPhotoCard?.[sectionId] ?? {};
     const [aw, ah] = aspectRatio.split(":").map(Number);
-    const { flipped, setflipped, imgSelect, setimgSelect } = flipPhotoCardState();
+    const [flipped, setflipped] = useState(false);
+    const [imgSelect, setimgSelect] = useState<string>("");
     useEffect(() => {
         if (imgSelect === "") return;
         setflipped(true);
         nextStep();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imgSelect, setflipped]);
 
     return (
@@ -64,8 +66,8 @@ export default function FlipPhotoCard({
                         >
                             <div className="mb-4 text-5xl drop-shadow sm:text-6xl">🎁</div>
                             <p className="mt-3 max-w-55 text-sm leading-relaxed text-white/90 sm:text-base">
-                                Choose "{dogLabel || "Dog"}" or "{catLabel || "Cat"}" below to open
-                                the card
+                                Choose &quot;{dogLabel || "Dog"}&quot; or &quot;
+                                {catLabel || "Cat"}&quot; below to open the card
                             </p>
                             {!imgSelect && (
                                 <div className="mt-5 rounded-full bg-white/20 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm sm:text-sm">
@@ -82,6 +84,7 @@ export default function FlipPhotoCard({
                             <div className="relative h-full w-full">
                                 {imgSelect ? (
                                     isUrl(imgSelect) ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
                                         <img
                                             src={imgSelect}
                                             alt="photo card"
@@ -134,6 +137,12 @@ export default function FlipPhotoCard({
                         </button>
                     </div>
                 </div>
+
+                {flipped && (
+                    <div className="mt-6 flex justify-center">
+                        <ScrollDownButton />
+                    </div>
+                )}
             </div>
         </section>
     );

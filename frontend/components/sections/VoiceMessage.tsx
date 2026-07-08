@@ -1,5 +1,6 @@
 "use client";
 
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function VoiceMessage({
@@ -34,13 +35,10 @@ export default function VoiceMessage({
                 )}
             </div>
 
-            <button
-                type="button"
-                onClick={nextStep}
+            <NextStepButton
+                nextStep={nextStep}
                 className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-            >
-                Next ▶
-            </button>
+            />
         </section>
     );
 }

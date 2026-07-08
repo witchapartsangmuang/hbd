@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { typingTextState } from "@/components/sections/utils/hooks";
+import { useEffect, useRef, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function TypingText({
@@ -14,7 +14,8 @@ export default function TypingText({
 }) {
     const { message: typewriterMessage = "", messageAlign = "left" } =
         content.typingText?.[sectionId] ?? {};
-    const { typedText, settypedText, typeStarted, settypeStarted } = typingTextState();
+    const [typedText, settypedText] = useState("");
+    const [typeStarted, settypeStarted] = useState(false);
     const messageRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -29,6 +30,7 @@ export default function TypingText({
             }
         }, 35);
         return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [typeStarted]);
 
     useEffect(() => {
@@ -45,7 +47,7 @@ export default function TypingText({
         );
         observer.observe(messageRef.current);
         return () => observer.disconnect();
-    }, []);
+    }, [settypeStarted]);
 
     return (
         <section className="relative flex flex-col items-center p-5">
@@ -60,6 +62,9 @@ export default function TypingText({
                     <span className="typewriter-cursor">{typedText}</span>
                 </div>
             </div>
+            {typeStarted && typedText.length >= typewriterMessage.length && (
+                <ScrollDownButton className="mt-6" />
+            )}
         </section>
     );
 }

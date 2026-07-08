@@ -6,12 +6,7 @@ import { Input } from "@/components/Input";
 import { SegmentedControl } from "@/components/SegmentedControl";
 import { SectionEditorProps, panelClass } from "./_shared";
 
-export default function DateOfBirthEditor({
-    content,
-    slug,
-    hidden,
-    sectionId,
-}: SectionEditorProps) {
+export default function DateOfBirthEditor({ content, hidden, sectionId }: SectionEditorProps) {
     const [digitCount, setDigitCount] = useState<4 | 6 | 8>(
         (content.dateOfBirth?.[sectionId]?.digitCount ?? 6) as 4 | 6 | 8
     );
@@ -22,7 +17,9 @@ export default function DateOfBirthEditor({
     return (
         <div className={hidden ? "hidden" : ""}>
             <div className={panelClass}>
-                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">Birthday Code</h2>
+                <h2 className="mb-4 text-lg font-semibold text-(--theme-primary-dark)">
+                    Birthday Code
+                </h2>
                 <input
                     type="hidden"
                     name={`dateOfBirth.${sectionId}.digitCount`}

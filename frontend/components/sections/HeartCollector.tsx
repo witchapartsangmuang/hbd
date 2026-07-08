@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type HeartItem = {
@@ -342,10 +343,16 @@ export default function HeartCollector({
                         Unlocked 🎉
                     </div>
                 )}
+
+                {isUnlocked && (
+                    <div className="mt-3 flex justify-center">
+                        <ScrollDownButton />
+                    </div>
+                )}
             </div>
 
             <div
-                className="relative w-full overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,#ffe4ef_0%,#fff3f8_45%,#fffdfd_100%)] shadow-2xl"
+                className="relative w-full overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,var(--theme-soft)_0%,var(--theme-softer)_45%,#fffdfd_100%)] shadow-2xl"
                 style={{ aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}` }}
             >
                 <div className="pointer-events-none absolute inset-0">

@@ -86,7 +86,9 @@ export default function BackgroundMusicPlayerEditor({
                             value={startAtSeconds}
                             onChange={(e) => {
                                 const raw = Math.max(0, Number(e.target.value) || 0);
-                                setStartAtSeconds(maxStart !== undefined ? Math.min(raw, maxStart) : raw);
+                                setStartAtSeconds(
+                                    maxStart !== undefined ? Math.min(raw, maxStart) : raw
+                                );
                             }}
                         />
                     </Field>

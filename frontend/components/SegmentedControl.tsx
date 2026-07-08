@@ -12,12 +12,20 @@ type SegmentedControlProps = {
     fullWidth?: boolean;
 };
 
-export function SegmentedControl({ options, value, onChange, disabled, fullWidth }: SegmentedControlProps) {
+export function SegmentedControl({
+    options,
+    value,
+    onChange,
+    disabled,
+    fullWidth,
+}: SegmentedControlProps) {
     return (
-        <div className={cx(
-            "items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-0.5",
-            fullWidth ? "flex w-full" : "inline-flex"
-        )}>
+        <div
+            className={cx(
+                "items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-0.5",
+                fullWidth ? "flex w-full" : "inline-flex"
+            )}
+        >
             {options.map((opt) => (
                 <button
                     key={opt.value}

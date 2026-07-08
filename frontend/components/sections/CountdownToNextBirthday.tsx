@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 function getNextBirthday(month: number, day: number, from: Date): Date {
@@ -59,7 +60,7 @@ export default function CountdownToNextBirthday({
         : [];
 
     return (
-        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-indigo-50 via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
+        <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-(--theme-soft) p-4 sm:gap-8 sm:p-6">
             <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-[0.2em] text-(--theme-primary)">
                     Looking Ahead
@@ -84,13 +85,10 @@ export default function CountdownToNextBirthday({
                 ))}
             </div>
 
-            <button
-                type="button"
-                onClick={nextStep}
+            <NextStepButton
+                nextStep={nextStep}
                 className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-            >
-                Next ▶
-            </button>
+            />
         </section>
     );
 }

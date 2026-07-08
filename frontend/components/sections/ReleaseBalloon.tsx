@@ -1,16 +1,16 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { releaseBalloonState } from "@/components/sections/utils/hooks";
+import { useRef, useState } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { BalloonItem } from "@/components/sections/utils/type";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 const DEFAULT_BALLOON_GRADIENTS = [
-    "from-pink-400 to-rose-500",
+    "from-(--theme-primary-light) to-(--theme-primary)",
     "from-sky-400 to-blue-500",
     "from-amber-300 to-orange-500",
     "from-violet-400 to-purple-500",
     "from-emerald-400 to-teal-500",
-    "from-fuchsia-400 to-pink-500",
+    "from-(--theme-gradient-from) to-(--theme-gradient-to)",
 ];
 
 export default function ReleaseBalloon({
@@ -29,7 +29,8 @@ export default function ReleaseBalloon({
     } = content.releaseBalloon?.[sectionId] ?? {};
     const balloonGradients =
         configuredGradients.length > 0 ? configuredGradients : DEFAULT_BALLOON_GRADIENTS;
-    const { balloons, setballoons, release, setrelease } = releaseBalloonState();
+    const [balloons, setballoons] = useState<BalloonItem[]>([]);
+    const [release, setrelease] = useState(false);
     const balloonIdRef = useRef(1);
     const balloonZoneRef = useRef<HTMLDivElement | null>(null);
     const handleStartBalloons = () => {
@@ -50,9 +51,6 @@ export default function ReleaseBalloon({
         setrelease((prev) => !prev);
         nextStep();
     };
-    useEffect(() => {
-        console.log("balloons", balloons);
-    }, [balloons]);
     return (
         <section className="relative flex flex-col items-center min-h-screen p-5">
             {/* <h2 className="text-center text-3xl font-bold text-(--theme-primary-dark)">
@@ -85,6 +83,7 @@ export default function ReleaseBalloon({
                             Release Balloon
                         </button>
                     )}
+                    {release && <ScrollDownButton />}
                 </div>
             </div>
         </section>

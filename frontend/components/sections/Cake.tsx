@@ -1,7 +1,8 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { launchConfetti } from "@/components/sections/utils/functions";
-import { cakeState, confettiState } from "@/components/sections/utils/hooks";
+import { ConfettiPiece } from "@/components/sections/utils/type";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 export default function Cake({
     nextStep,
@@ -15,8 +16,8 @@ export default function Cake({
     const { wishText: cakeWishText = "", wishTextAlign = "center" } =
         content.cake?.[sectionId] ?? {};
     const confettiIdRef = useRef(2);
-    const { confetti, setConfetti } = confettiState();
-    const { blown, setblown } = cakeState();
+    const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
+    const [blown, setblown] = useState(false);
     const handleBlowCandles = () => {
         launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         setblown((prev) => !prev);
@@ -87,6 +88,7 @@ export default function Cake({
                 >
                     {cakeWishText}
                 </p>
+                {blown && <ScrollDownButton className="mb-5" />}
             </section>
         </>
     );

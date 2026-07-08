@@ -13,8 +13,9 @@ etc.) that the recipient unlocks one at a time by completing each one.
 
 ```
 npm run dev     # runs `bun scripts/migrate.ts` then `next dev -p 3003` — needs bun installed globally
-npm run build   # next build (no migration step)
-npm run start   # next start -p 3003
+npm run build   # next build (no migration step — migration runs on dev/start instead)
+npm run start   # runs `bun scripts/migrate.ts` then `next start -p 3003`
+npm run migrate # apply lib/schema.sql to the database without starting the app
 npm run format  # prettier --write over app/, components/, lib/
 ```
 

@@ -57,7 +57,7 @@ type Props<T> = {
 export function SortableList<T>({ items, onReorder, children, getItemId, grid }: Props<T>) {
     const dndId = useId();
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
-    const ids = items.map((item, i) => getItemId ? getItemId(item, i) : String(i));
+    const ids = items.map((item, i) => (getItemId ? getItemId(item, i) : String(i)));
 
     function handleDragEnd({ active, over }: DragEndEvent) {
         if (!over || active.id === over.id) return;
@@ -69,8 +69,16 @@ export function SortableList<T>({ items, onReorder, children, getItemId, grid }:
     }
 
     return (
-        <DndContext id={dndId} sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={ids} strategy={grid ? rectSortingStrategy : verticalListSortingStrategy}>
+        <DndContext
+            id={dndId}
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+        >
+            <SortableContext
+                items={ids}
+                strategy={grid ? rectSortingStrategy : verticalListSortingStrategy}
+            >
                 {items.map((item, i) => {
                     const id = getItemId ? getItemId(item, i) : String(i);
                     return (

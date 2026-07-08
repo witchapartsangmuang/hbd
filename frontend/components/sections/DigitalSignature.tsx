@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function DigitalSignature({
@@ -20,6 +21,7 @@ export default function DigitalSignature({
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const drawingRef = useRef(false);
     const [hasSigned, setHasSigned] = useState(false);
+    const [nextPressed, setNextPressed] = useState(false);
 
     const getContext = () => canvasRef.current?.getContext("2d") ?? null;
 
@@ -53,8 +55,7 @@ export default function DigitalSignature({
         ctx.lineWidth = 2.5;
         ctx.lineCap = "round";
         ctx.strokeStyle =
-            getComputedStyle(canvas).getPropertyValue("--theme-primary-dark").trim() ||
-            "#be123c";
+            getComputedStyle(canvas).getPropertyValue("--theme-primary-dark").trim() || "#be123c";
         ctx.lineTo(x, y);
         ctx.stroke();
         if (!hasSigned) setHasSigned(true);
@@ -93,21 +94,21 @@ export default function DigitalSignature({
             />
 
             <div className="flex gap-3">
-                <button
-                    type="button"
-                    onClick={clearSignature}
-                    className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
-                >
-                    Clear
-                </button>
-                <button
-                    type="button"
-                    onClick={nextStep}
+                {!nextPressed && (
+                    <button
+                        type="button"
+                        onClick={clearSignature}
+                        className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                    >
+                        Clear
+                    </button>
+                )}
+                <NextStepButton
+                    nextStep={nextStep}
                     disabled={!hasSigned}
+                    onPressed={() => setNextPressed(true)}
                     className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2 text-sm font-semibold text-white shadow-lg transition active:scale-95 disabled:opacity-50"
-                >
-                    Next ▶
-                </button>
+                />
             </div>
         </section>
     );

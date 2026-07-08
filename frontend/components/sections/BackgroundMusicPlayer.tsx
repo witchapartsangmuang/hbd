@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 import { HeartIcon, PlayIcon, PauseIcon, BackwardIcon, ForwardIcon } from "@/icons/icons";
 
@@ -30,6 +32,7 @@ export default function BackgroundMusicPlayer({
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [playing, setPlaying] = useState(false);
+    const [hasStarted, setHasStarted] = useState(false);
     const [currentTime, setCurrentTime] = useState(startAtSeconds);
     const [duration, setDuration] = useState(0);
     const hasSeekedOnPlayRef = useRef(false);
@@ -50,6 +53,7 @@ export default function BackgroundMusicPlayer({
             }
             audio.play().catch(() => {});
             nextStep();
+            setHasStarted(true);
         }
         setPlaying((p) => !p);
     };
@@ -129,22 +133,25 @@ export default function BackgroundMusicPlayer({
                         aria-label={playing ? "Pause music" : "Play music"}
                         className="flex size-12 items-center justify-center rounded-full bg-white text-slate-900 shadow-lg transition active:scale-95 disabled:opacity-40"
                     >
-                        {playing ? <PauseIcon className="size-5" /> : <PlayIcon className="size-5" />}
+                        {playing ? (
+                            <PauseIcon className="size-5" />
+                        ) : (
+                            <PlayIcon className="size-5" />
+                        )}
                     </button>
                     <ForwardIcon className="size-5 text-slate-600 opacity-60" />
                 </div>
             </div>
 
+            {hasStarted && <ScrollDownButton />}
+
             {!audioSrc && (
                 <>
                     <p className="text-sm text-slate-400">No music track has been added yet</p>
-                    <button
-                        type="button"
-                        onClick={nextStep}
+                    <NextStepButton
+                        nextStep={nextStep}
                         className="rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition active:scale-95"
-                    >
-                        Next ▶
-                    </button>
+                    />
                 </>
             )}
         </section>

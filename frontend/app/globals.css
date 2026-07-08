@@ -262,3 +262,18 @@ input[type="color"].color-swatch-round::-moz-color-swatch {
   }
 }
  */
+
+/* Honor the OS-level "reduce motion" preference: collapse every animation and
+   transition to a single instant frame so decorative motion (bounce, confetti,
+   shake, cinematic entrances) never plays for users who opted out. */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

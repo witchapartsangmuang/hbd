@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import NextStepButton from "@/components/NextStepButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 type SceneItem = {
@@ -217,7 +218,7 @@ export default function FindTheHiddenGift({
             </div>
 
             <div
-                className="relative w-full overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,#ffe4ef_0%,#fff3f8_45%,#fffdfd_100%)] shadow-2xl"
+                className="relative w-full overflow-hidden rounded-[24px] border border-white/70 bg-[linear-gradient(180deg,var(--theme-soft)_0%,var(--theme-softer)_45%,#fffdfd_100%)] shadow-2xl"
                 style={{ aspectRatio: `${WORLD_WIDTH} / ${WORLD_HEIGHT}` }}
             >
                 <div className="pointer-events-none absolute inset-0">
@@ -333,13 +334,10 @@ export default function FindTheHiddenGift({
                                         >
                                             Play Again
                                         </button>
-                                        <button
-                                            type="button"
-                                            onClick={nextStep}
+                                        <NextStepButton
+                                            nextStep={nextStep}
                                             className="rounded-2xl bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-semibold text-white transition active:scale-95 hover:sm:scale-[1.02]"
-                                        >
-                                            Next ▶
-                                        </button>
+                                        />
                                     </div>
                                 </>
                             )}
@@ -347,7 +345,7 @@ export default function FindTheHiddenGift({
                             {status === "failed" && (
                                 <>
                                     <h3 className="text-2xl font-bold text-slate-800 sm:text-3xl">
-                                        Time's Up
+                                        Time&apos;s Up
                                     </h3>
                                     <p className="mt-3 text-sm text-slate-600 sm:text-base">
                                         No worries, try again
