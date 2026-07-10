@@ -15,7 +15,7 @@ export default function ScratchCardImg({
 }) {
     const {
         mounted,
-        cardSize,
+        cardAspect,
         isRevealed,
         isFading,
         confetti,
@@ -31,14 +31,15 @@ export default function ScratchCardImg({
         <section className="relative flex flex-col items-center p-5">
             <p className="mt-6 text-3xl font-bold text-(--theme-primary-dark)">{headingText}</p>
             <p className="mt-3 text-center text-[#3a2433]/80">{subText}</p>
-            <div className="w-full z-1000 h-1">
+            <div className="pointer-events-none fixed inset-0 z-1000">
                 {confetti.map((piece) => (
                     <span
                         key={piece.id}
                         className="confetti-piece pointer-events-none absolute z-9999 block rounded-sm"
                         style={
                             {
-                                left: `${piece.left}px`,
+                                left: "50%",
+                                top: "50%",
                                 width: `${piece.width}px`,
                                 height: `${piece.height}px`,
                                 backgroundColor: piece.color,
@@ -53,14 +54,11 @@ export default function ScratchCardImg({
             </div>
             <div className="flex w-full p-2 justify-center">
                 {mounted && (
-                    <div
-                        ref={containerRef}
-                        style={{ minWidth: cardSize.width, minHeight: cardSize.height }}
-                        className="flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2"
-                    >
+                    <div className="w-full max-w-md flex justify-center rounded-3xl border shadow-2xl border-white/70 bg-white/70 p-2">
                         <div
-                            className="flex items-center justify-center relative overflow-hidden rounded-2xl border border-(--theme-border) bg-linear-to-br from-(--theme-soft) via-(--theme-softer) to-white"
-                            style={{ width: cardSize.width, height: cardSize.height }}
+                            ref={containerRef}
+                            className="w-full flex items-center justify-center relative overflow-hidden rounded-2xl border border-(--theme-border) bg-linear-to-br from-(--theme-soft) via-(--theme-softer) to-white"
+                            style={{ aspectRatio: cardAspect }}
                         >
                             <canvas
                                 ref={canvasRef}

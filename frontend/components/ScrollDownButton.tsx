@@ -15,10 +15,30 @@ export default function ScrollDownButton({ className = "" }: { className?: strin
         );
     }, []);
 
+    // Native smooth scroll can't be slowed down, so animate the scroll
+    // ourselves over a fixed duration with easing for a gentle glide.
     const scrollToNextSection = () => {
-        buttonRef.current
-            ?.closest("[data-section-wrapper]")
-            ?.nextElementSibling?.scrollIntoView({ behavior: "smooth" });
+        const target = buttonRef.current?.closest("[data-section-wrapper]")
+            ?.nextElementSibling as HTMLElement | null | undefined;
+        if (!target) return;
+
+        const startY = window.scrollY;
+        const targetY = target.getBoundingClientRect().top + startY;
+        const distance = targetY - startY;
+        if (distance === 0) return;
+
+        const duration = 1600; // ms — slow, gentle glide
+        const easeInOutCubic = (t: number) =>
+            t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+        let startTime: number | null = null;
+        const step = (now: number) => {
+            if (startTime === null) startTime = now;
+            const progress = Math.min((now - startTime) / duration, 1);
+            window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+            if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
     };
 
     return (

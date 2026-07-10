@@ -42,6 +42,10 @@ export function useScratchCanvas({
         subText = "",
         revealedText = "",
     } = content.scratchCard?.[sectionId] ?? {};
+    const [arW, arH] = (aspectRatio ?? "16:9").split(":").map(Number);
+    // CSS-ready aspect for the card box; layout is CSS-driven so it never
+    // depends on the measured cardSize (which only sizes the canvas pixels).
+    const cardAspect = `${arW || 16} / ${arH || 9}`;
     const confettiIdRef = useRef(1);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -49,30 +53,17 @@ export function useScratchCanvas({
     const revealedRef = useRef(false);
     const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
     const [mounted, setmouted] = useState(false);
-    const [progress, setprogress] = useState(0);
     const [isRevealed, setisRevealed] = useState(false);
     const [isFading, setisFading] = useState(false);
-    const [cardSize, setCardSize] = useState(() => {
-        if (typeof window === "undefined") {
-            return { width: 1, height: 1 };
-        }
-        return {
-            width: window.innerWidth,
-            height: window.innerHeight * 0.4,
-        };
-    });
+    // Start at 0 — the real size is measured from the DOM after mount. The card
+    // box itself is laid out by CSS (w-full + aspect-ratio), so a 0 here only
+    // means the canvas waits for a measurement, not that the card flashes.
+    const [cardSize, setCardSize] = useState({ width: 0, height: 0 });
     const [showVideo, setshowVideo] = useState(false);
 
     useEffect(() => {
         setmouted(true);
     }, []);
-
-    useEffect(() => {
-        if (progress === revealThreshold) {
-            launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [progress]);
 
     const isMobile = cardSize.width < 720;
     const actualBrushRadius = isMobile ? Math.max(26, brushRadius * 0.6) : brushRadius;
@@ -115,7 +106,6 @@ export function useScratchCanvas({
         ctx.font = isMobile ? "700 24px sans-serif" : "700 34px sans-serif";
         ctx.fillStyle = "rgba(255,255,255,0.95)";
         ctx.fillText("Scratch Me ✨", renderWidth / 2, renderHeight / 2);
-        setprogress(0);
         setisRevealed(false);
         setisFading(false);
         setshowVideo(false);
@@ -128,10 +118,16 @@ export function useScratchCanvas({
         const updateSize = () => {
             const wrapper = containerRef.current;
             if (!wrapper) return;
-            const [rw, rh] = (aspectRatio ?? "16:9").split(":").map(Number);
-            const nextWidth = wrapper.clientWidth;
-            const nextHeight = Math.round(nextWidth * (rh / rw));
-            setCardSize({ width: nextWidth - sizeInsetPx, height: nextHeight - sizeInsetPx });
+            // wrapper is the CSS-sized card box (w-full + aspect-ratio); its size
+            // never depends on cardSize, so measuring it can't feed back into a
+            // ResizeObserver loop.
+            const nextWidth = wrapper.clientWidth - sizeInsetPx;
+            const nextHeight = wrapper.clientHeight - sizeInsetPx;
+            setCardSize((prev) =>
+                prev.width === nextWidth && prev.height === nextHeight
+                    ? prev
+                    : { width: nextWidth, height: nextHeight }
+            );
         };
         updateSize();
         const observer = new ResizeObserver(() => {
@@ -175,6 +171,9 @@ export function useScratchCanvas({
         revealedRef.current = true;
         setisRevealed(true);
         setisFading(true);
+        // Fire on reveal (not on an exact progress value) so it always runs —
+        // including keyboard reveal, which never updates the scratch progress.
+        launchConfetti(confettiIdRef, setConfetti, content.confettiColors);
         window.setTimeout(() => {
             const c = canvasRef.current;
             if (!c) return;
@@ -216,7 +215,6 @@ export function useScratchCanvas({
             if (pixels[i] < 20) transparentCount++;
         }
         const percent = Math.round((transparentCount / totalPixels) * 100);
-        setprogress(percent);
         if (percent >= revealThreshold) {
             revealSuccess();
         }
@@ -271,6 +269,7 @@ export function useScratchCanvas({
     return {
         mounted,
         cardSize,
+        cardAspect,
         isRevealed,
         isFading,
         showVideo,
