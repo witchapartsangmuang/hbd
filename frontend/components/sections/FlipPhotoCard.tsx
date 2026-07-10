@@ -117,7 +117,7 @@ export default function FlipPhotoCard({
                     <div className="grid grid-cols-2 gap-3">
                         <button
                             type="button"
-                            onClick={() => setimgSelect(dogEmoji || dogImg)}
+                            onClick={() => setimgSelect(dogImg || dogEmoji)}
                             className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-sky-200 bg-linear-to-br from-sky-50 to-cyan-100 px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
                         >
                             <span className="text-2xl transition-transform group-hover:scale-110">
@@ -127,7 +127,7 @@ export default function FlipPhotoCard({
                         </button>
                         <button
                             type="button"
-                            onClick={() => setimgSelect(catEmoji || catImg)}
+                            onClick={() => setimgSelect(catImg || catEmoji)}
                             className="cursor-pointer group flex items-center justify-center gap-3 rounded-2xl border border-(--theme-border) bg-linear-to-br from-(--theme-softer) to-(--theme-soft) px-4 py-4 text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
                         >
                             <span className="text-2xl transition-transform group-hover:scale-110">
