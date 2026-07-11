@@ -13,7 +13,7 @@ const SECTIONS: SectionInstance[] = [
     { id: "c2", type: "cake", enabled: true },
     { id: "q1", type: "quizAboutYou", enabled: true },
     { id: "b1", type: "releaseBalloon", enabled: true },
-    { id: "d1", type: "dateOfBirth", enabled: true },
+    { id: "d1", type: "secretCode", enabled: true },
     { id: "g1", type: "guestbookWall", enabled: true },
 ];
 
@@ -31,12 +31,13 @@ function baseExisting(): HbdContent {
         releaseBalloon: {
             b1: { wishes: ["wish A", "wish B"], balloonGradients: [], balloonCount: 5 },
         },
-        dateOfBirth: {
+        secretCode: {
             d1: {
                 digitCount: 6,
-                formatPlaceholder: ["D", "D", "M", "M", "Y", "Y"],
                 correctCode: "181299",
-                emptyDigits: ["", "", "", "", "", ""],
+                hint: "old hint",
+                revealImage: "",
+                aspectRatio: "3:4",
             },
         },
         guestbookWall: {
@@ -144,20 +145,20 @@ describe("newline list fields", () => {
 });
 
 describe("validated fields", () => {
-    test("a correct-length birthday code is applied", () => {
+    test("a correct-length secret code is applied", () => {
         const updated = mergeContentFromForm(
             baseExisting(),
-            form({ "dateOfBirth.d1.correctCode": "010203", "dateOfBirth.d1.digitCount": "6" })
+            form({ "secretCode.d1.correctCode": "010203", "secretCode.d1.digitCount": "6" })
         );
-        expect(updated.dateOfBirth?.d1.correctCode).toBe("010203");
+        expect(updated.secretCode?.d1.correctCode).toBe("010203");
     });
 
     test("a wrong-length code keeps the existing one", () => {
         const updated = mergeContentFromForm(
             baseExisting(),
-            form({ "dateOfBirth.d1.correctCode": "123", "dateOfBirth.d1.digitCount": "6" })
+            form({ "secretCode.d1.correctCode": "123", "secretCode.d1.digitCount": "6" })
         );
-        expect(updated.dateOfBirth?.d1.correctCode).toBe("181299");
+        expect(updated.secretCode?.d1.correctCode).toBe("181299");
     });
 });
 

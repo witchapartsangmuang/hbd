@@ -9,7 +9,7 @@ import ReleaseBalloon from "./ReleaseBalloon";
 import ScratchCardImg from "./ScratchCardImg";
 import TypingText from "./TypingText";
 import FlipPhotoCard from "./FlipPhotoCard";
-import DateOfBirth from "./DateOfBirth";
+import SecretCode from "./SecretCode";
 import SlideInIcon from "./SlideInIcon";
 import PopTheBalloon from "./PopTheBalloon";
 import MemoryMatching from "./MemoryMatching";
@@ -23,20 +23,16 @@ import CinematicDog from "./CinematicDog";
 import SpinTheWheel from "./SpinTheWheel";
 import JigsawPhotoPuzzle from "./JigsawPhotoPuzzle";
 import QuizAboutYou from "./QuizAboutYou";
-import CandleBlow from "./CandleBlow";
 import GiftBoxUnwrap from "./GiftBoxUnwrap";
 import EnvelopeOpen from "./EnvelopeOpen";
 import PolaroidShake from "./PolaroidShake";
 import CountdownToNextBirthday from "./CountdownToNextBirthday";
 import MemoryTimeline from "./MemoryTimeline";
-import VoiceMessage from "./VoiceMessage";
-import ZodiacReveal from "./ZodiacReveal";
 import GuestbookWall from "./GuestbookWall";
 import DigitalSignature from "./DigitalSignature";
 import BackgroundMusicPlayer from "./BackgroundMusicPlayer";
 import CinematicRabbit from "./CinematicRabbit";
 import CinematicPanda from "./CinematicPanda";
-import FireworksFinale from "./FireworksFinale";
 
 export interface SectionComponentProps {
     nextStep: () => void;
@@ -57,7 +53,7 @@ export const SECTION_REGISTRY: Record<
     scratchCardImg: { label: SECTION_LABELS.scratchCardImg, component: ScratchCardImg },
     typingText: { label: SECTION_LABELS.typingText, component: TypingText },
     flipPhotoCard: { label: SECTION_LABELS.flipPhotoCard, component: FlipPhotoCard },
-    dateOfBirth: { label: SECTION_LABELS.dateOfBirth, component: DateOfBirth },
+    secretCode: { label: SECTION_LABELS.secretCode, component: SecretCode },
     slideInIcon: { label: SECTION_LABELS.slideInIcon, component: SlideInIcon },
     popTheBalloon: { label: SECTION_LABELS.popTheBalloon, component: PopTheBalloon },
     memoryMatching: { label: SECTION_LABELS.memoryMatching, component: MemoryMatching },
@@ -74,7 +70,6 @@ export const SECTION_REGISTRY: Record<
     spinTheWheel: { label: SECTION_LABELS.spinTheWheel, component: SpinTheWheel },
     jigsawPhotoPuzzle: { label: SECTION_LABELS.jigsawPhotoPuzzle, component: JigsawPhotoPuzzle },
     quizAboutYou: { label: SECTION_LABELS.quizAboutYou, component: QuizAboutYou },
-    candleBlow: { label: SECTION_LABELS.candleBlow, component: CandleBlow },
     giftBoxUnwrap: { label: SECTION_LABELS.giftBoxUnwrap, component: GiftBoxUnwrap },
     envelopeOpen: { label: SECTION_LABELS.envelopeOpen, component: EnvelopeOpen },
     polaroidShake: { label: SECTION_LABELS.polaroidShake, component: PolaroidShake },
@@ -83,8 +78,6 @@ export const SECTION_REGISTRY: Record<
         component: CountdownToNextBirthday,
     },
     memoryTimeline: { label: SECTION_LABELS.memoryTimeline, component: MemoryTimeline },
-    voiceMessage: { label: SECTION_LABELS.voiceMessage, component: VoiceMessage },
-    zodiacReveal: { label: SECTION_LABELS.zodiacReveal, component: ZodiacReveal },
     guestbookWall: { label: SECTION_LABELS.guestbookWall, component: GuestbookWall },
     digitalSignature: { label: SECTION_LABELS.digitalSignature, component: DigitalSignature },
     backgroundMusicPlayer: {
@@ -93,5 +86,4 @@ export const SECTION_REGISTRY: Record<
     },
     cinematicRabbit: { label: SECTION_LABELS.cinematicRabbit, component: CinematicRabbit },
     cinematicPanda: { label: SECTION_LABELS.cinematicPanda, component: CinematicPanda },
-    fireworksFinale: { label: SECTION_LABELS.fireworksFinale, component: FireworksFinale },
 };

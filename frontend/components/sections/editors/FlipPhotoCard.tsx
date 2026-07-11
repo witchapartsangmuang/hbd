@@ -77,6 +77,7 @@ export default function FlipPhotoCardEditor({
                                 name={`flipPhotoCard.${sectionId}.dogImg`}
                                 defaultValue={content.flipPhotoCard?.[sectionId]?.dogImg ?? ""}
                                 label="รูปภาพที่แสดงเมื่อพลิกการ์ด"
+                                aspectRatio={flipAspectRatio}
                             />
                         </div>
                     </div>
@@ -108,6 +109,7 @@ export default function FlipPhotoCardEditor({
                                 name={`flipPhotoCard.${sectionId}.catImg`}
                                 defaultValue={content.flipPhotoCard?.[sectionId]?.catImg ?? ""}
                                 label="รูปภาพที่แสดงเมื่อพลิกการ์ด"
+                                aspectRatio={flipAspectRatio}
                             />
                         </div>
                     </div>

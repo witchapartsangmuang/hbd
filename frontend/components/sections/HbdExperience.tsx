@@ -56,6 +56,10 @@ export default function HbdExperience({ content }: { content: HbdContent }) {
             >
                 {activeSections.map((section, i) => {
                     const entry = SECTION_REGISTRY[section.type];
+                    // Skip sections whose type was removed from the registry so a
+                    // stale saved page (e.g. an old dateOfBirth/zodiacReveal
+                    // section) renders the rest instead of crashing.
+                    if (!entry) return null;
                     const Component = entry.component;
                     const visible = i < unlockedCount;
                     return (

@@ -1,17 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import NextStepButton from "@/components/NextStepButton";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
-
-function getNextBirthday(month: number, day: number, from: Date): Date {
-    const year = from.getFullYear();
-    let next = new Date(year, month - 1, day, 0, 0, 0, 0);
-    if (next.getTime() <= from.getTime()) {
-        next = new Date(year + 1, month - 1, day, 0, 0, 0, 0);
-    }
-    return next;
-}
 
 export default function CountdownToNextBirthday({
     nextStep,
@@ -23,6 +14,7 @@ export default function CountdownToNextBirthday({
     sectionId: string;
 }) {
     const {
+        birthdayYear = new Date().getFullYear(),
         birthdayMonth = 12,
         birthdayDay = 18,
         message = "",
@@ -34,10 +26,17 @@ export default function CountdownToNextBirthday({
         s: number;
     } | null>(null);
 
+    // Auto-advance: unlock the next section on mount (no Next button). nextStep
+    // is idempotent, so a Strict-Mode double-invoke is harmless.
+    useEffect(() => {
+        nextStep();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     useEffect(() => {
         const tick = () => {
             const now = new Date();
-            const target = getNextBirthday(birthdayMonth, birthdayDay, now);
+            const target = new Date(birthdayYear, birthdayMonth - 1, birthdayDay, 0, 0, 0, 0);
             const diff = Math.max(0, target.getTime() - now.getTime());
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -48,7 +47,7 @@ export default function CountdownToNextBirthday({
         tick();
         const id = window.setInterval(tick, 1000);
         return () => window.clearInterval(id);
-    }, [birthdayMonth, birthdayDay]);
+    }, [birthdayYear, birthdayMonth, birthdayDay]);
 
     const units = remaining
         ? [
@@ -66,7 +65,9 @@ export default function CountdownToNextBirthday({
                     Looking Ahead
                 </p>
                 <h2 className="mt-1 text-2xl font-bold text-slate-800 sm:text-3xl">Countdown 🎂</h2>
-                <p className="mt-2 max-w-sm text-sm text-slate-600">{message}</p>
+                <p className="mt-2 max-w-sm whitespace-pre-line text-sm text-slate-600">
+                    {message}
+                </p>
             </div>
 
             <div className="grid grid-cols-4 gap-2 sm:gap-4">
@@ -85,10 +86,7 @@ export default function CountdownToNextBirthday({
                 ))}
             </div>
 
-            <NextStepButton
-                nextStep={nextStep}
-                className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-            />
+            <ScrollDownButton />
         </section>
     );
 }

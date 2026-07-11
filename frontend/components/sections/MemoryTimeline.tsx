@@ -1,6 +1,7 @@
 "use client";
 
-import NextStepButton from "@/components/NextStepButton";
+import { useEffect } from "react";
+import ScrollDownButton from "@/components/ScrollDownButton";
 import { HbdContent } from "@/components/sections/utils/content-types";
 
 export default function MemoryTimeline({
@@ -13,6 +14,13 @@ export default function MemoryTimeline({
     sectionId: string;
 }) {
     const { items = [] } = content.memoryTimeline?.[sectionId] ?? {};
+
+    // Auto-advance: unlock the next section on mount (no Next button). nextStep
+    // is idempotent, so a Strict-Mode double-invoke is harmless.
+    useEffect(() => {
+        nextStep();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <section className="flex min-h-screen flex-col items-center justify-center gap-6 bg-linear-to-b from-(--theme-softer) via-(--theme-softer) to-white p-4 sm:gap-8 sm:p-6">
@@ -39,7 +47,10 @@ export default function MemoryTimeline({
                             <img
                                 src={item.imgPath}
                                 alt={item.caption}
-                                className="h-32 w-full rounded-2xl object-cover sm:h-24 sm:w-32"
+                                style={{
+                                    aspectRatio: (item.aspectRatio || "4:3").replace(":", "/"),
+                                }}
+                                className="w-full rounded-2xl object-cover sm:w-40"
                             />
                             <div className="text-center sm:text-left">
                                 <p className="text-sm font-bold text-(--theme-primary)">
@@ -52,10 +63,7 @@ export default function MemoryTimeline({
                 </div>
             </div>
 
-            <NextStepButton
-                nextStep={nextStep}
-                className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-2.5 font-semibold text-white shadow-lg transition active:scale-95"
-            />
+            <ScrollDownButton />
         </section>
     );
 }

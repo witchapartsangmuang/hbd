@@ -124,18 +124,6 @@ function isQuizQuestion(item: unknown): item is {
     );
 }
 
-function isMemoryTimelineItem(item: unknown): item is {
-    year: string;
-    imgPath: string;
-    caption: string;
-} {
-    if (!item || typeof item !== "object") return false;
-    const i = item as Record<string, unknown>;
-    return (
-        typeof i.year === "string" && typeof i.imgPath === "string" && typeof i.caption === "string"
-    );
-}
-
 function isGuestbookEntry(item: unknown): item is { name: string; message: string } {
     if (!item || typeof item !== "object") return false;
     const i = item as Record<string, unknown>;
@@ -218,22 +206,22 @@ export function mergeContentFromForm(existing: HbdContent, formData: FormData): 
             messageAlign: (str(formData, `${prefix}messageAlign`) || ex?.messageAlign || "left") as
                 "left" | "center",
         })),
-        dateOfBirth: perInstance(sections, "dateOfBirth", existing.dateOfBirth, (prefix, ex) => {
+        secretCode: perInstance(sections, "secretCode", existing.secretCode, (prefix, ex) => {
             const correctCode = str(formData, `${prefix}correctCode`).trim();
             const _dc = Number(str(formData, `${prefix}digitCount`));
-            const digitCount = _dc === 4 || _dc === 8 ? _dc : 6;
+            const digitCount = _dc === 2 || _dc === 6 || _dc === 8 ? _dc : 4;
+            const _ar = str(formData, `${prefix}aspectRatio`);
+            const aspectRatio = ["1:1", "3:4", "4:3", "9:16", "16:9"].includes(_ar)
+                ? _ar
+                : (ex?.aspectRatio ?? "3:4");
             return {
-                digitCount: digitCount as 4 | 6 | 8,
-                formatPlaceholder:
-                    digitCount === 4
-                        ? ["D", "D", "M", "M"]
-                        : digitCount === 8
-                          ? ["D", "D", "M", "M", "Y", "Y", "Y", "Y"]
-                          : ["D", "D", "M", "M", "Y", "Y"],
-                emptyDigits: Array(digitCount).fill(""),
+                digitCount: digitCount as 2 | 4 | 6 | 8,
                 correctCode: new RegExp(`^\\d{${digitCount}}$`).test(correctCode)
                     ? correctCode
                     : (ex?.correctCode ?? ""),
+                hint: strOr(formData, `${prefix}hint`, ex?.hint ?? ""),
+                revealImage: strOr(formData, `${prefix}revealImage`, ex?.revealImage ?? ""),
+                aspectRatio,
             };
         }),
         releaseBalloon: perInstance(
@@ -308,10 +296,6 @@ export function mergeContentFromForm(existing: HbdContent, formData: FormData): 
                 ),
             })
         ),
-        candleBlow: perInstance(sections, "candleBlow", existing.candleBlow, (prefix, ex) => ({
-            candleCount: num(formData, `${prefix}candleCount`, ex?.candleCount ?? 3),
-            message: strOr(formData, `${prefix}message`, ex?.message ?? ""),
-        })),
         giftBoxUnwrap: perInstance(
             sections,
             "giftBoxUnwrap",
@@ -366,6 +350,17 @@ export function mergeContentFromForm(existing: HbdContent, formData: FormData): 
             "countdownToNextBirthday",
             existing.countdownToNextBirthday,
             (prefix, ex) => ({
+                birthdayYear: Math.min(
+                    3000,
+                    Math.max(
+                        1970,
+                        num(
+                            formData,
+                            `${prefix}birthdayYear`,
+                            ex?.birthdayYear ?? new Date().getFullYear()
+                        )
+                    )
+                ),
                 birthdayMonth: Math.min(
                     12,
                     Math.max(1, num(formData, `${prefix}birthdayMonth`, ex?.birthdayMonth ?? 12))
@@ -381,31 +376,35 @@ export function mergeContentFromForm(existing: HbdContent, formData: FormData): 
             sections,
             "memoryTimeline",
             existing.memoryTimeline,
-            (prefix, ex) => ({
-                items: jsonListOr(
-                    formData,
-                    `${prefix}itemsJson`,
-                    isMemoryTimelineItem,
-                    ex?.items ?? []
-                ),
-            })
-        ),
-        voiceMessage: perInstance(
-            sections,
-            "voiceMessage",
-            existing.voiceMessage,
-            (prefix, ex) => ({
-                audioSrc: strOr(formData, `${prefix}audioSrc`, ex?.audioSrc ?? ""),
-                message: strOr(formData, `${prefix}message`, ex?.message ?? ""),
-            })
-        ),
-        zodiacReveal: perInstance(
-            sections,
-            "zodiacReveal",
-            existing.zodiacReveal,
-            (prefix, ex) => ({
-                customMessage: strOr(formData, `${prefix}customMessage`, ex?.customMessage ?? ""),
-            })
+            (prefix, ex) => {
+                const raw = formData.get(`${prefix}itemsJson`);
+                let items = ex?.items ?? [];
+                if (raw !== null) {
+                    try {
+                        const parsed = JSON.parse(String(raw));
+                        if (Array.isArray(parsed)) {
+                            items = parsed
+                                .filter(
+                                    (c) =>
+                                        c &&
+                                        typeof c.year === "string" &&
+                                        typeof c.imgPath === "string" &&
+                                        typeof c.caption === "string"
+                                )
+                                .map((c) => ({
+                                    year: String(c.year),
+                                    imgPath: String(c.imgPath),
+                                    caption: String(c.caption),
+                                    aspectRatio:
+                                        typeof c.aspectRatio === "string" ? c.aspectRatio : "4:3",
+                                }));
+                        }
+                    } catch {
+                        // keep existing on malformed JSON
+                    }
+                }
+                return { items };
+            }
         ),
         guestbookWall: perInstance(
             sections,
@@ -465,14 +464,6 @@ export function mergeContentFromForm(existing: HbdContent, formData: FormData): 
             (prefix, ex) => ({
                 title: strOr(formData, `${prefix}title`, ex?.title ?? ""),
                 subtitle: strOr(formData, `${prefix}subtitle`, ex?.subtitle ?? ""),
-            })
-        ),
-        fireworksFinale: perInstance(
-            sections,
-            "fireworksFinale",
-            existing.fireworksFinale,
-            (prefix, ex) => ({
-                message: strOr(formData, `${prefix}message`, ex?.message ?? ""),
             })
         ),
         confettiColors: existing.confettiColors,

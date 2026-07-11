@@ -21,7 +21,7 @@ export type SectionType =
     | "scratchCardImg"
     | "typingText"
     | "flipPhotoCard"
-    | "dateOfBirth"
+    | "secretCode"
     | "slideInIcon"
     | "popTheBalloon"
     | "memoryMatching"
@@ -35,20 +35,16 @@ export type SectionType =
     | "spinTheWheel"
     | "jigsawPhotoPuzzle"
     | "quizAboutYou"
-    | "candleBlow"
     | "giftBoxUnwrap"
     | "envelopeOpen"
     | "polaroidShake"
     | "countdownToNextBirthday"
     | "memoryTimeline"
-    | "voiceMessage"
-    | "zodiacReveal"
     | "guestbookWall"
     | "digitalSignature"
     | "backgroundMusicPlayer"
     | "cinematicRabbit"
-    | "cinematicPanda"
-    | "fireworksFinale";
+    | "cinematicPanda";
 
 export const SECTION_TYPES: SectionType[] = [
     "scratchCard",
@@ -60,7 +56,7 @@ export const SECTION_TYPES: SectionType[] = [
     "scratchCardImg",
     "typingText",
     "flipPhotoCard",
-    "dateOfBirth",
+    "secretCode",
     "slideInIcon",
     "popTheBalloon",
     "memoryMatching",
@@ -74,20 +70,16 @@ export const SECTION_TYPES: SectionType[] = [
     "spinTheWheel",
     "jigsawPhotoPuzzle",
     "quizAboutYou",
-    "candleBlow",
     "giftBoxUnwrap",
     "envelopeOpen",
     "polaroidShake",
     "countdownToNextBirthday",
     "memoryTimeline",
-    "voiceMessage",
-    "zodiacReveal",
     "guestbookWall",
     "digitalSignature",
     "backgroundMusicPlayer",
     "cinematicRabbit",
     "cinematicPanda",
-    "fireworksFinale",
 ];
 
 export const SECTION_LABELS: Record<SectionType, string> = {
@@ -106,20 +98,11 @@ export const SECTION_LABELS: Record<SectionType, string> = {
     guestbookWall: "Guestbook Wall",
     backgroundMusicPlayer: "Background Music",
     giftBoxUnwrap: "Unwrap the Gift Box",
-
-    // section ที่ฉันยังไม่ได้ปรับ
-    dateOfBirth: "Birthday Code",
-
-    // ไม่เอา
-    candleBlow: "Blow the Candle",
-    fireworksFinale: "Fireworks Finale",
-    zodiacReveal: "Zodiac Reveal",
-    // แก้ Open the Envelope
+    secretCode: "Secret Code",
     envelopeOpen: "Open the Envelope",
     countdownToNextBirthday: "Countdown to Next Birthday",
     memoryTimeline: "Memory Timeline",
-    voiceMessage: "Voice Message",
-
+    // section ที่ฉันยังไม่ได้ปรับ
     cinematicRabbit: "Cinematic Rabbit",
     cinematicPanda: "Cinematic Panda",
     cinematicBirthdayBear: "Cinematic Bear",
@@ -154,6 +137,7 @@ export interface MemoryTimelineItem {
     year: string;
     imgPath: string;
     caption: string;
+    aspectRatio: string;
 }
 
 export interface GuestbookEntry {
@@ -206,13 +190,14 @@ export interface HbdContent {
             messageAlign: "left" | "center";
         }
     >;
-    dateOfBirth?: Record<
+    secretCode?: Record<
         string,
         {
-            digitCount: 4 | 6 | 8;
-            formatPlaceholder: string[];
+            digitCount: 2 | 4 | 6 | 8;
             correctCode: string;
-            emptyDigits: string[];
+            hint: string;
+            revealImage: string;
+            aspectRatio: string;
         }
     >;
     releaseBalloon?: Record<
@@ -267,13 +252,6 @@ export interface HbdContent {
             questions: QuizQuestion[];
         }
     >;
-    candleBlow?: Record<
-        string,
-        {
-            candleCount: number;
-            message: string;
-        }
-    >;
     giftBoxUnwrap?: Record<
         string,
         {
@@ -301,6 +279,7 @@ export interface HbdContent {
     countdownToNextBirthday?: Record<
         string,
         {
+            birthdayYear: number;
             birthdayMonth: number;
             birthdayDay: number;
             message: string;
@@ -310,19 +289,6 @@ export interface HbdContent {
         string,
         {
             items: MemoryTimelineItem[];
-        }
-    >;
-    voiceMessage?: Record<
-        string,
-        {
-            audioSrc: string;
-            message: string;
-        }
-    >;
-    zodiacReveal?: Record<
-        string,
-        {
-            customMessage: string;
         }
     >;
     guestbookWall?: Record<
@@ -361,12 +327,6 @@ export interface HbdContent {
         {
             title: string;
             subtitle: string;
-        }
-    >;
-    fireworksFinale?: Record<
-        string,
-        {
-            message: string;
         }
     >;
     confettiColors?: string[];

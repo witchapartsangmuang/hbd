@@ -18,8 +18,8 @@ export default function ScrollDownButton({ className = "" }: { className?: strin
     // Native smooth scroll can't be slowed down, so animate the scroll
     // ourselves over a fixed duration with easing for a gentle glide.
     const scrollToNextSection = () => {
-        const target = buttonRef.current?.closest("[data-section-wrapper]")
-            ?.nextElementSibling as HTMLElement | null | undefined;
+        const target = buttonRef.current?.closest("[data-section-wrapper]")?.nextElementSibling as
+            HTMLElement | null | undefined;
         if (!target) return;
 
         const startY = window.scrollY;
