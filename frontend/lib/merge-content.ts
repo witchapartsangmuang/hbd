@@ -249,6 +249,8 @@ export function mergeContentFromForm(existing: HbdContent, formData: FormData): 
                 catEmoji: str(formData, `${prefix}catEmoji`),
                 dogLabel: strOr(formData, `${prefix}dogLabel`, ex?.dogLabel ?? ""),
                 catLabel: strOr(formData, `${prefix}catLabel`, ex?.catLabel ?? ""),
+                subtitle: strOr(formData, `${prefix}subtitle`, ex?.subtitle ?? ""),
+                frontText: strOr(formData, `${prefix}frontText`, ex?.frontText ?? ""),
             })
         ),
         slideInIcon: perInstance(sections, "slideInIcon", existing.slideInIcon, (prefix, ex) => ({

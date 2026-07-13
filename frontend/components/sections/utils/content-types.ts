@@ -218,6 +218,8 @@ export interface HbdContent {
             catEmoji: string;
             dogLabel: string;
             catLabel: string;
+            subtitle: string;
+            frontText: string;
         }
     >;
     slideInIcon?: Record<

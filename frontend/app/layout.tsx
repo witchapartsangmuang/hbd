@@ -13,6 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+    // Resolves relative og:image / twitter:image paths (e.g. "/uploads/…")
+    // into absolute URLs that social/chat scrapers can fetch. Set
+    // NEXT_PUBLIC_SITE_URL to the public domain in production.
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3003"),
     title: "Secret Page — A Cozy Place",
     description: "A cozy little corner of the internet.",
 };

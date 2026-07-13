@@ -24,6 +24,8 @@ export default function FlipPhotoCard({
         dogLabel = "",
         catLabel = "",
         aspectRatio = "3:4",
+        subtitle = "",
+        frontText = "",
     } = content.flipPhotoCard?.[sectionId] ?? {};
     const [aw, ah] = aspectRatio.split(":").map(Number);
     const [flipped, setflipped] = useState(false);
@@ -43,8 +45,9 @@ export default function FlipPhotoCard({
                     <h1 className="text-2xl font-extrabold tracking-tight text-(--theme-primary-dark) sm:text-3xl">
                         Photo Flip Card
                     </h1>
-                    <p className="mt-2 text-sm text-slate-600 sm:text-base">
-                        Choose your favorite, and the card will flip to reveal the photo inside
+                    <p className="mt-2 whitespace-pre-line text-sm text-slate-600 sm:text-base">
+                        {subtitle ||
+                            "Choose your favorite, and the card will flip to reveal the photo inside"}
                     </p>
                 </div>
 
@@ -65,9 +68,9 @@ export default function FlipPhotoCard({
                             style={{ backfaceVisibility: "hidden" }}
                         >
                             <div className="mb-4 text-5xl drop-shadow sm:text-6xl">🎁</div>
-                            <p className="mt-3 max-w-55 text-sm leading-relaxed text-white/90 sm:text-base">
-                                Choose &quot;{dogLabel || "Dog"}&quot; or &quot;
-                                {catLabel || "Cat"}&quot; below to open the card
+                            <p className="mt-3 max-w-55 whitespace-pre-line text-sm leading-relaxed text-white/90 sm:text-base">
+                                {frontText ||
+                                    `Choose "${dogLabel || "Dog"}" or "${catLabel || "Cat"}" below to open the card`}
                             </p>
                             {!imgSelect && (
                                 <div className="mt-5 rounded-full bg-white/20 px-4 py-2 text-xs font-medium text-white backdrop-blur-sm sm:text-sm">
