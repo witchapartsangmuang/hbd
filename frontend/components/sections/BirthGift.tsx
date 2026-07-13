@@ -58,14 +58,15 @@ export default function BirthGift({
                     Happy Birthday 🎂
                 </p>
                 <p className="mt-3 text-center text-[#3a2433]/80">Try opening the gift box</p>
-                <div className="w-full z-1000 h-1">
+                <div className="pointer-events-none fixed inset-0 z-1000">
                     {confetti.map((piece) => (
                         <span
                             key={piece.id}
                             className="confetti-piece pointer-events-none absolute z-9999 block rounded-sm"
                             style={
                                 {
-                                    left: `${piece.left}px`,
+                                    left: "50%",
+                                    top: "20%",
                                     width: `${piece.width}px`,
                                     height: `${piece.height}px`,
                                     backgroundColor: piece.color,
