@@ -33,7 +33,7 @@ export default function ReleaseBalloon({
     const [release, setrelease] = useState(false);
     const balloonIdRef = useRef(1);
     const balloonZoneRef = useRef<HTMLDivElement | null>(null);
-    const handleStartBalloons = () => {
+    const launchBalloons = () => {
         const zoneWidth = balloonZoneRef.current?.clientWidth ?? 900;
         const newItems: BalloonItem[] = Array.from({ length: balloonCount }).map((_, i) => ({
             id: balloonIdRef.current++,
@@ -48,7 +48,10 @@ export default function ReleaseBalloon({
                 prev.filter((item) => !newItems.some((newItem) => newItem.id === item.id))
             );
         }, 11000);
-        setrelease((prev) => !prev);
+    };
+    const handleStartBalloons = () => {
+        launchBalloons();
+        setrelease(true);
         nextStep();
     };
     return (
@@ -83,7 +86,18 @@ export default function ReleaseBalloon({
                             Release Balloon
                         </button>
                     )}
-                    {release && <ScrollDownButton />}
+                    {release && (
+                        <div className="mt-6 flex flex-col items-center gap-4">
+                            <button
+                                type="button"
+                                onClick={launchBalloons}
+                                className="rounded-full bg-linear-to-r from-(--theme-gradient-from) to-(--theme-gradient-to) px-6 py-3 font-medium text-white shadow-lg transition hover:-translate-y-0.5"
+                            >
+                                Release again
+                            </button>
+                            <ScrollDownButton />
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

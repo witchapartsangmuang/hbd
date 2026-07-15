@@ -8,6 +8,9 @@ import { Button } from "@/components/Button";
 type VideoItem = { url: string; name: string };
 type UploadItem = { id: string; name: string; progress: number };
 
+const MAX_UPLOAD_BYTES = 200 * 1024 * 1024;
+const MAX_UPLOAD_LABEL = "200 MB";
+
 export default function VideoPickerModal({
     slug,
     open,
@@ -44,7 +47,15 @@ export default function VideoPickerModal({
 
     const handleFiles = (files: File[]) => {
         setError(null);
-        for (const file of files) {
+
+        const tooLarge = files.filter((f) => f.size > MAX_UPLOAD_BYTES);
+        if (tooLarge.length) {
+            const names = tooLarge.map((f) => `"${f.name}"`).join(", ");
+            setError(`${names} exceeds the ${MAX_UPLOAD_LABEL} limit and was not uploaded`);
+        }
+        const uploadable = files.filter((f) => f.size <= MAX_UPLOAD_BYTES);
+
+        for (const file of uploadable) {
             const id = Math.random().toString(36).slice(2);
             setUploads((prev) => [...prev, { id, name: file.name, progress: 0 }]);
 
